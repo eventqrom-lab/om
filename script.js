@@ -23,7 +23,7 @@ const translations = {
         mockupScan: "امسح الرمز للدخول",
         offersTitle: "للطلب",
         offersDesc: "اختر الكمية وأضف لمستك الخاصة بتصميم يعكس ذوقك الراقي",
-        calcQuantityLabel: "إجمالي الوحدات المطلوبة",
+        calcQuantityLabel: "عدد البطاقات المطلوبة",
         calcQuantityPlaceholder: "أدخل العدد (الأدنى 30)",
         calcCustomDesignLabel: "إضافة تصميم مخصص",
         perCard: "للبطاقة الواحدة",
@@ -55,9 +55,12 @@ const translations = {
         optSelectType: "اختر النوع",
         optDigital: "دعوة إلكترونية",
         optPrinted: "دعوة مطبوعة",
+        printedFeeNote: "يوجد رسوم للطباعه",
         labelDesignType: "نوع التصميم",
         optReadyTemplate: "نموذج جاهز",
         optCustomDesign: `تصميم مخصص <span class="price-tag price-tag-stacked"><span>+0.040 ر.ع للبطاقة</span></span>`,
+        optCustomDesignText: "تصميم مخصص",
+        customDesignPrice: "+0.040 ر.ع للبطاقة",
         templateGalleryTitle: "اختر نموذجاً من القائمة",
         selectSizeFirst: "يرجى اختيار الحجم أولاً لعرض النماذج المناسبة",
         templatesComingSoon: "سيتم إضافة النماذج قريباً",
@@ -86,19 +89,25 @@ const translations = {
         quickLinks: "روابط سريعة",
         copyright: "&copy; 2026 Event QR Tech Tricks. جميع الحقوق محفوظة.",
         labelLetters: "إضافة أحرف (مخصص للزفاف)",
+        labelWeddingPersonalization: "تفاصيل بطاقة الزفاف",
+        optWeddingLetters: "أحرف",
+        optWeddingNames: "أسماء",
         optLetter1: "الحرف الأول",
         optLetter2: "الحرف الثاني",
+        phWeddingName1: "الاسم الأول",
+        phWeddingName2: "الاسم الثاني",
         labelAddTime: "إضافة الوقت",
         labelEventTime: "وقت المناسبة",
         timeAM: "صباحاً",
         timePM: "مساءً",
         currencyShort: "ر.ع",
         valLetters: "الرجاء اختيار الحرفين بوضوح",
+        valRequiredOptions: "يرجى اختيار خيار واحد من كل قسم: نوع الدعوة، مقاس بطاقة الدعوة، ونوع التصميم.",
         showcaseTitle: "نماذج من بطاقاتنا",
         showcaseDesc: "تصاميم رقمية أنيقة مع QR مخصص لكل مناسبة",
         cardAlt1: "نموذج بطاقة دعوة رقمية 1",
         cardAlt2: "نموذج بطاقة دعوة رقمية 2",
-        dateNote: "يشترط أن يكون تاريخ المناسبة بعد سبعة أيام أو أكثر من تاريخ تقديم الطلب",
+        dateNote: "يشترط عند طلب بطاقة دعوة مطبوعة أن يتم تقديم الطلب قبل موعد استلام البطاقة بما لا يقل عن سبعة أيام",
         dateDayLabel: "اليوم:",
         dateMonthLabel: "الشهر:",
         dateYearLabel: "السنة:",
@@ -195,9 +204,12 @@ const translations = {
         optSelectType: "Select Type",
         optDigital: "Digital Invitation",
         optPrinted: "Printed Invitation",
+        printedFeeNote: "Printing fees apply",
         labelDesignType: "Design Type",
         optReadyTemplate: "Ready Template",
         optCustomDesign: `Custom Design <span class="price-tag price-tag-stacked"><span>+0.040 OMR</span><span>per card</span></span>`,
+        optCustomDesignText: "Custom Design",
+        customDesignPrice: "+0.040 OMR per card",
         templateGalleryTitle: "Choose a template from the list",
         selectSizeFirst: "Please select a size first to view suitable templates",
         templatesComingSoon: "Templates will be added soon",
@@ -226,14 +238,20 @@ const translations = {
         quickLinks: "Quick Links",
         copyright: "&copy; 2026 Event QR Tech Tricks. All rights reserved.",
         labelLetters: "Add Letters (For Weddings)",
+        labelWeddingPersonalization: "Wedding Card Details",
+        optWeddingLetters: "Letters",
+        optWeddingNames: "Names",
         optLetter1: "First Letter",
         optLetter2: "Second Letter",
+        phWeddingName1: "First Name",
+        phWeddingName2: "Second Name",
         labelAddTime: "Add Time",
         labelEventTime: "Event Time",
         timeAM: "AM",
         timePM: "PM",
         currencyShort: "OMR",
         valLetters: "Please select both letters clearly",
+        valRequiredOptions: "Please select one option from each section: invitation type, card size, and design type.",
         showcaseTitle: "Samples of Our Cards",
         showcaseDesc: "Elegant digital designs with QR codes for every occasion",
         cardAlt1: "Digital invitation card sample 1",
@@ -294,8 +312,8 @@ const translations = {
 let currentLang = 'ar';
 
 const templates = {
-    "4x3cm": [], // e.g. { id: "T001", src: "images/templates/4x3/T001.jpg" }
-    "9x6cm": []
+    "9x5.5cm": [], // e.g. { id: "T001", src: "images/templates/9x5.5/T001.jpg" }
+    "9x16cm": []
 };
 
 const monthNames = {
@@ -451,24 +469,62 @@ document.addEventListener('DOMContentLoaded', () => {
     // Conditional logic for Add Letters
     const eventTypeSelect = document.getElementById('event-type');
     const lettersGroup = document.getElementById('letters-group');
+    const weddingLettersRadio = document.getElementById('wedding-letters');
+    const weddingNamesRadio = document.getElementById('wedding-names');
+    const weddingLettersFields = document.getElementById('wedding-letters-fields');
+    const weddingNamesFields = document.getElementById('wedding-names-fields');
     const letter1 = document.getElementById('letter-1');
     const letter2 = document.getElementById('letter-2');
+    const weddingName1 = document.getElementById('wedding-name-1');
+    const weddingName2 = document.getElementById('wedding-name-2');
 
     if (eventTypeSelect && lettersGroup) {
+        function updateWeddingDetailFields() {
+            const useLetters = weddingLettersRadio && weddingLettersRadio.checked;
+            const useNames = weddingNamesRadio && weddingNamesRadio.checked;
+
+            if (weddingLettersFields) weddingLettersFields.classList.toggle('hidden', !useLetters);
+            if (weddingNamesFields) weddingNamesFields.classList.toggle('hidden', !useNames);
+
+            if (letter1 && letter2) {
+                letter1.toggleAttribute('required', useLetters);
+                letter2.toggleAttribute('required', useLetters);
+                if (!useLetters) {
+                    letter1.value = '';
+                    letter2.value = '';
+                }
+            }
+
+            if (weddingName1 && weddingName2) {
+                weddingName1.toggleAttribute('required', useNames);
+                weddingName2.toggleAttribute('required', useNames);
+                if (!useNames) {
+                    weddingName1.value = '';
+                    weddingName2.value = '';
+                }
+            }
+        }
+
         function updateWeddingOptions() {
             const isWedding = eventTypeSelect.value === 'زفاف';
 
             if (isWedding) {
                 lettersGroup.classList.remove('hidden');
-                letter1.setAttribute('required', 'required');
-                letter2.setAttribute('required', 'required');
+                if (weddingLettersRadio) weddingLettersRadio.setAttribute('required', 'required');
+                if (weddingNamesRadio) weddingNamesRadio.setAttribute('required', 'required');
             } else {
                 lettersGroup.classList.add('hidden');
-                letter1.removeAttribute('required');
-                letter2.removeAttribute('required');
-                letter1.value = '';
-                letter2.value = '';
+                if (weddingLettersRadio) {
+                    weddingLettersRadio.removeAttribute('required');
+                    weddingLettersRadio.checked = false;
+                }
+                if (weddingNamesRadio) {
+                    weddingNamesRadio.removeAttribute('required');
+                    weddingNamesRadio.checked = false;
+                }
             }
+
+            updateWeddingDetailFields();
         }
 
         // Initial setup on load
@@ -476,6 +532,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         eventTypeSelect.addEventListener('change', () => {
             updateWeddingOptions();
+        });
+
+        [weddingLettersRadio, weddingNamesRadio].forEach((radio) => {
+            if (radio) radio.addEventListener('change', updateWeddingDetailFields);
         });
     }
 
@@ -862,11 +922,73 @@ document.addEventListener('DOMContentLoaded', () => {
     const calcDesignToggle = document.getElementById('calc-design');
 
     if (inquiryForm) {
+        const requiredOptionGroups = [
+            {
+                name: "نوع_الدعوة",
+                containerSelector: ".invitation-type-options"
+            },
+            {
+                name: "حجم_الدعوة",
+                containerSelector: ".invitation-size-options"
+            },
+            {
+                name: "نوع_التصميم",
+                containerSelector: ".design-type-options"
+            }
+        ];
+
+        function validateRequiredOptionGroups() {
+            let firstInvalidGroup = null;
+
+            requiredOptionGroups.forEach((group) => {
+                const selected = inquiryForm.querySelector(`input[name="${group.name}"]:checked`);
+                const container = inquiryForm.querySelector(group.containerSelector);
+                const isInvalid = !selected;
+
+                if (container) {
+                    container.classList.toggle('option-group-invalid', isInvalid);
+                }
+
+                if (isInvalid && !firstInvalidGroup) {
+                    firstInvalidGroup = container;
+                }
+            });
+
+            if (firstInvalidGroup) {
+                if (formMessage) {
+                    formMessage.textContent = translations[currentLang].valRequiredOptions;
+                    formMessage.classList.remove('hidden');
+                    formMessage.classList.add('error');
+                }
+                firstInvalidGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return false;
+            }
+
+            return true;
+        }
+
+        requiredOptionGroups.forEach((group) => {
+            inquiryForm.querySelectorAll(`input[name="${group.name}"]`).forEach((input) => {
+                input.addEventListener('change', () => {
+                    const container = inquiryForm.querySelector(group.containerSelector);
+                    if (container) container.classList.remove('option-group-invalid');
+                    if (formMessage && formMessage.classList.contains('error')) {
+                        formMessage.classList.add('hidden');
+                        formMessage.classList.remove('error');
+                    }
+                });
+            });
+        });
+
         inquiryForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submit-btn');
             const formMessage = document.getElementById('form-message');
+
+            if (!validateRequiredOptionGroups()) {
+                return;
+            }
             
             // Basic validation check
             if (!inquiryForm.checkValidity()) {
@@ -922,9 +1044,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 eventTime = currentLang === 'ar' ? "لم يحدد" : "Not specified";
             }
 
+            const weddingDetailInput = document.querySelector('input[name="تفاصيل_الزفاف"]:checked');
+            const weddingDetailType = weddingDetailInput ? weddingDetailInput.value : (currentLang === 'ar' ? "لا يوجد" : "None");
             const l1 = document.getElementById('letter-1').value;
             const l2 = document.getElementById('letter-2').value;
+            const name1 = document.getElementById('wedding-name-1').value.trim();
+            const name2 = document.getElementById('wedding-name-2').value.trim();
             const selectedLetters = (l1 && l2) ? `${l1} & ${l2}` : (currentLang === 'ar' ? "لا يوجد" : "None");
+            const selectedNames = (name1 && name2) ? `${name1} & ${name2}` : (currentLang === 'ar' ? "لا يوجد" : "None");
 
             const finalPrice = document.getElementById('calc-total-price').textContent + " OMR";
 
@@ -941,7 +1068,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 "نوع_المناسبة": rawObject["نوع_المناسبة"],
                 "تاريخ_المناسبة": eventDate,
                 "الوقت": eventTime,
+                "تفاصيل_بطاقة_الزفاف": weddingDetailType,
                 "الأحرف_المختارة": selectedLetters,
+                "الأسماء_المكتوبة": selectedNames,
                 "عدد_الوحدات": rawObject["عدد_البطاقات"],
                 "حجم_الدعوة": rawObject["حجم_الدعوة"],
                 "نوع_الدعوة": rawObject["نوع_الدعوة"],

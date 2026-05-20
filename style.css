@@ -570,6 +570,14 @@ ul {
     background-color: var(--deep-black);
 }
 
+.product-showcase .section-title p {
+    font-family: var(--font-header);
+    font-size: 3rem;
+    color: var(--luxury-gold);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
 .showcase-gallery {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -789,7 +797,7 @@ input:checked + .slider:before {
     font-size: 0.85rem;
     color: var(--luxury-gold);
     opacity: 0.8;
-    margin-top: -8px;
+    margin-top: 10px;
     margin-bottom: 20px;
     padding: 0 5px;
     font-style: italic;
@@ -839,13 +847,13 @@ input:checked + .slider:before {
 }
 
 .size-card-preview-small {
-    width: 42px;
+    width: 52px;
     height: 32px;
 }
 
 .size-card-preview-large {
-    width: 38px;
-    height: 58px;
+    width: 32px;
+    height: 57px;
 }
 
 .size-card-text {
@@ -863,6 +871,7 @@ input:checked + .slider:before {
 .type-option-card {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 12px;
     min-height: 72px;
     padding: 14px 16px;
@@ -888,8 +897,8 @@ input:checked + .slider:before {
 }
 
 .type-option-icon {
-    width: 38px;
-    height: 38px;
+    width: 46px;
+    height: 46px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -901,13 +910,35 @@ input:checked + .slider:before {
 }
 
 .type-option-icon svg {
-    width: 22px;
-    height: 22px;
+    width: 30px;
+    height: 30px;
+}
+
+.type-option-icon img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    display: block;
 }
 
 .type-option-text {
     font-weight: 700;
     color: var(--text-main);
+}
+
+.type-option-note {
+    flex-basis: 100%;
+    color: #10b981;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.option-group-invalid {
+    border: 1px solid rgba(158, 61, 61, 0.85);
+    border-radius: 10px;
+    padding: 8px;
+    background: rgba(158, 61, 61, 0.08);
 }
 
 .design-type-options {
@@ -917,8 +948,9 @@ input:checked + .slider:before {
 }
 
 .design-option-card {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-rows: 38px auto 18px;
+    place-items: center;
     gap: 8px;
     padding: 10px 16px;
     border: 1.5px solid var(--border-color, #333);
@@ -941,6 +973,7 @@ input:checked + .slider:before {
 }
 
 .design-option-icon {
+    grid-row: 1;
     width: 38px;
     height: 38px;
     display: inline-flex;
@@ -959,8 +992,19 @@ input:checked + .slider:before {
 }
 
 .design-option-text {
+    grid-row: 2;
     font-weight: 700;
     color: var(--text-main);
+    text-align: center;
+}
+
+.design-option-price {
+    grid-row: 3;
+    color: #10b981;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
 }
 
 .design-option-text .price-tag,
@@ -971,6 +1015,7 @@ input:checked + .slider:before {
 }
 
 .price-tag-stacked {
+    grid-row: 3;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
@@ -982,6 +1027,16 @@ input:checked + .slider:before {
 
 .price-tag-stacked span {
     display: block;
+}
+
+.wedding-detail-options {
+    margin-bottom: 16px;
+}
+
+#wedding-letters-fields,
+#wedding-names-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
 }
 
 .template-gallery {
@@ -2170,6 +2225,12 @@ html[lang="en"] .contact-info h2 {
     .form-row {
         grid-template-columns: 1fr;
     }
+
+    #wedding-letters-fields,
+    #wedding-names-fields {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
     
     .contact-info {
         padding: 24px 20px;
@@ -2673,7 +2734,9 @@ html[lang="en"] .contact-info h2 {
     }
 
     .invitation-size-options .size-option-card {
-        flex-direction: column;
+        display: grid;
+        grid-template-rows: 52px auto;
+        place-items: center;
         justify-content: center;
         gap: 8px;
         min-height: 108px;
@@ -2688,12 +2751,31 @@ html[lang="en"] .contact-info h2 {
     }
 
     .invitation-type-options .type-option-card {
-        flex-direction: column;
+        display: grid;
+        grid-template-rows: 46px 20px 16px;
+        place-items: center;
         justify-content: center;
         gap: 8px;
         min-height: 104px;
         padding: 12px 8px;
         text-align: center;
+    }
+
+    .invitation-type-options .type-option-icon {
+        grid-row: 1;
+    }
+
+    .invitation-type-options .type-option-text {
+        grid-row: 2;
+    }
+
+    .invitation-type-options .type-option-note {
+        grid-row: 3;
+        flex-basis: auto;
+        width: 100%;
+        text-align: center;
+        font-size: 0.68rem;
+        line-height: 1.25;
     }
 
     .design-type-options {
@@ -2729,16 +2811,17 @@ html[lang="en"] .contact-info h2 {
     }
 
     .size-card-preview-small {
-        width: 38px;
+        width: 46px;
         height: 28px;
     }
 
     .size-card-preview-large {
-        width: 30px;
-        height: 46px;
+        width: 28px;
+        height: 50px;
     }
 
     .size-card-text {
+        line-height: 1.2;
         font-size: 0.86rem;
     }
 
@@ -2989,5 +3072,195 @@ html[lang="en"] .contact-info h2 {
     .size-option-card,
     .design-option-card {
         gap: 10px;
+    }
+}
+
+/* Responsive visual balance */
+.product-showcase .section-title p {
+    max-width: 820px;
+    margin-inline: auto;
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    text-align: center;
+}
+
+.invitation-type-options .type-option-card {
+    display: grid;
+    grid-template-rows: 52px auto 18px;
+    place-items: center;
+    align-content: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.type-option-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.type-option-icon svg,
+.type-option-icon img {
+    width: 38px;
+    height: 38px;
+}
+
+.type-option-text,
+.size-card-text,
+.design-option-text {
+    line-height: 1.3;
+}
+
+.design-option-card {
+    display: grid;
+    grid-template-rows: 42px 22px 18px;
+    place-items: center;
+    align-content: center;
+    row-gap: 8px;
+}
+
+.design-option-icon {
+    grid-row: 1;
+}
+
+.design-option-text {
+    grid-row: 2;
+}
+
+.design-option-price {
+    grid-row: 3;
+}
+
+.design-option-text .price-tag-stacked {
+    margin-top: 3px;
+}
+
+.type-option-note {
+    width: 100%;
+    text-align: center;
+    line-height: 1.25;
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 920px;
+        padding-inline: 28px;
+    }
+
+    .section-padding {
+        padding: 78px 0;
+    }
+
+    .product-showcase .section-title p,
+    html[lang="ar"] .section-title h2,
+    html[lang="en"] .section-title h2 {
+        font-size: 2.35rem;
+        line-height: 1.25;
+    }
+
+    .calculator-card {
+        padding: 34px 30px;
+    }
+
+    .invitation-size-options,
+    .invitation-type-options,
+    .design-type-options {
+        gap: 12px;
+    }
+
+    .size-option-card,
+    .type-option-card,
+    .design-option-card {
+        min-height: 112px;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-showcase .section-title p {
+        font-size: clamp(1.45rem, 6.3vw, 2.15rem);
+        line-height: 1.35;
+    }
+
+    .invitation-size-options,
+    .invitation-type-options,
+    .design-type-options {
+        gap: 10px;
+    }
+
+    .invitation-type-options .type-option-card {
+        grid-template-rows: 44px auto 16px;
+        min-height: 116px;
+        padding: 12px 8px;
+    }
+
+    .type-option-icon,
+    .design-option-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .type-option-icon svg,
+    .type-option-icon img,
+    .design-option-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .type-option-text,
+    .size-card-text,
+    .design-option-text {
+        font-size: 0.88rem;
+        font-weight: 700;
+    }
+
+    .design-option-card {
+        grid-template-rows: 40px 22px 18px;
+    }
+
+    .type-option-note {
+        font-size: 0.7rem;
+    }
+
+    .time-selector-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1.1fr;
+        gap: 8px;
+    }
+
+    .time-selector-container select {
+        height: 42px;
+        min-height: 42px;
+        padding: 0 8px;
+        font-size: 0.84rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .product-showcase .section-title p {
+        font-size: 1.45rem;
+    }
+
+    .invitation-type-options .type-option-card {
+        min-height: 112px;
+        padding-inline: 6px;
+    }
+
+    .type-option-text,
+    .size-card-text,
+    .design-option-text {
+        font-size: 0.8rem;
+    }
+
+    .type-option-note {
+        font-size: 0.64rem;
+    }
+
+    .time-selector-container {
+        gap: 6px;
+    }
+
+    .time-selector-container select {
+        height: 40px;
+        min-height: 40px;
+        padding: 0 6px;
+        font-size: 0.78rem;
     }
 }
