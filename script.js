@@ -859,7 +859,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 "يوجد_لدي_تصميم_جاهز": readyDesign,
                 "السعر_النهائي": finalPrice,
                 "ملاحظات_إضافية": rawObject["ملاحظات_إضافية"] || (currentLang === 'ar' ? "لا يوجد" : "None"),
-                "رابط_الفاتورة": "https://sykrix.github.io/bill/"
+                "رابط_الفاتورة": "https://eventqrom-lab.github.io/bill/"
             };
 
             const json = JSON.stringify(organizedObject);
