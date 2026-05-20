@@ -26,8 +26,6 @@ const translations = {
         calcQuantityLabel: "إجمالي الوحدات المطلوبة",
         calcQuantityPlaceholder: "أدخل العدد (الأدنى 30)",
         calcCustomDesignLabel: "إضافة تصميم مخصص",
-        readyDesignLabel: "يوجد لدي تصميم جاهز",
-        readyDesignNote: "يرجى تزويدنا بالتصميم عبر الواتساب.",
         perCard: "للبطاقة الواحدة",
         calcMinWarning: "أقل عدد للطلب هو 30 بطاقة وأقصى عدد هو 1000",
         calcMaxWarning: "أقصى عدد للطلب هو 1000 بطاقة",
@@ -36,7 +34,7 @@ const translations = {
         calcOrderBtn: "اطلب الآن",
         calcMsgWithDesign: "مع تصميم مخصص",
         calcMsgWithoutDesign: "بدون تصميم مخصص",
-        currency: `<img src="images/IMG_1248 (2).png" alt="ر.ع" style="height: 1.2em; vertical-align: -0.15em;">`,
+        currency: `<img src="images/IMG_1248 (2).png" alt="ر.ع" style="height: 1.35em; vertical-align: -0.2em;">`,
         inquiryTitle: "للاستفسار",
         inquiryDesc: "نسعد بتواصلكم معنا لتلبية احتياجات مناسباتكم. فريقنا جاهز لخدمتكم.",
         labelName: "الاسم",
@@ -46,9 +44,26 @@ const translations = {
         labelEventType: "نوع المناسبة",
         optSelect: "اختر نوع المناسبة",
         optWedding: "زفاف",
+        optBirthday: "عيد ميلاد",
         optParty: "حفلة خاصة",
         optBusiness: "فعالية أعمال",
+        optConference: "مؤتمر خاص",
         optOther: "أخرى",
+        labelInvitationSize: "مقاس بطاقة الدعوة",
+        optSelectSize: "اختر الحجم",
+        labelInvitationType: "نوع الدعوة",
+        optSelectType: "اختر النوع",
+        optDigital: "دعوة إلكترونية",
+        optPrinted: "دعوة مطبوعة",
+        labelDesignType: "نوع التصميم",
+        optReadyTemplate: "نموذج جاهز",
+        optCustomDesign: `تصميم مخصص <span class="price-tag price-tag-stacked"><span>+0.040 ر.ع للبطاقة</span></span>`,
+        templateGalleryTitle: "اختر نموذجاً من القائمة",
+        selectSizeFirst: "يرجى اختيار الحجم أولاً لعرض النماذج المناسبة",
+        templatesComingSoon: "سيتم إضافة النماذج قريباً",
+        labelSecurity: "موظف سكيورتي",
+        securityPriceNote: "+25.000 ريال عماني",
+        calcSecurityLabel: "رسوم السكيورتي:",
         labelEventDate: "تاريخ المناسبة",
         labelGuests: "عدد الدعوات المتوقع",
         phGuests: "مثال: 100",
@@ -73,19 +88,11 @@ const translations = {
         labelLetters: "إضافة أحرف (مخصص للزفاف)",
         optLetter1: "الحرف الأول",
         optLetter2: "الحرف الثاني",
-        labelColors: "اختار لون ثيم المناسبة",
         labelAddTime: "إضافة الوقت",
         labelEventTime: "وقت المناسبة",
         timeAM: "صباحاً",
         timePM: "مساءً",
         currencyShort: "ر.ع",
-        colorGold: "ذهبي",
-        colorSilver: "فضي",
-        colorBlack: "أسود",
-        colorWhite: "أبيض",
-        colorNavy: "كحلي",
-        colorRose: "وردي ذهبي",
-        colorGreen: "أخضر زمردي",
         valLetters: "الرجاء اختيار الحرفين بوضوح",
         showcaseTitle: "نماذج من بطاقاتنا",
         showcaseDesc: "تصاميم رقمية أنيقة مع QR مخصص لكل مناسبة",
@@ -95,7 +102,7 @@ const translations = {
         dateDayLabel: "اليوم:",
         dateMonthLabel: "الشهر:",
         dateYearLabel: "السنة:",
-        customDesignNote: "يمكنك وصف التصميم الذي تريده، أو إرسال نموذج مشابه لنصممه لك بما يناسب مناسبتك.",
+        customDesignNote: "يمكنك وصف التصميم الذي تريده، أو إرسال نموذج مشابه لنصممه لك.",
         calcBasePriceLabel: "قيمة الباقة الأساسية:",
         calcDesignPriceLabel: "رسوم التصميم:",
         calcDeliveryLabel: "رسوم التوصيل:",
@@ -159,8 +166,6 @@ const translations = {
         calcQuantityLabel: "Total Cards Requested",
         calcQuantityPlaceholder: "Enter quantity (Min 30)",
         calcCustomDesignLabel: "Add Custom Design",
-        readyDesignLabel: "I already have a ready design",
-        readyDesignNote: "Please send us the design via WhatsApp.",
         perCard: "per unit",
         calcMinWarning: "Minimum order is 30 units, maximum is 1000",
         calcMaxWarning: "Maximum order is 1000 units",
@@ -169,7 +174,7 @@ const translations = {
         calcOrderBtn: "Order Now",
         calcMsgWithDesign: "with custom design",
         calcMsgWithoutDesign: "without custom design",
-        currency: `<img src="images/IMG_1248 (2).png" alt="OMR" style="height: 1.2em; vertical-align: -0.15em;">`,
+        currency: `<img src="images/IMG_1248 (2).png" alt="OMR" style="height: 1.35em; vertical-align: -0.2em;">`,
         inquiryTitle: "For Inquiries",
         inquiryDesc: "We are happy to hear from you and meet your event needs. Our team is ready to serve you.",
         labelName: "Name",
@@ -179,9 +184,26 @@ const translations = {
         labelEventType: "Event Type",
         optSelect: "Select Event Type",
         optWedding: "Wedding",
+        optBirthday: "Birthday",
         optParty: "Private Party",
         optBusiness: "Business Event",
+        optConference: "Private Conference",
         optOther: "Other",
+        labelInvitationSize: "Invitation Card Size",
+        optSelectSize: "Select Size",
+        labelInvitationType: "Invitation Type",
+        optSelectType: "Select Type",
+        optDigital: "Digital Invitation",
+        optPrinted: "Printed Invitation",
+        labelDesignType: "Design Type",
+        optReadyTemplate: "Ready Template",
+        optCustomDesign: `Custom Design <span class="price-tag price-tag-stacked"><span>+0.040 OMR</span><span>per card</span></span>`,
+        templateGalleryTitle: "Choose a template from the list",
+        selectSizeFirst: "Please select a size first to view suitable templates",
+        templatesComingSoon: "Templates will be added soon",
+        labelSecurity: "Security Staff",
+        securityPriceNote: "+25.000 OMR",
+        calcSecurityLabel: "Security Fee:",
         labelEventDate: "Event Date",
         labelGuests: "Expected Number of Invitations",
         phGuests: "e.g. 100",
@@ -206,19 +228,11 @@ const translations = {
         labelLetters: "Add Letters (For Weddings)",
         optLetter1: "First Letter",
         optLetter2: "Second Letter",
-        labelColors: "Choose the event theme color",
         labelAddTime: "Add Time",
         labelEventTime: "Event Time",
         timeAM: "AM",
         timePM: "PM",
         currencyShort: "OMR",
-        colorGold: "Gold",
-        colorSilver: "Silver",
-        colorBlack: "Black",
-        colorWhite: "White",
-        colorNavy: "Navy Blue",
-        colorRose: "Rose Gold",
-        colorGreen: "Emerald Green",
         valLetters: "Please select both letters clearly",
         showcaseTitle: "Samples of Our Cards",
         showcaseDesc: "Elegant digital designs with QR codes for every occasion",
@@ -228,7 +242,7 @@ const translations = {
         dateDayLabel: "Day:",
         dateMonthLabel: "Month:",
         dateYearLabel: "Year:",
-        customDesignNote: "Stand out with your own touch. Add a unique design that reflects your taste and the status of your guests.",
+        customDesignNote: "You can describe the design you want, or send a similar sample for us to design.",
         calcBasePriceLabel: "Base Package Value:",
         calcDesignPriceLabel: "Design Fee:",
         calcDeliveryLabel: "Delivery Fee:",
@@ -278,6 +292,11 @@ const translations = {
 };
 
 let currentLang = 'ar';
+
+const templates = {
+    "4x3cm": [], // e.g. { id: "T001", src: "images/templates/4x3/T001.jpg" }
+    "9x6cm": []
+};
 
 const monthNames = {
     ar: ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"],
@@ -434,39 +453,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const lettersGroup = document.getElementById('letters-group');
     const letter1 = document.getElementById('letter-1');
     const letter2 = document.getElementById('letter-2');
-    const readyDesignGroup = document.getElementById('ready-design-group');
-    const readyDesignNote = document.getElementById('ready-design-note');
-    const readyDesignToggle = document.getElementById('ready-design');
 
     if (eventTypeSelect && lettersGroup) {
-        const customDesignToggle = document.getElementById('calc-design');
-
         function updateWeddingOptions() {
             const isWedding = eventTypeSelect.value === 'زفاف';
 
             if (isWedding) {
                 lettersGroup.classList.remove('hidden');
-                if (readyDesignGroup) readyDesignGroup.classList.remove('hidden');
-                if (readyDesignNote) readyDesignNote.classList.remove('hidden');
                 letter1.setAttribute('required', 'required');
                 letter2.setAttribute('required', 'required');
-                if (customDesignToggle && readyDesignToggle && !customDesignToggle.checked && !readyDesignToggle.checked) {
-                    customDesignToggle.checked = true;
-                    customDesignToggle.dispatchEvent(new Event('change'));
-                }
             } else {
                 lettersGroup.classList.add('hidden');
-                if (readyDesignGroup) readyDesignGroup.classList.add('hidden');
-                if (readyDesignNote) readyDesignNote.classList.add('hidden');
                 letter1.removeAttribute('required');
                 letter2.removeAttribute('required');
                 letter1.value = '';
                 letter2.value = '';
-                if (readyDesignToggle) readyDesignToggle.checked = false;
-            }
-
-            if (customDesignToggle) {
-                customDesignToggle.disabled = false;
             }
         }
 
@@ -476,29 +477,119 @@ document.addEventListener('DOMContentLoaded', () => {
         eventTypeSelect.addEventListener('change', () => {
             updateWeddingOptions();
         });
+    }
 
-        if (customDesignToggle && readyDesignToggle) {
-            customDesignToggle.addEventListener('change', () => {
-                const isWedding = eventTypeSelect.value === 'زفاف';
+    const invitationSizeInputs = document.querySelectorAll('input[name="حجم_الدعوة"]');
+    const designReadyRadio = document.getElementById('design-ready');
+    const designCustomRadio = document.getElementById('design-custom');
+    const templateGallery = document.getElementById('template-gallery');
+    const templateGrid = document.getElementById('template-grid');
+    const selectSizeFirstMsg = document.getElementById('select-size-first-msg');
+    const selectedTemplateInput = document.getElementById('selected-template');
+    const customDesignNote = document.getElementById('custom-design-note');
+    const templateLightbox = document.getElementById('template-lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxClose = document.getElementById('lightbox-close');
 
-                if (customDesignToggle.checked) {
-                    readyDesignToggle.checked = false;
-                } else if (isWedding && !readyDesignToggle.checked) {
-                    customDesignToggle.checked = true;
-                }
-            });
+    function openTemplateLightbox(src) {
+        if (!templateLightbox || !lightboxImage || !src) return;
+        lightboxImage.src = src;
+        templateLightbox.classList.add('active');
+        templateLightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-open');
+    }
 
-            readyDesignToggle.addEventListener('change', () => {
-                const isWedding = eventTypeSelect.value === 'زفاف';
+    function closeTemplateLightbox() {
+        if (!templateLightbox || !lightboxImage) return;
+        templateLightbox.classList.remove('active');
+        templateLightbox.setAttribute('aria-hidden', 'true');
+        lightboxImage.src = '';
+        document.body.classList.remove('lightbox-open');
+    }
 
-                if (readyDesignToggle.checked) {
-                    customDesignToggle.checked = false;
-                    customDesignToggle.dispatchEvent(new Event('change'));
-                } else if (isWedding && !customDesignToggle.checked) {
-                    readyDesignToggle.checked = true;
-                }
-            });
+    function renderTemplates() {
+        if (!templateGallery || !templateGrid || !selectSizeFirstMsg) return;
+
+        const selectedSizeInput = document.querySelector('input[name="حجم_الدعوة"]:checked');
+        const size = selectedSizeInput ? selectedSizeInput.value : "";
+        if (selectedTemplateInput) selectedTemplateInput.value = "";
+        templateGrid.innerHTML = "";
+
+        if (!size) {
+            templateGrid.classList.add('hidden');
+            selectSizeFirstMsg.classList.remove('hidden');
+            return;
         }
+
+        const sizeTemplates = templates[size] || [];
+        templateGrid.classList.remove('hidden');
+        selectSizeFirstMsg.classList.add('hidden');
+
+        if (sizeTemplates.length === 0) {
+            const placeholder = document.createElement('p');
+            placeholder.className = 'template-size-msg';
+            placeholder.textContent = translations[currentLang].templatesComingSoon;
+            templateGrid.appendChild(placeholder);
+            return;
+        }
+
+        sizeTemplates.forEach((template) => {
+            const card = document.createElement('div');
+            card.className = 'template-card';
+            card.dataset.templateId = template.id;
+
+            const image = document.createElement('img');
+            image.src = template.src;
+            image.alt = `${currentLang === 'ar' ? 'نموذج' : 'Template'} #${template.id}`;
+
+            const label = document.createElement('span');
+            label.textContent = `${currentLang === 'ar' ? 'نموذج' : 'Template'} #${template.id}`;
+
+            card.appendChild(image);
+            card.appendChild(label);
+
+            card.addEventListener('click', () => {
+                templateGrid.querySelectorAll('.template-card').forEach((item) => item.classList.remove('selected'));
+                card.classList.add('selected');
+                if (selectedTemplateInput) selectedTemplateInput.value = template.id;
+                openTemplateLightbox(template.src);
+            });
+
+            templateGrid.appendChild(card);
+        });
+    }
+
+    function syncDesignType() {
+        const calcDesignToggle = document.getElementById('calc-design');
+        const isCustom = designCustomRadio && designCustomRadio.checked;
+        const isReady = designReadyRadio && designReadyRadio.checked;
+
+        if (calcDesignToggle) {
+            calcDesignToggle.checked = isCustom;
+            calcDesignToggle.value = isCustom ? "1" : "0";
+            calcDesignToggle.dispatchEvent(new Event('change'));
+        }
+
+        if (customDesignNote) customDesignNote.classList.toggle('hidden', !isCustom);
+        if (templateGallery) templateGallery.classList.toggle('hidden', !isReady);
+        if (isReady) renderTemplates();
+    }
+
+    [designReadyRadio, designCustomRadio].forEach((radio) => {
+        if (radio) radio.addEventListener('change', syncDesignType);
+    });
+
+    invitationSizeInputs.forEach((input) => {
+        input.addEventListener('change', () => {
+            if (designReadyRadio && designReadyRadio.checked) renderTemplates();
+        });
+    });
+
+    if (lightboxClose) lightboxClose.addEventListener('click', closeTemplateLightbox);
+    if (templateLightbox) {
+        templateLightbox.addEventListener('click', (event) => {
+            if (event.target === templateLightbox) closeTemplateLightbox();
+        });
     }
 
     function getCryptoRandomValues(length) {
@@ -835,8 +926,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const l2 = document.getElementById('letter-2').value;
             const selectedLetters = (l1 && l2) ? `${l1} & ${l2}` : (currentLang === 'ar' ? "لا يوجد" : "None");
 
-            const customDesign = rawObject['تصميم_مخصص'] ? (currentLang === 'ar' ? "نعم" : "Yes") : (currentLang === 'ar' ? "لا" : "No");
-            const readyDesign = rawObject['يوجد_لدي_تصميم_جاهز'] ? (currentLang === 'ar' ? "نعم" : "Yes") : (currentLang === 'ar' ? "لا" : "No");
             const finalPrice = document.getElementById('calc-total-price').textContent + " OMR";
 
             // Create Organized Object for Web3Forms (Labels in Arabic for professional email)
@@ -853,10 +942,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 "تاريخ_المناسبة": eventDate,
                 "الوقت": eventTime,
                 "الأحرف_المختارة": selectedLetters,
-                "لون_الثيم": rawObject["اللون"],
                 "عدد_الوحدات": rawObject["عدد_البطاقات"],
-                "تصميم_مخصص": customDesign,
-                "يوجد_لدي_تصميم_جاهز": readyDesign,
+                "حجم_الدعوة": rawObject["حجم_الدعوة"],
+                "نوع_الدعوة": rawObject["نوع_الدعوة"],
+                "نوع_التصميم": rawObject["نوع_التصميم"],
+                "النموذج_المختار": document.getElementById('selected-template').value || (currentLang === 'ar' ? "لا يوجد" : "None"),
+                "السكيورتي": document.getElementById('security-toggle').checked ? (currentLang === 'ar' ? "نعم (+25.000 ريال عماني)" : "Yes (+25.000 OMR)") : (currentLang === 'ar' ? "لا" : "No"),
                 "السعر_النهائي": finalPrice,
                 "ملاحظات_إضافية": rawObject["ملاحظات_إضافية"] || (currentLang === 'ar' ? "لا يوجد" : "None"),
                 "رابط_الفاتورة": "https://eventqrom-lab.github.io/bill/"
@@ -944,6 +1035,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const calcDesignOldPriceSpan = document.getElementById('calc-design-old-price');
     const designDiscountBadge = document.getElementById('design-discount-badge');
     const calcDesignRow = document.getElementById('calc-design-row');
+    const securityToggle = document.getElementById('security-toggle');
+    const calcSecurityRow = document.getElementById('calc-security-row');
+    const calcSecurityPriceSpan = document.getElementById('calc-security-price');
 
     function updateCalculator() {
         if (!calcQtyInput || !calcDesignToggle) return;
@@ -991,7 +1085,9 @@ document.addEventListener('DOMContentLoaded', () => {
             designPrice = originalDesignPrice * (1 - discountPercent);
         }
 
-        const totalPrice = basePrice + designPrice;
+        const hasSecurity = securityToggle && securityToggle.checked;
+        const securityPrice = hasSecurity ? 25 : 0;
+        const totalPrice = basePrice + designPrice + securityPrice;
 
         if (calcBasePriceSpan) calcBasePriceSpan.textContent = basePrice.toFixed(2);
 
@@ -1017,6 +1113,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (calcDesignRow) calcDesignRow.classList.add('hidden');
         }
 
+        if (calcSecurityRow) calcSecurityRow.classList.toggle('hidden', !hasSecurity);
+        if (calcSecurityPriceSpan) calcSecurityPriceSpan.textContent = securityPrice.toFixed(3);
+
         calcTotalPriceSpan.textContent = totalPrice.toFixed(2);
         
         // Sync with hidden input for form submission
@@ -1029,5 +1128,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (calcQtyInput && calcDesignToggle) {
         calcQtyInput.addEventListener('input', updateCalculator);
         calcDesignToggle.addEventListener('change', updateCalculator);
+        if (securityToggle) securityToggle.addEventListener('change', updateCalculator);
     }
 });

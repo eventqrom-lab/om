@@ -110,8 +110,9 @@
                             <select id="event-type" name="نوع_المناسبة" required>
                                 <option value="" disabled selected data-i18n="optSelect">اختر نوع المناسبة</option>
                                 <option value="زفاف" data-i18n="optWedding">زفاف</option>
-                                <option value="حفلة خاصة" data-i18n="optParty">حفلة خاصة</option>
+                                <option value="عيد ميلاد" data-i18n="optBirthday">عيد ميلاد</option>
                                 <option value="فعالية أعمال" data-i18n="optBusiness">فعالية أعمال</option>
+                                <option value="مؤتمر خاص" data-i18n="optConference">مؤتمر خاص</option>
                                 <option value="أخرى" data-i18n="optOther">أخرى</option>
                             </select>
                         </div>
@@ -238,17 +239,6 @@
                             </div>
                         </div>
 
-                        <!-- Color Selection Option -->
-                        <div class="form-group">
-                            <label data-i18n="labelColors">اختار لون ثيم المناسبة</label>
-
-                            <div class="color-picker-container" id="color-picker-container">
-                                <div class="color-picker-row">
-                                    <input type="color" name="اللون" class="custom-color-input" value="#b4965c">
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="calc-group calc-divider">
                             <label for="calc-qty" data-i18n="calcQuantityLabel">عدد البطاقات</label>
                             <input type="text" id="calc-qty" name="عدد_البطاقات" class="calc-input"
@@ -256,26 +246,107 @@
                                 inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9٠-٩۰-۹]/g, '');">
                         </div>
 
-                        <div class="calc-group calc-toggle-group">
+                        <div class="form-group">
+                            <label data-i18n="labelInvitationType">نوع الدعوة</label>
+                            <div class="invitation-type-options">
+                                <label class="type-option-card">
+                                    <input type="radio" id="invitation-type" name="نوع_الدعوة" value="دعوة إلكترونية" required>
+                                    <span class="type-option-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="5" y="2" width="14" height="20" rx="2"></rect>
+                                            <path d="M9 18h6"></path>
+                                            <path d="M8 6h8"></path>
+                                            <path d="M8 10h8"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="type-option-text" data-i18n="optDigital">دعوة إلكترونية</span>
+                                </label>
+                                <label class="type-option-card">
+                                    <input type="radio" name="نوع_الدعوة" value="دعوة مطبوعة">
+                                    <span class="type-option-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M6 9V3h12v6"></path>
+                                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                            <path d="M6 14h12v7H6z"></path>
+                                            <path d="M18 12h.01"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="type-option-text" data-i18n="optPrinted">دعوة مطبوعة</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-i18n="labelInvitationSize">مقاس بطاقة الدعوة</label>
+                            <div class="invitation-size-options">
+                                <label class="size-option-card">
+                                    <input type="radio" id="invitation-size" name="حجم_الدعوة" value="4x3cm" required>
+                                    <span class="size-card-preview size-card-preview-small"></span>
+                                    <span class="size-card-text">4×3 cm</span>
+                                </label>
+                                <label class="size-option-card">
+                                    <input type="radio" name="حجم_الدعوة" value="9x6cm">
+                                    <span class="size-card-preview size-card-preview-large"></span>
+                                    <span class="size-card-text">9×6 cm</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="calc-design" value="0">
+
+                        <div class="form-group">
+                            <label data-i18n="labelDesignType">نوع التصميم</label>
+                            <div class="design-type-options">
+                                <label class="design-option-card">
+                                    <input type="radio" name="نوع_التصميم" id="design-ready" value="نموذج جاهز" required>
+                                    <span class="design-option-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+                                            <path d="M8 7h8"></path>
+                                            <path d="M8 11h8"></path>
+                                            <path d="M8 15h5"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="design-option-text" data-i18n="optReadyTemplate">نموذج جاهز</span>
+                                </label>
+                                <label class="design-option-card">
+                                    <input type="radio" name="نوع_التصميم" id="design-custom" value="تصميم مخصص">
+                                    <span class="design-option-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m14 4 6 6"></path>
+                                            <path d="M5 19l4.5-1 9-9a2.1 2.1 0 0 0-3-3l-9 9L5 19z"></path>
+                                            <path d="M12 7l5 5"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="design-option-text" data-i18n="optCustomDesign">تصميم مخصص <span class="price-tag price-tag-stacked"><span>+0.040 ر.ع للبطاقة</span></span></span>
+                                </label>
+                            </div>
+                            <p class="custom-note hidden" id="custom-design-note" data-i18n="customDesignNote">يمكنك وصف التصميم الذي تريده، أو إرسال نموذج مشابه لنصممه لك.</p>
+                            <input type="hidden" id="selected-template" name="النموذج_المختار" value="">
+                            <div id="template-gallery" class="template-gallery hidden">
+                                <p class="template-gallery-title" data-i18n="templateGalleryTitle">اختر نموذجاً من القائمة</p>
+                                <div class="template-grid" id="template-grid">
+                                    <!-- Templates injected by JS based on selected size -->
+                                </div>
+                                <p id="select-size-first-msg" class="template-size-msg hidden" data-i18n="selectSizeFirst">يرجى اختيار الحجم أولاً لعرض النماذج المناسبة</p>
+                            </div>
+                        </div>
+
+                        <div id="template-lightbox" aria-hidden="true">
+                            <button type="button" id="lightbox-close" aria-label="Close">×</button>
+                            <img id="lightbox-image" src="" alt="">
+                        </div>
+
+                        <div class="calc-group calc-toggle-group" id="security-group">
                             <div class="toggle-label-container">
-                                <span data-i18n="calcCustomDesignLabel">إضافة تصميم مخصص</span>
-                                <span class="price-tag">(+0.040 <span data-i18n="currencyShort">ر.ع</span> <span data-i18n="perCard">للبطاقة الواحدة</span>)</span>
+                                <span data-i18n="labelSecurity">موظف سكيورتي</span>
+                                <span class="price-tag" data-i18n="securityPriceNote">+25.000 ريال عماني</span>
                             </div>
                             <label class="toggle-switch">
-                                <input type="checkbox" id="calc-design" name="تصميم_مخصص">
+                                <input type="checkbox" id="security-toggle" name="السكيورتي">
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <p class="custom-note" data-i18n="customDesignNote">تميز بلمستك الخاصة! أضف تصميمك الفريد الذي يعكس ذوقك ومكانة ضيوفك.</p>
-
-                        <div class="calc-group calc-toggle-group hidden" id="ready-design-group">
-                            <span data-i18n="readyDesignLabel">يوجد لدي تصميم جاهز</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="ready-design" name="يوجد_لدي_تصميم_جاهز">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <p class="custom-note ready-design-note hidden" id="ready-design-note" data-i18n="readyDesignNote">يرجى تزويدنا بالتصميم عبر الواتساب.</p>
 
                         <div id="calc-warning" class="calc-warning hidden">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -300,6 +371,10 @@
                                     <span id="calc-design-old-price" style="text-decoration: line-through; color: #888; font-size: 0.9em; margin-left: 8px; display: none;"></span>
                                     <span id="calc-design-price">0.00</span> <small data-i18n="currency"></small>
                                 </div>
+                            </div>
+                            <div class="result-row hidden" id="calc-security-row">
+                                <span class="result-label" data-i18n="calcSecurityLabel">رسوم السكيورتي:</span>
+                                <div class="result-value"><span id="calc-security-price">25.000</span> <small data-i18n="currency"></small></div>
                             </div>
                             <div class="result-row">
                                 <span class="result-label">
