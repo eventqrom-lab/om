@@ -1,0 +1,545 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl" style="color-scheme: dark;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event QR Tech Tricks | باقات الدعوات</title>
+    <meta name="description" content="Smart Digital Invitations with QR Technology | دعوات رقمية ذكية بتقنية QR">
+    <link rel="icon" type="image/png" href="images/IMG_1449.PNG">
+    <link rel="shortcut icon" type="image/png" href="images/IMG_1449.PNG">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="images/IMG_1449.PNG" alt="Event QR Logo" class="logo-img">
+                <span class="logo-text">Event QR Tech</span>
+            </a>
+            <div class="nav-right">
+                <a href="#" id="lang-switch" class="lang-btn">English</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span data-i18n="heroTitleStart">دعوات رقمية ذكية</span>
+                    <br />
+                    <span class="highlight" data-i18n="heroTitleHighlight">بتقنية QR</span>
+                </h1>
+                <p class="hero-desc" data-i18n="heroDesc">ارتقِ بمناسبتك مع دعوات عصرية ومبتكرة تليق بضيوفك. تصميم أنيق،
+                    تنظيم سلس، وتجربة لا تُنسى.</p>
+                <div class="hero-buttons">
+                    <a href="#pricing" class="btn btn-primary" data-i18n="btnOffers">اطلب الان</a>
+                    <a href="#contact" class="btn btn-secondary" data-i18n="btnContact">تواصل معنا</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Showcase Section -->
+    <section id="showcase" class="product-showcase section-padding">
+        <div class="container">
+            <div class="section-title">
+                <p data-i18n="showcaseDesc">تصاميم رقمية أنيقة مع QR مخصص لكل مناسبة</p>
+            </div>
+            <div class="showcase-gallery showcase-single">
+                <div class="showcase-item">
+                    <img src="images/IMG_1371.PNG" alt="نموذج بطاقة دعوة" data-i18n-alt="cardAlt1">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-i18n="offersTitle">العروض</h2>
+                <p data-i18n="offersDesc">اختر الكمية وأضف لمستك الخاصة بتصميم يعكس ذوقك الراقي</p>
+            </div>
+            <div class="calculator-container">
+                <div class="calculator-card">
+                    <form id="inquiry-form" class="inquiry-form" autocomplete="off">
+                        <!-- Web3Forms Config -->
+                        <input type="hidden" name="access_key" value="cb10a277-8ae3-4d49-96a8-740b882e2d98">
+                        <input type="hidden" name="order_number" id="order-number-input">
+                        <input type="hidden" name="subject" id="email-subject" value="طلب جديد من الموقع">
+                        <input type="hidden" name="from_name" value="Event QR Tech">
+                        <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+                        <input type="hidden" id="hidden-total-price" name="الإجمالي" value="0.00">
+
+                        <div class="form-group">
+                            <label for="customer-name" data-i18n="labelName">الاسم</label>
+                            <input type="text" id="customer-name" name="الاسم_الكامل" required autocomplete="new-password" data-lpignore="true" data-form-type="other" placeholder="الاسم الكامل"
+                                data-i18n="phName">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" data-i18n="labelPhone">رقم الجوال</label>
+                            <div class="input-group-with-prefix" dir="ltr">
+                                <span class="input-prefix">+968</span>
+                                <input type="tel" id="phone" name="رقم_الجوال" required autocomplete="new-password" data-lpignore="true" data-form-type="other" placeholder="أدخل رقم الجوال"
+                                    maxlength="8" minlength="8" pattern="^[97٩٧][0-9٠-٩]{7}$"
+                                    oninput="
+                                        this.value = this.value.replace(/[^0-9٠-٩۰-۹]/g, '').slice(0, 8);
+                                        const first = this.value[0];
+                                        if (this.value.length > 0 && !['9', '7', '٩', '٧'].includes(first)) {
+                                            this.classList.add('invalid-input');
+                                        } else {
+                                            this.classList.remove('invalid-input');
+                                        }
+                                    "
+                                    data-i18n="phPhone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="event-type" data-i18n="labelEventType">نوع المناسبة</label>
+                            <select id="event-type" name="نوع_المناسبة" required>
+                                <option value="" disabled selected data-i18n="optSelect">اختر نوع المناسبة</option>
+                                <option value="زفاف" data-i18n="optWedding">زفاف</option>
+                                <option value="عيد ميلاد" data-i18n="optBirthday">عيد ميلاد</option>
+                                <option value="فعالية أعمال" data-i18n="optBusiness">فعالية أعمال</option>
+                                <option value="مؤتمر خاص" data-i18n="optConference">مؤتمر خاص</option>
+                                <option value="أخرى" data-i18n="optOther">أخرى</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-i18n="labelEventDate">تاريخ المناسبة</label>
+                            <p class="date-note">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <span data-i18n="dateNote">يشترط عند طلب بطاقة دعوة مطبوعة أن يتم تقديم الطلب قبل موعد استلام البطاقة بما لا يقل عن سبعة أيام</span>
+                            </p>
+                            <div class="date-selector-container">
+                                <div class="date-field">
+                                    <span class="date-field-label" data-i18n="dateDayLabel">اليوم:</span>
+                                    <select id="event-day" required></select>
+                                </div>
+                                <div class="date-field">
+                                    <span class="date-field-label" data-i18n="dateMonthLabel">الشهر:</span>
+                                    <select id="event-month" required></select>
+                                </div>
+                                <div class="date-field">
+                                    <span class="date-field-label" data-i18n="dateYearLabel">السنة:</span>
+                                    <select id="event-year" required></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="calc-group calc-toggle-group">
+                            <span data-i18n="labelAddTime">إضافة الوقت</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-time">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group hidden" id="time-group">
+                            <div class="time-header">
+                                <label data-i18n="labelEventTime">وقت المناسبة</label>
+                                <div class="format-toggle">
+                                    <span id="format-label">12h</span>
+                                    <label class="toggle-switch mini">
+                                        <input type="checkbox" id="toggle-format">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="time-selector-container">
+                                <select id="event-hour"></select>
+                                <select id="event-minute"></select>
+                                <select id="event-ampm">
+                                    <option value="AM" data-i18n="timeAM">AM</option>
+                                    <option value="PM" data-i18n="timePM">PM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="calc-group calc-divider">
+                            <label for="calc-qty" data-i18n="calcQuantityLabel">عدد البطاقات</label>
+                            <input type="text" id="calc-qty" name="عدد_البطاقات" class="calc-input"
+                                placeholder="أدخل العدد (الأدنى 30)" data-i18n="calcQuantityPlaceholder" required
+                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9٠-٩۰-۹]/g, '');">
+                        </div>
+
+                        <div class="form-group">
+                            <label data-i18n="labelInvitationType">نوع الدعوة</label>
+                            <div class="invitation-type-options">
+                                <label class="type-option-card">
+                                    <input type="radio" id="invitation-type" name="نوع_الدعوة" value="دعوة إلكترونية" required>
+                                    <span class="type-option-icon" aria-hidden="true">
+                                        <img src="images/invitation-digital-logo.png" alt="">
+                                    </span>
+                                    <span class="type-option-text" data-i18n="optDigital">دعوة إلكترونية</span>
+                                </label>
+                                <label class="type-option-card">
+                                    <input type="radio" name="نوع_الدعوة" value="دعوة مطبوعة">
+                                    <span class="type-option-icon" aria-hidden="true">
+                                        <img src="images/invitation-printed-logo.png" alt="">
+                                    </span>
+                                    <span class="type-option-text" data-i18n="optPrinted">دعوة مطبوعة</span>
+                                    <span class="type-option-note" data-i18n="printedFeeNote">يوجد رسوم للطباعه</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-i18n="labelInvitationSize">مقاس بطاقة الدعوة</label>
+                            <div class="invitation-size-options">
+                                <label class="size-option-card">
+                                    <input type="radio" id="invitation-size" name="حجم_الدعوة" value="9x5.5cm" required>
+                                    <span class="size-card-preview size-card-preview-small"></span>
+                                    <span class="size-card-text">
+                                        <span>9×5.5 cm</span>
+                                        <span class="printed-size-price hidden" data-i18n="printedSmallSizeFee">(+0.050 للبطاقة)</span>
+                                    </span>
+                                </label>
+                                <label class="size-option-card">
+                                    <input type="radio" name="حجم_الدعوة" value="9x16cm">
+                                    <span class="size-card-preview size-card-preview-large"></span>
+                                    <span class="size-card-text">
+                                        <span>9×16 cm</span>
+                                        <span class="printed-size-price hidden" data-i18n="printedLargeSizeFee">(+0.070 للبطاقة)</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="calc-design" value="0">
+
+                        <div class="form-group">
+                            <label data-i18n="labelDesignType">نوع التصميم</label>
+                            <div class="design-type-options">
+                                <label class="design-option-card">
+                                    <input type="radio" name="نوع_التصميم" id="design-ready" value="نموذج جاهز" required>
+                                    <span class="design-option-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+                                            <path d="M8 7h8"></path>
+                                            <path d="M8 11h8"></path>
+                                            <path d="M8 15h5"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="design-option-text" data-i18n="optReadyTemplate">نموذج جاهز</span>
+                                </label>
+                                <label class="design-option-card">
+                                    <input type="radio" name="نوع_التصميم" id="design-custom" value="تصميم مخصص">
+                                    <span class="design-option-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m14 4 6 6"></path>
+                                            <path d="M5 19l4.5-1 9-9a2.1 2.1 0 0 0-3-3l-9 9L5 19z"></path>
+                                            <path d="M12 7l5 5"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="design-option-text" data-i18n="optCustomDesignText">تصميم مخصص</span>
+                                    <span class="design-option-price" data-i18n="customDesignPrice">+0.040 ر.ع للبطاقة</span>
+                                </label>
+                            </div>
+                            <p class="custom-note hidden" id="custom-design-note" data-i18n="customDesignNote">يمكنك وصف التصميم الذي تريده، أو إرسال نموذج مشابه لنصممه لك.</p>
+                            <input type="hidden" id="selected-template" name="النموذج_المختار" value="">
+                            <div id="template-gallery" class="template-gallery hidden">
+                                <p class="template-gallery-title" data-i18n="templateGalleryTitle">اختر نموذجاً من القائمة</p>
+                                <div class="template-grid" id="template-grid">
+                                    <!-- Templates injected by JS based on selected size -->
+                                </div>
+                                <p id="select-size-first-msg" class="template-size-msg hidden" data-i18n="selectSizeFirst">يرجى اختيار مقاس الدعوة لعرض النماذج المناسبة</p>
+                            </div>
+                        </div>
+
+                        <!-- Wedding Personalization Options -->
+                        <div class="form-group hidden" id="letters-group">
+                            <label data-i18n="labelWeddingPersonalization">تفاصيل بطاقة الزفاف</label>
+                            <div class="design-type-options wedding-detail-options">
+                                <label class="design-option-card">
+                                    <input type="radio" name="تفاصيل_الزفاف" id="wedding-letters" value="أحرف">
+                                    <span class="design-option-text" data-i18n="optWeddingLetters">أحرف</span>
+                                </label>
+                                <label class="design-option-card">
+                                    <input type="radio" name="تفاصيل_الزفاف" id="wedding-names" value="أسماء">
+                                    <span class="design-option-text" data-i18n="optWeddingNames">أسماء</span>
+                                </label>
+                            </div>
+                            <div class="form-row hidden" id="wedding-letters-fields">
+                                <select id="letter-1" class="letter-select">
+                                    <option value="" disabled selected data-i18n="optLetter1">الحرف الأول</option>
+                                    <option value="أ">أ</option>
+                                    <option value="ب">ب</option>
+                                    <option value="ت">ت</option>
+                                    <option value="ث">ث</option>
+                                    <option value="ج">ج</option>
+                                    <option value="ح">ح</option>
+                                    <option value="خ">خ</option>
+                                    <option value="د">د</option>
+                                    <option value="ذ">ذ</option>
+                                    <option value="ر">ر</option>
+                                    <option value="ز">ز</option>
+                                    <option value="س">س</option>
+                                    <option value="ش">ش</option>
+                                    <option value="ص">ص</option>
+                                    <option value="ض">ض</option>
+                                    <option value="ط">ط</option>
+                                    <option value="ظ">ظ</option>
+                                    <option value="ع">ع</option>
+                                    <option value="غ">غ</option>
+                                    <option value="ف">ف</option>
+                                    <option value="ق">ق</option>
+                                    <option value="ك">ك</option>
+                                    <option value="ل">ل</option>
+                                    <option value="م">م</option>
+                                    <option value="ن">ن</option>
+                                    <option value="هـ">هـ</option>
+                                    <option value="و">و</option>
+                                    <option value="ي">ي</option>
+                                </select>
+                                <select id="letter-2" class="letter-select">
+                                    <option value="" disabled selected data-i18n="optLetter2">الحرف الثاني</option>
+                                    <option value="أ">أ</option>
+                                    <option value="ب">ب</option>
+                                    <option value="ت">ت</option>
+                                    <option value="ث">ث</option>
+                                    <option value="ج">ج</option>
+                                    <option value="ح">ح</option>
+                                    <option value="خ">خ</option>
+                                    <option value="د">د</option>
+                                    <option value="ذ">ذ</option>
+                                    <option value="ر">ر</option>
+                                    <option value="ز">ز</option>
+                                    <option value="س">س</option>
+                                    <option value="ش">ش</option>
+                                    <option value="ص">ص</option>
+                                    <option value="ض">ض</option>
+                                    <option value="ط">ط</option>
+                                    <option value="ظ">ظ</option>
+                                    <option value="ع">ع</option>
+                                    <option value="غ">غ</option>
+                                    <option value="ف">ف</option>
+                                    <option value="ق">ق</option>
+                                    <option value="ك">ك</option>
+                                    <option value="ل">ل</option>
+                                    <option value="م">م</option>
+                                    <option value="ن">ن</option>
+                                    <option value="هـ">هـ</option>
+                                    <option value="و">و</option>
+                                    <option value="ي">ي</option>
+                                </select>
+                            </div>
+                            <div class="form-row hidden" id="wedding-names-fields">
+                                <input type="text" id="wedding-name-1" name="اسم_الزفاف_الأول" placeholder="الاسم الأول" data-i18n="phWeddingName1">
+                                <input type="text" id="wedding-name-2" name="اسم_الزفاف_الثاني" placeholder="الاسم الثاني" data-i18n="phWeddingName2">
+                            </div>
+                        </div>
+
+                        <div id="template-lightbox" aria-hidden="true">
+                            <button type="button" id="lightbox-close" aria-label="Close">×</button>
+                            <img id="lightbox-image" src="" alt="">
+                        </div>
+
+                        <div class="calc-group calc-toggle-group" id="security-group">
+                            <div class="toggle-label-container">
+                                <span data-i18n="labelSecurity">موظف سكيورتي</span>
+                                <span class="price-tag" data-i18n="securityPriceNote">+25.000 ريال عماني</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="security-toggle" name="السكيورتي">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div id="calc-warning" class="calc-warning hidden">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                class="warning-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span data-i18n="calcMinWarning">أقل عدد للطلب هو 50 بطاقة</span>
+                        </div>
+
+                        <div id="calc-results" class="calc-results hidden">
+                            <div class="result-row">
+                                <span class="result-label" data-i18n="calcBasePriceLabel">قيمة الباقة الأساسية:</span>
+                                <div class="result-value"><span id="calc-base-price">0.00</span> <small data-i18n="currency"></small></div>
+                            </div>
+                            <div class="result-row hidden" id="calc-design-row">
+                                <span class="result-label">
+                                    <span data-i18n="calcDesignPriceLabel">رسوم التصميم الاحترافي:</span>
+                                    <span id="design-discount-badge" class="discount-badge hidden" data-i18n="discount50">خصم 50%</span>
+                                </span>
+                                <div class="result-value">
+                                    <span id="calc-design-old-price" style="text-decoration: line-through; color: #888; font-size: 0.9em; margin-left: 8px; display: none;"></span>
+                                    <span id="calc-design-price">0.00</span> <small data-i18n="currency"></small>
+                                </div>
+                            </div>
+                            <div class="result-row hidden" id="calc-security-row">
+                                <span class="result-label" data-i18n="calcSecurityLabel">رسوم السكيورتي:</span>
+                                <div class="result-value"><span id="calc-security-price">25.000</span> <small data-i18n="currency"></small></div>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">
+                                    <span data-i18n="calcDeliveryLabel">رسوم التوصيل:</span>
+                                    <span class="free-badge" data-i18n="freeBadge">مجاناً</span>
+                                </span>
+                                <div class="result-value">
+                                    <span style="text-decoration: line-through; color: #888; font-size: 0.9em; margin-left: 8px;">2.000</span>
+                                    <span data-i18n="calcFree">0.00</span> <small data-i18n="currency"></small>
+                                </div>
+                            </div>
+                            <div class="result-row total-row">
+                                <span class="result-label" data-i18n="calcTotalPriceLabel">إجمالي قيمة الطلب:</span>
+                                <div class="result-value"><span id="calc-total-price">0.00</span> <small data-i18n="currency"></small></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group msg-group">
+                            <label for="message" data-i18n="labelMessage">الرسالة (اختياري)</label>
+                            <textarea id="message" name="ملاحظات_إضافية" rows="4" autocomplete="off" data-lpignore="true" data-form-type="other"
+                                placeholder="يرجى تزويدنا بتفاصيل التصميم أو الألوان المناسبة، ويمكنك إرسال نموذج التصميم الذي تحتاجه عبر الواتساب." data-i18n="phMessage"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-submit-order"
+                            id="submit-btn" data-i18n="btnSubmit">إرسال الطلب</button>
+                        <div id="form-message" class="form-message hidden"></div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Inquiry Section -->
+    <section id="contact" class="contact section-padding bg-light">
+        <div class="container">
+            <div class="contact-info">
+                <h2 data-i18n="inquiryTitle">للاستفسار</h2>
+                <p data-i18n="inquiryDesc">نسعد بتواصلكم معنا لتلبية احتياجات مناسباتكم. فريقنا جاهز لخدمتكم.</p>
+
+                <div class="social-actions">
+                    <a href="https://api.whatsapp.com/send?phone=96896001636" target="_blank" class="btn btn-social">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
+                            <path
+                                d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" />
+                        </svg>
+                        <span data-i18n="btnWhatsapp">تواصل عبر واتساب</span>
+                    </a>
+
+                    <a href="https://www.instagram.com/qrevent.om?igsh=czBsbjhtZDBkZmxh&utm_source=qr"
+                        target="_blank" class="btn btn-social">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                        <span data-i18n="btnInstagram">تواصل عبر انستجرام</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-i18n="faqTitle">الأسئلة الشائعة</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span data-i18n="faqQ1">هل يمكن مشاركة بطاقة الـ QR مع أكثر من شخص؟</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faqA1">لا، كل رمز QR يتم إنشاؤه بشكل فريد ومخصص لدخول واحد فقط، لضمان تجربة دخول آمنة ومنظمة لجميع الضيوف.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span data-i18n="faqQ2">هل يمكن طلب تصميم مخصص؟</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faqA2">نعم، يمكنك إضافة تصميم مخصص مقابل 0.040 ر.ع لكل بطاقة، لنقدّم لك بطاقة QR بتصميم أنيق يعكس هوية مناسبتك بأسلوب راقٍ واحترافي، مع لمسات مميزة تضيف تجربة دخول أكثر فخامة وتنظيماً لضيوفك.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span data-i18n="faqQ3">هل يمكن استلام الطلب قبل ٧ أيام؟</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faqA3">يعتمد وقت التجهيز على الكمية المطلوبة والتعديلات الخاصة بالتصميم، ولكن في حال عدم وجود ضغط على الطلبات قد يتم تجهيز طلبك قبل المدة المحددة. وفي حال الانتهاء من التجهيز مبكراً، سيتم التواصل معك مباشرة لإبلاغك بموعد الاستلام.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <img src="images/IMG_1449.PNG" alt="Event QR Logo" class="footer-logo">
+                <h4 data-i18n="footerBrand">Event QR Tech Tricks</h4>
+                <p data-i18n="footerDesc">الحل الأمثل لدعوات عصرية وذكية تليق بضيوفك.</p>
+                <div class="footer-links">
+                    <h4 data-i18n="quickLinks">روابط سريعة</h4>
+                    <ul>
+                        <li><a href="#home" data-i18n="navHome">الرئيسية</a></li>
+                        <li><a href="#pricing" data-i18n="navOffers">للطلب</a></li>
+                        <li><a href="#contact" data-i18n="navInquiry">للاستفسار</a></li>
+                    </ul>
+                    <div class="footer-contact-details">
+                        <a href="tel:+96896001636" dir="ltr">
+                            <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.91.33 1.8.62 2.65a2 2 0 0 1-.45 2.11L8 9.75a16 16 0 0 0 6.25 6.25l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.74.5 2.65.62A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            <span>+968 9600 1636</span>
+                        </a>
+                        <a href="mailto:eventqr.om@gmail.com">
+                            <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                                <path d="m3 7 9 6 9-6"></path>
+                            </svg>
+                            <span>eventqr.om@gmail.com</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <p data-i18n="copyright">&copy; 2026 Event QR Tech Tricks. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>
