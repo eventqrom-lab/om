@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event QR Tech Tricks | باقات الدعوات</title>
     <meta name="description" content="Smart Digital Invitations with QR Technology | دعوات رقمية ذكية بتقنية QR">
+    <link rel="icon" type="image/png" href="images/IMG_1449.PNG">
+    <link rel="shortcut icon" type="image/png" href="images/IMG_1449.PNG">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -259,43 +261,6 @@
                                 inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9٠-٩۰-۹]/g, '');">
                         </div>
 
-                        <div class="form-group">
-                            <label data-i18n="labelInvitationType">نوع الدعوة</label>
-                            <div class="invitation-type-options">
-                                <label class="type-option-card">
-                                    <input type="radio" id="invitation-type" name="نوع_الدعوة" value="دعوة إلكترونية" required>
-                                    <span class="type-option-icon" aria-hidden="true">
-                                        <img src="images/digital-phone-logo.png" alt="">
-                                    </span>
-                                    <span class="type-option-text" data-i18n="optDigital">دعوة إلكترونية</span>
-                                </label>
-                                <label class="type-option-card">
-                                    <input type="radio" name="نوع_الدعوة" value="دعوة مطبوعة">
-                                    <span class="type-option-icon" aria-hidden="true">
-                                        <img src="images/printed-card-logo.png" alt="">
-                                    </span>
-                                    <span class="type-option-text" data-i18n="optPrinted">دعوة مطبوعة</span>
-                                    <span class="type-option-note" data-i18n="printedFeeNote">يوجد رسوم للطباعه</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label data-i18n="labelInvitationSize">مقاس بطاقة الدعوة</label>
-                            <div class="invitation-size-options">
-                                <label class="size-option-card">
-                                    <input type="radio" id="invitation-size" name="حجم_الدعوة" value="9x5.5cm" required>
-                                    <span class="size-card-preview size-card-preview-small"></span>
-                                    <span class="size-card-text">9×5.5 cm</span>
-                                </label>
-                                <label class="size-option-card">
-                                    <input type="radio" name="حجم_الدعوة" value="9x16cm">
-                                    <span class="size-card-preview size-card-preview-large"></span>
-                                    <span class="size-card-text">9×16 cm</span>
-                                </label>
-                            </div>
-                        </div>
-
                         <input type="hidden" id="calc-design" value="0">
 
                         <div class="form-group">
@@ -333,7 +298,44 @@
                                 <div class="template-grid" id="template-grid">
                                     <!-- Templates injected by JS based on selected size -->
                                 </div>
-                                <p id="select-size-first-msg" class="template-size-msg hidden" data-i18n="selectSizeFirst">يرجى اختيار الحجم أولاً لعرض النماذج المناسبة</p>
+                                <p id="select-size-first-msg" class="template-size-msg hidden" data-i18n="selectSizeFirst">يرجى اختيار مقاس الدعوة لعرض النماذج المناسبة</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-i18n="labelInvitationType">نوع الدعوة</label>
+                            <div class="invitation-type-options">
+                                <label class="type-option-card">
+                                    <input type="radio" id="invitation-type" name="نوع_الدعوة" value="دعوة إلكترونية" required>
+                                    <span class="type-option-icon" aria-hidden="true">
+                                        <img src="images/digital-phone-logo.png" alt="">
+                                    </span>
+                                    <span class="type-option-text" data-i18n="optDigital">دعوة إلكترونية</span>
+                                </label>
+                                <label class="type-option-card">
+                                    <input type="radio" name="نوع_الدعوة" value="دعوة مطبوعة">
+                                    <span class="type-option-icon" aria-hidden="true">
+                                        <img src="images/printed-card-logo.png" alt="">
+                                    </span>
+                                    <span class="type-option-text" data-i18n="optPrinted">دعوة مطبوعة</span>
+                                    <span class="type-option-note" data-i18n="printedFeeNote">يوجد رسوم للطباعه</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-i18n="labelInvitationSize">مقاس بطاقة الدعوة</label>
+                            <div class="invitation-size-options">
+                                <label class="size-option-card">
+                                    <input type="radio" id="invitation-size" name="حجم_الدعوة" value="9x5.5cm" required>
+                                    <span class="size-card-preview size-card-preview-small"></span>
+                                    <span class="size-card-text">9×5.5 cm</span>
+                                </label>
+                                <label class="size-option-card">
+                                    <input type="radio" name="حجم_الدعوة" value="9x16cm">
+                                    <span class="size-card-preview size-card-preview-large"></span>
+                                    <span class="size-card-text">9×16 cm</span>
+                                </label>
                             </div>
                         </div>
 
