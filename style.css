@@ -3377,8 +3377,15 @@ textarea {
     .date-selector-container,
     .time-selector-container {
         display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 8px;
+    }
+
+    .date-selector-container {
+        grid-template-columns: 0.78fr 1.22fr 1fr;
+    }
+
+    .time-selector-container {
+        grid-template-columns: 1fr 1fr 1.1fr;
     }
 
     .date-field {
@@ -3395,8 +3402,8 @@ textarea {
     .time-selector-container select {
         height: 48px;
         min-height: 48px;
-        padding-inline: 12px;
-        font-size: 0.95rem;
+        padding-inline: 8px;
+        font-size: 0.9rem;
     }
 
     .invitation-size-options,
@@ -3404,8 +3411,8 @@ textarea {
     .design-type-options,
     .wedding-detail-options {
         display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
     }
 
     .size-option-card,
@@ -3421,19 +3428,19 @@ textarea {
 
     .type-option-card,
     .invitation-type-options .type-option-card {
-        grid-template-columns: 46px minmax(0, 1fr);
-        place-items: center start;
-        text-align: start;
+        grid-template-columns: 1fr;
+        place-items: center;
+        text-align: center;
     }
 
     html[dir="rtl"] .type-option-card,
     html[dir="rtl"] .invitation-type-options .type-option-card {
-        place-items: center end;
+        place-items: center;
     }
 
     .type-option-icon,
     .invitation-type-options .type-option-icon {
-        grid-row: 1 / span 2;
+        grid-row: auto;
         width: 42px;
         height: 42px;
     }
@@ -3450,21 +3457,21 @@ textarea {
         grid-row: auto;
         width: 100%;
         font-size: 0.72rem;
-        text-align: inherit;
+        text-align: center;
     }
 
     .design-option-card {
-        grid-template-columns: 42px minmax(0, 1fr);
-        grid-template-rows: auto auto;
-        text-align: start;
+        grid-template-columns: 1fr;
+        grid-template-rows: 42px auto auto;
+        text-align: center;
     }
 
     html[dir="rtl"] .design-option-card {
-        text-align: right;
+        text-align: center;
     }
 
     .design-option-icon {
-        grid-row: 1 / span 2;
+        grid-row: 1;
     }
 
     .design-option-text,
@@ -3475,6 +3482,21 @@ textarea {
 
     .price-tag-stacked {
         white-space: normal;
+    }
+
+    .size-option-card {
+        display: grid;
+        grid-template-columns: 1fr;
+        place-items: center;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .size-card-text,
+    .type-option-text,
+    .design-option-text {
+        font-size: 0.82rem;
+        line-height: 1.3;
     }
 
     .calc-toggle-group,
@@ -3517,6 +3539,19 @@ textarea {
         text-align: center;
     }
 
+    .calc-warning {
+        gap: 8px;
+        padding: 12px 10px;
+        font-size: 0.82rem;
+        line-height: 1.35;
+        white-space: nowrap;
+    }
+
+    .calc-warning .warning-icon {
+        width: 18px;
+        height: 18px;
+    }
+
     .social-actions {
         width: 100%;
     }
@@ -3543,14 +3578,56 @@ textarea {
         font-size: 2rem;
     }
 
-    .date-selector-container,
+    .date-selector-container {
+        grid-template-columns: 0.72fr 1.18fr 0.95fr;
+        gap: 6px;
+    }
+
     .time-selector-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 0.9fr 0.9fr 1fr;
+        gap: 6px;
     }
 
     .date-selector-container select,
     .time-selector-container select {
-        padding-inline: 10px;
-        font-size: 0.9rem;
+        padding-inline: 6px;
+        font-size: 0.78rem;
+    }
+
+    .invitation-size-options,
+    .invitation-type-options,
+    .design-type-options,
+    .wedding-detail-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .size-option-card,
+    .type-option-card,
+    .design-option-card,
+    .invitation-type-options .type-option-card {
+        padding: 10px 6px;
+    }
+
+    .size-card-text,
+    .type-option-text,
+    .design-option-text {
+        font-size: 0.76rem;
+    }
+
+    .type-option-note,
+    .design-option-price {
+        font-size: 0.64rem;
+    }
+
+    .calc-warning {
+        gap: 6px;
+        padding: 10px 8px;
+        font-size: 0.72rem;
+    }
+
+    .calc-warning .warning-icon {
+        width: 16px;
+        height: 16px;
     }
 }

@@ -96,11 +96,11 @@
                             <div class="input-group-with-prefix" dir="ltr">
                                 <span class="input-prefix">+968</span>
                                 <input type="tel" id="phone" name="رقم_الجوال" required autocomplete="new-password" data-lpignore="true" data-form-type="other" placeholder="أدخل رقم الجوال"
-                                    maxlength="8" minlength="8" pattern="^[97٩٧][0-9٠-٩]{7}$"
+                                    maxlength="8" minlength="8" pattern="[97٩٧۹۷][0-9٠-٩۰-۹]{7}"
                                     oninput="
                                         this.value = this.value.replace(/[^0-9٠-٩۰-۹]/g, '').slice(0, 8);
                                         const first = this.value[0];
-                                        if (this.value.length > 0 && !['9', '7', '٩', '٧'].includes(first)) {
+                                        if (this.value.length > 0 && !['9', '7', '٩', '٧', '۹', '۷'].includes(first)) {
                                             this.classList.add('invalid-input');
                                         } else {
                                             this.classList.remove('invalid-input');
@@ -181,6 +181,15 @@
                                 inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9٠-٩۰-۹]/g, '');">
                         </div>
 
+                        <div id="calc-warning" class="calc-warning hidden">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                class="warning-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span data-i18n="calcMinWarning">أقل عدد للطلب هو 30 بطاقة وأقصى عدد هو 1000</span>
+                        </div>
+
                         <div class="form-group">
                             <label data-i18n="labelInvitationType">نوع الدعوة</label>
                             <div class="invitation-type-options">
@@ -245,9 +254,10 @@
                                     <input type="radio" name="نوع_التصميم" id="design-custom" value="تصميم مخصص">
                                     <span class="design-option-icon" aria-hidden="true">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="m14 4 6 6"></path>
-                                            <path d="M5 19l4.5-1 9-9a2.1 2.1 0 0 0-3-3l-9 9L5 19z"></path>
-                                            <path d="M12 7l5 5"></path>
+                                            <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+                                            <path d="M8 7h7"></path>
+                                            <path d="M8 11h4"></path>
+                                            <path d="M13.5 17.5 18 13a1.4 1.4 0 0 0-2-2l-4.5 4.5L11 18l2.5-.5z"></path>
                                         </svg>
                                     </span>
                                     <span class="design-option-text" data-i18n="optCustomDesignText">تصميم مخصص</span>
@@ -362,15 +372,6 @@
                                 <input type="checkbox" id="security-toggle" name="السكيورتي">
                                 <span class="slider"></span>
                             </label>
-                        </div>
-
-                        <div id="calc-warning" class="calc-warning hidden">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                class="warning-icon">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                            <span data-i18n="calcMinWarning">أقل عدد للطلب هو 50 بطاقة</span>
                         </div>
 
                         <div id="calc-results" class="calc-results hidden">

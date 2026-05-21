@@ -386,10 +386,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const phoneGroup = phoneInput.closest('.input-group-with-prefix');
         const updatePhoneState = () => {
             const phoneValue = convertToEnglish(phoneInput.value);
-            const hasInvalidStart = phoneValue.length > 0 && !/^[97]/.test(phoneValue);
-            phoneInput.classList.toggle('invalid-input', hasInvalidStart);
+            const hasInvalidValue = phoneValue.length > 0 && !/^[97]\d{0,7}$/.test(phoneValue);
+            phoneInput.classList.toggle('invalid-input', hasInvalidValue);
             if (phoneGroup) {
-                phoneGroup.classList.toggle('phone-invalid', hasInvalidStart);
+                phoneGroup.classList.toggle('phone-invalid', hasInvalidValue);
             }
         };
 
@@ -1000,6 +1000,74 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         }
 
+        function setFormError(message, target) {
+            if (formMessage) {
+                formMessage.textContent = message;
+                formMessage.classList.remove('hidden');
+                formMessage.classList.add('error');
+            }
+
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (typeof target.focus === 'function') {
+                    target.focus({ preventScroll: true });
+                }
+            }
+        }
+
+        function validateQuantityRange() {
+            if (!calcQtyInput) return true;
+
+            const qtyValue = convertToEnglish(calcQtyInput.value.trim());
+            const qty = Number(qtyValue);
+            const isValidQuantity = /^\d+$/.test(qtyValue) && qty >= 30 && qty <= 1000;
+
+            if (!isValidQuantity) {
+                const message = currentLang === 'ar'
+                    ? 'أقل عدد للطلب هو 30 بطاقة وأقصى عدد هو 1000'
+                    : 'Minimum order is 30 cards and maximum is 1000.';
+                const warningText = document.querySelector('#calc-warning span');
+                if (warningText) warningText.textContent = message;
+                if (calcWarning) calcWarning.classList.remove('hidden');
+                if (calcResults) calcResults.classList.add('hidden');
+                if (formMessage) {
+                    formMessage.classList.add('hidden');
+                    formMessage.classList.remove('error');
+                    formMessage.textContent = '';
+                }
+                calcQtyInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                calcQtyInput.focus({ preventScroll: true });
+                return false;
+            }
+
+            if (calcWarning) calcWarning.classList.add('hidden');
+            return true;
+        }
+
+        function validatePhoneNumber() {
+            const phoneField = document.getElementById('phone');
+            if (!phoneField) return true;
+
+            const phoneVal = convertToEnglish(phoneField.value.trim());
+            const isValidPhone = /^[97]\d{7}$/.test(phoneVal);
+            const phoneGroup = phoneField.closest('.input-group-with-prefix');
+
+            phoneField.classList.toggle('invalid-input', !isValidPhone);
+            if (phoneGroup) phoneGroup.classList.toggle('phone-invalid', !isValidPhone);
+
+            if (!isValidPhone) {
+                setFormError(
+                    currentLang === 'ar'
+                        ? 'رقم الجوال يجب أن يكون 8 أرقام ويبدأ بـ 9 أو 7'
+                        : 'Phone number must be 8 digits and start with 9 or 7.',
+                    phoneField
+                );
+                return false;
+            }
+
+            return true;
+        }
+
         requiredOptionGroups.forEach((group) => {
             inquiryForm.querySelectorAll(`input[name="${group.name}"]`).forEach((input) => {
                 input.addEventListener('change', () => {
@@ -1022,19 +1090,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!validateRequiredOptionGroups()) {
                 return;
             }
+
+            if (!validateQuantityRange()) {
+                return;
+            }
+
+            if (!validatePhoneNumber()) {
+                return;
+            }
             
             // Basic validation check
             if (!inquiryForm.checkValidity()) {
                 inquiryForm.reportValidity();
-                return;
-            }
-
-            // Phone validation check (Starts with 9 or 7)
-            const phoneField = document.getElementById('phone');
-            const phoneVal = convertToEnglish(phoneField.value);
-            if (!/^[97]/.test(phoneVal)) {
-                alert(currentLang === 'ar' ? 'يجب أن يبدأ رقم الجوال بـ 9 أو 7' : 'Phone number must start with 9 or 7');
-                phoneField.focus();
                 return;
             }
 
