@@ -3277,3 +3277,280 @@ html[lang="en"] .contact-info h2 {
         font-size: 0.78rem;
     }
 }
+
+/* Mobile stability overrides */
+img,
+svg,
+video {
+    max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+@media (max-width: 768px) {
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        min-width: 0;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding-inline: 16px;
+    }
+
+    .section-padding {
+        padding: 56px 0;
+    }
+
+    .navbar,
+    .navbar.scrolled {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .nav-container {
+        min-width: 0;
+    }
+
+    .logo {
+        min-width: 0;
+        max-width: calc(100% - 96px);
+    }
+
+    .logo-text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .hero {
+        min-height: auto;
+        padding: 100px 0 48px;
+    }
+
+    .hero-title {
+        font-size: clamp(2.05rem, 11vw, 2.85rem);
+        line-height: 1.22;
+        overflow-wrap: anywhere;
+    }
+
+    .hero-desc,
+    .section-title p,
+    .contact-info p,
+    .footer-brand p,
+    .faq-answer p {
+        overflow-wrap: anywhere;
+    }
+
+    .calculator-container,
+    .calculator-card,
+    .inquiry-form {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .calculator-card {
+        padding: 22px 16px;
+        overflow: hidden;
+    }
+
+    input,
+    select,
+    textarea {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .input-group-with-prefix input {
+        min-width: 0;
+    }
+
+    .date-selector-container,
+    .time-selector-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .date-field {
+        min-width: 0;
+    }
+
+    .date-field-label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.82rem;
+    }
+
+    .date-selector-container select,
+    .time-selector-container select {
+        height: 48px;
+        min-height: 48px;
+        padding-inline: 12px;
+        font-size: 0.95rem;
+    }
+
+    .invitation-size-options,
+    .invitation-type-options,
+    .design-type-options,
+    .wedding-detail-options {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .size-option-card,
+    .type-option-card,
+    .design-option-card,
+    .invitation-type-options .type-option-card {
+        min-height: auto;
+        width: 100%;
+        padding: 14px 12px;
+        grid-template-rows: none;
+        align-content: center;
+    }
+
+    .type-option-card,
+    .invitation-type-options .type-option-card {
+        grid-template-columns: 46px minmax(0, 1fr);
+        place-items: center start;
+        text-align: start;
+    }
+
+    html[dir="rtl"] .type-option-card,
+    html[dir="rtl"] .invitation-type-options .type-option-card {
+        place-items: center end;
+    }
+
+    .type-option-icon,
+    .invitation-type-options .type-option-icon {
+        grid-row: 1 / span 2;
+        width: 42px;
+        height: 42px;
+    }
+
+    .type-option-text,
+    .invitation-type-options .type-option-text {
+        grid-row: auto;
+        width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .type-option-note,
+    .invitation-type-options .type-option-note {
+        grid-row: auto;
+        width: 100%;
+        font-size: 0.72rem;
+        text-align: inherit;
+    }
+
+    .design-option-card {
+        grid-template-columns: 42px minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        text-align: start;
+    }
+
+    html[dir="rtl"] .design-option-card {
+        text-align: right;
+    }
+
+    .design-option-icon {
+        grid-row: 1 / span 2;
+    }
+
+    .design-option-text,
+    .design-option-price {
+        grid-row: auto;
+        width: 100%;
+    }
+
+    .price-tag-stacked {
+        white-space: normal;
+    }
+
+    .calc-toggle-group,
+    .result-row,
+    .invoice-row,
+    .invoice-total {
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .result-row,
+    .invoice-row,
+    .invoice-total {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .result-value,
+    .invoice-row .value,
+    .invoice-total .value {
+        justify-content: flex-start;
+        overflow-wrap: anywhere;
+    }
+
+    html[dir="rtl"] .result-value,
+    html[dir="rtl"] .invoice-row .value,
+    html[dir="rtl"] .invoice-total .value {
+        justify-content: flex-end;
+    }
+
+    .total-row .result-value {
+        font-size: 2rem;
+    }
+
+    .btn,
+    .btn-social,
+    .btn-submit-order {
+        min-width: 0;
+        white-space: normal;
+        text-align: center;
+    }
+
+    .social-actions {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .container {
+        padding-inline: 12px;
+    }
+
+    .calculator-card {
+        padding: 18px 12px;
+    }
+
+    .logo-text {
+        max-width: 136px;
+    }
+
+    .hero-title {
+        font-size: clamp(1.9rem, 10vw, 2.25rem);
+    }
+
+    .section-title h2 {
+        font-size: 2rem;
+    }
+
+    .date-selector-container,
+    .time-selector-container {
+        grid-template-columns: 1fr;
+    }
+
+    .date-selector-container select,
+    .time-selector-container select {
+        padding-inline: 10px;
+        font-size: 0.9rem;
+    }
+}
