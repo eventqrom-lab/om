@@ -121,6 +121,7 @@ const translations = {
         dateYearLabel: "السنة:",
         customDesignNote: "يمكنك وصف التصميم الذي تريده، أو إرسال نموذج مشابه لنصممه لك.",
         calcBasePriceLabel: "قيمة الباقة الأساسية:",
+        calcPrintingPriceLabel: "سعر الطباعه:",
         calcDesignPriceLabel: "رسوم التصميم:",
         calcDeliveryLabel: "رسوم التوصيل:",
         calcFree: "0.000",
@@ -272,6 +273,7 @@ const translations = {
         dateYearLabel: "Year:",
         customDesignNote: "You can describe the design you want, or send a similar sample for us to design.",
         calcBasePriceLabel: "Base Package Value:",
+        calcPrintingPriceLabel: "Printing Price:",
         calcDesignPriceLabel: "Design Fee:",
         calcDeliveryLabel: "Delivery Fee:",
         calcFree: "0.000",
@@ -783,7 +785,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Hide today and the next 7 days from the event date selectors.
+    // Hide today and tomorrow from the event date selectors.
     const daySelect = document.getElementById('event-day');
     const monthSelect = document.getElementById('event-month');
     const yearSelect = document.getElementById('event-year');
@@ -791,7 +793,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (daySelect && monthSelect && yearSelect) {
         function getMinAllowedDate() {
             const date = new Date();
-            date.setDate(date.getDate() + 8);
+            date.setDate(date.getDate() + 2);
             date.setHours(0, 0, 0, 0);
             return date;
         }
@@ -799,8 +801,8 @@ document.addEventListener('DOMContentLoaded', () => {
         function populateYears() {
             const minAllowed = getMinAllowedDate();
             const selectedYear = yearSelect.value;
-            const startYear = minAllowed.getFullYear();
-            const endYear = startYear + 2;
+            const startYear = new Date().getFullYear();
+            const endYear = startYear + 7;
 
             yearSelect.innerHTML = '';
             for (let year = startYear; year <= endYear; year++) {
@@ -883,6 +885,25 @@ document.addEventListener('DOMContentLoaded', () => {
         monthSelect.addEventListener('change', updateDays);
 
         refreshDateSelectors();
+    }
+
+    // Date Toggle Logic
+    const toggleDate = document.getElementById('toggle-date');
+    const dateGroup = document.getElementById('date-group');
+
+    if (toggleDate && dateGroup && daySelect && monthSelect && yearSelect) {
+        function setDateFieldsEnabled(isEnabled) {
+            dateGroup.classList.toggle('hidden', !isEnabled);
+            [daySelect, monthSelect, yearSelect].forEach((select) => {
+                select.disabled = !isEnabled;
+                select.required = isEnabled;
+            });
+        }
+
+        setDateFieldsEnabled(toggleDate.checked);
+        toggleDate.addEventListener('change', (e) => {
+            setDateFieldsEnabled(e.target.checked);
+        });
     }
 
 
@@ -1122,11 +1143,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const rawObject = Object.fromEntries(formData);
             
             // Format specific fields
-            const eventDay = document.getElementById('event-day').value;
-            const eventMonthSelect = document.getElementById('event-month');
-            const eventMonth = eventMonthSelect.options[eventMonthSelect.selectedIndex].textContent;
-            const eventYear = document.getElementById('event-year').value;
-            const eventDate = `${eventDay}-${eventMonth}-${eventYear}`;
+            let eventDate = "";
+            const isDateEnabled = document.getElementById('toggle-date').checked;
+            if (isDateEnabled) {
+                const eventDay = document.getElementById('event-day').value;
+                const eventMonthSelect = document.getElementById('event-month');
+                const eventMonth = eventMonthSelect.options[eventMonthSelect.selectedIndex].textContent;
+                const eventYear = document.getElementById('event-year').value;
+                eventDate = `${eventDay}-${eventMonth}-${eventYear}`;
+            } else {
+                eventDate = currentLang === 'ar' ? "لم يحدد" : "Not specified";
+            }
 
             let eventTime = "";
             if (document.getElementById('toggle-time').checked) {
@@ -1153,6 +1180,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const selectedLetters = (l1 && l2) ? `${l1} & ${l2}` : (currentLang === 'ar' ? "لا يوجد" : "None");
             const selectedNames = (name1 && name2) ? `${name1} & ${name2}` : (currentLang === 'ar' ? "لا يوجد" : "None");
 
+            const basePackagePrice = document.getElementById('calc-base-price').textContent + " OMR";
+            const printingPrice = document.getElementById('calc-printing-price').textContent + " OMR";
+            const designPrice = document.getElementById('calc-design-price').textContent + " OMR";
             const finalPrice = document.getElementById('calc-total-price').textContent + " OMR";
 
             // Create Organized Object for Web3Forms (Labels in Arabic for professional email)
@@ -1177,6 +1207,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 "نوع_التصميم": rawObject["نوع_التصميم"],
                 "النموذج_المختار": document.getElementById('selected-template').value || (currentLang === 'ar' ? "لا يوجد" : "None"),
                 "السكيورتي": document.getElementById('security-toggle').checked ? (currentLang === 'ar' ? "نعم (+25.000 ريال عماني)" : "Yes (+25.000 OMR)") : (currentLang === 'ar' ? "لا" : "No"),
+                "قيمة_الباقة_الأساسية": basePackagePrice,
+                "سعر_الطباعه": printingPrice,
+                "رسوم_التصميم": designPrice,
                 "السعر_النهائي": finalPrice,
                 "ملاحظات_إضافية": rawObject["ملاحظات_إضافية"] || (currentLang === 'ar' ? "لا يوجد" : "None"),
                 "رابط_الفاتورة": "https://eventqrom-lab.github.io/bill/"
@@ -1264,9 +1297,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const calcDesignOldPriceSpan = document.getElementById('calc-design-old-price');
     const designDiscountBadge = document.getElementById('design-discount-badge');
     const calcDesignRow = document.getElementById('calc-design-row');
+    const calcPrintingRow = document.getElementById('calc-printing-row');
+    const calcPrintingPriceSpan = document.getElementById('calc-printing-price');
     const securityToggle = document.getElementById('security-toggle');
     const calcSecurityRow = document.getElementById('calc-security-row');
     const calcSecurityPriceSpan = document.getElementById('calc-security-price');
+    const BASE_CARD_PRICE = 0.040;
+    const PRINTING_SMALL_PRICE = 0.050;
+    const PRINTING_LARGE_PRICE = 0.070;
+    const CUSTOM_DESIGN_PRICE = 0.040;
+    const SECURITY_PRICE = 25;
+
+    function getSelectedInvitationType() {
+        return document.querySelector('input[name="نوع_الدعوة"]:checked');
+    }
+
+    function getSelectedInvitationSize() {
+        return document.querySelector('input[name="حجم_الدعوة"]:checked');
+    }
+
+    function getPrintingUnitPrice() {
+        const selectedInvitationType = getSelectedInvitationType();
+        const selectedSize = getSelectedInvitationSize();
+        const isPrinted = selectedInvitationType && selectedInvitationType.value === 'دعوة مطبوعة';
+
+        if (!isPrinted || !selectedSize) return 0;
+        return selectedSize.value === '9x16cm' ? PRINTING_LARGE_PRICE : PRINTING_SMALL_PRICE;
+    }
 
     function updateCalculator() {
         if (!calcQtyInput || !calcDesignToggle) return;
@@ -1289,7 +1346,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Valid quantity
         calcWarning.classList.add('hidden');
 
-        const basePrice = qty * 0.090;
+        const basePrice = qty * BASE_CARD_PRICE;
+        const printingUnitPrice = getPrintingUnitPrice();
+        const printingPrice = qty * printingUnitPrice;
         const hasCustomDesign = calcDesignToggle.checked;
 
         let designPrice = 0;
@@ -1298,7 +1357,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let discountKey = "";
 
         if (hasCustomDesign) {
-            originalDesignPrice = qty * 0.040;
+            originalDesignPrice = qty * CUSTOM_DESIGN_PRICE;
 
             if (qty >= 500) {
                 discountPercent = 0.40;
@@ -1315,10 +1374,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const hasSecurity = securityToggle && securityToggle.checked;
-        const securityPrice = hasSecurity ? 25 : 0;
-        const totalPrice = basePrice + designPrice + securityPrice;
+        const securityPrice = hasSecurity ? SECURITY_PRICE : 0;
+        const totalPrice = basePrice + printingPrice + designPrice + securityPrice;
 
         if (calcBasePriceSpan) calcBasePriceSpan.textContent = basePrice.toFixed(2);
+        if (calcPrintingRow) calcPrintingRow.classList.toggle('hidden', printingPrice <= 0);
+        if (calcPrintingPriceSpan) calcPrintingPriceSpan.textContent = printingPrice.toFixed(2);
 
         if (hasCustomDesign) {
             if (calcDesignRow) calcDesignRow.classList.remove('hidden');
@@ -1357,6 +1418,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (calcQtyInput && calcDesignToggle) {
         calcQtyInput.addEventListener('input', updateCalculator);
         calcDesignToggle.addEventListener('change', updateCalculator);
+        invitationTypeInputs.forEach((input) => input.addEventListener('change', updateCalculator));
+        invitationSizeInputs.forEach((input) => input.addEventListener('change', updateCalculator));
         if (securityToggle) securityToggle.addEventListener('change', updateCalculator);
     }
 });
