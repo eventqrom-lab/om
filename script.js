@@ -333,6 +333,57 @@ const monthNames = {
     en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 };
 
+const weddingLetterOptions = {
+    ar: ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "هـ", "و", "ي"],
+    en: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+};
+
+function getWeddingLetterIndex(select) {
+    if (!select || !select.value) return -1;
+
+    const selectedOption = select.options[select.selectedIndex];
+    if (selectedOption && selectedOption.dataset.letterIndex) {
+        return Number(selectedOption.dataset.letterIndex);
+    }
+
+    for (const letters of Object.values(weddingLetterOptions)) {
+        const index = letters.indexOf(select.value);
+        if (index !== -1) return index;
+    }
+
+    return -1;
+}
+
+function refreshWeddingLetterOptions() {
+    const letterSelects = [
+        { element: document.getElementById('letter-1'), placeholderKey: 'optLetter1' },
+        { element: document.getElementById('letter-2'), placeholderKey: 'optLetter2' }
+    ];
+
+    letterSelects.forEach(({ element, placeholderKey }) => {
+        if (!element) return;
+
+        const selectedIndex = getWeddingLetterIndex(element);
+        element.innerHTML = '';
+
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.disabled = true;
+        placeholder.textContent = translations[currentLang][placeholderKey];
+        if (selectedIndex === -1) placeholder.selected = true;
+        element.appendChild(placeholder);
+
+        weddingLetterOptions[currentLang].forEach((letter, index) => {
+            const option = document.createElement('option');
+            option.value = letter;
+            option.textContent = letter;
+            option.dataset.letterIndex = String(index);
+            if (index === selectedIndex) option.selected = true;
+            element.appendChild(option);
+        });
+    });
+}
+
 function setLanguage(lang) {
     currentLang = lang;
 
@@ -377,6 +428,8 @@ function setLanguage(lang) {
     if (typeof window.refreshMonthOptions === 'function') {
         window.refreshMonthOptions();
     }
+
+    refreshWeddingLetterOptions();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1172,7 +1225,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const weddingDetailInput = document.querySelector('input[name="تفاصيل_الزفاف"]:checked');
-            const weddingDetailType = weddingDetailInput ? weddingDetailInput.value : (currentLang === 'ar' ? "لا يوجد" : "None");
+            const weddingDetailType = weddingDetailInput
+                ? (weddingDetailInput.id === 'wedding-letters'
+                    ? translations[currentLang].optWeddingLetters
+                    : translations[currentLang].optWeddingNames)
+                : (currentLang === 'ar' ? "لا يوجد" : "None");
             const l1 = document.getElementById('letter-1').value;
             const l2 = document.getElementById('letter-2').value;
             const name1 = document.getElementById('wedding-name-1').value.trim();

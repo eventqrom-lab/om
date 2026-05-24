@@ -1046,6 +1046,28 @@ input:checked + .slider:before {
     margin-bottom: 16px;
 }
 
+.wedding-detail-options .design-option-card {
+    grid-template-rows: 56px auto;
+    min-height: 98px;
+    padding: 12px 14px;
+}
+
+.wedding-option-logo {
+    grid-row: 1;
+    display: block;
+    width: 100%;
+    height: 56px;
+    object-fit: contain;
+}
+
+.wedding-option-logo-letters {
+    max-width: 44px;
+}
+
+.wedding-option-logo-names {
+    max-width: 118px;
+}
+
 #wedding-letters-fields,
 #wedding-names-fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3567,7 +3589,7 @@ textarea {
     }
 
     .logo-text {
-        max-width: 136px;
+        max-width: none;
     }
 
     .hero-title {
@@ -3629,5 +3651,33 @@ textarea {
     .calc-warning .warning-icon {
         width: 16px;
         height: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .logo {
+        max-width: calc(100% - 76px);
+    }
+
+    .logo-text {
+        max-width: none;
+        font-size: 0.9rem;
+        letter-spacing: 0;
+        text-overflow: clip;
+    }
+
+    .lang-btn {
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 360px) {
+    .logo-img {
+        width: 34px;
+        height: 34px;
+    }
+
+    .logo-text {
+        font-size: 0.82rem;
     }
 }
