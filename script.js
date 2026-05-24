@@ -1349,6 +1349,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const calcWarning = document.getElementById('calc-warning');
     const calcResults = document.getElementById('calc-results');
     const calcTotalPriceSpan = document.getElementById('calc-total-price');
+    const calcTotalOldPriceSpan = document.getElementById('calc-total-old-price');
     const calcBasePriceSpan = document.getElementById('calc-base-price');
     const calcDesignPriceSpan = document.getElementById('calc-design-price');
     const calcDesignOldPriceSpan = document.getElementById('calc-design-old-price');
@@ -1364,6 +1365,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const PRINTING_LARGE_PRICE = 0.070;
     const CUSTOM_DESIGN_PRICE = 0.040;
     const SECURITY_PRICE = 25;
+    const DELIVERY_PRICE = 2;
 
     function getSelectedInvitationType() {
         return document.querySelector('input[name="نوع_الدعوة"]:checked');
@@ -1433,6 +1435,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const hasSecurity = securityToggle && securityToggle.checked;
         const securityPrice = hasSecurity ? SECURITY_PRICE : 0;
         const totalPrice = basePrice + printingPrice + designPrice + securityPrice;
+        const originalTotalPrice = basePrice + printingPrice + originalDesignPrice + securityPrice + DELIVERY_PRICE;
 
         if (calcBasePriceSpan) calcBasePriceSpan.textContent = basePrice.toFixed(2);
         if (calcPrintingRow) calcPrintingRow.classList.toggle('hidden', printingPrice <= 0);
@@ -1464,6 +1467,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (calcSecurityPriceSpan) calcSecurityPriceSpan.textContent = securityPrice.toFixed(3);
 
         calcTotalPriceSpan.textContent = totalPrice.toFixed(2);
+        if (calcTotalOldPriceSpan) {
+            calcTotalOldPriceSpan.textContent = originalTotalPrice.toFixed(2);
+            calcTotalOldPriceSpan.classList.toggle('hidden', originalTotalPrice <= totalPrice);
+        }
         
         // Sync with hidden input for form submission
         const hiddenPrice = document.getElementById('hidden-total-price');

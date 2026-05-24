@@ -1234,6 +1234,30 @@ body.lightbox-open {
     line-height: 1;
 }
 
+.total-result-value {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.total-old-price {
+    color: #8f8f8f;
+    font-family: var(--font-body);
+    font-size: 1.18rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: line-through;
+    text-decoration-color: rgba(143, 143, 143, 0.9);
+    text-decoration-thickness: 1px;
+    text-decoration-skip-ink: auto;
+}
+
+.total-final-price {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    color: var(--luxury-gold);
+}
+
 @keyframes fadeInDown {
     from {
         opacity: 0;
