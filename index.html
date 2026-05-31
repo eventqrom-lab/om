@@ -109,6 +109,9 @@
                                     data-i18n="phPhone">
                             </div>
                         </div>
+
+                        <div class="calc-divider" aria-hidden="true"></div>
+
                         <div class="form-group">
                             <label for="event-type" data-i18n="labelEventType">نوع المناسبة</label>
                             <select id="event-type" name="نوع_المناسبة" required>
@@ -121,70 +124,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group date-control-block">
-                            <p class="date-note">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                                <span data-i18n="dateNote">يشترط عند طلب بطاقة دعوة مطبوعة أن يتم تقديم الطلب قبل موعد استلام البطاقة بما لا يقل عن سبعة أيام</span>
-                            </p>
-                        </div>
-
-                        <div class="calc-group calc-toggle-group">
-                            <span data-i18n="labelEventDate">تاريخ المناسبة</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="toggle-date">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="form-group hidden" id="date-group">
-                            <div class="date-selector-container">
-                                <div class="date-field">
-                                    <span class="date-field-label" data-i18n="dateDayLabel">اليوم:</span>
-                                    <select id="event-day"></select>
-                                </div>
-                                <div class="date-field">
-                                    <span class="date-field-label" data-i18n="dateMonthLabel">الشهر:</span>
-                                    <select id="event-month"></select>
-                                </div>
-                                <div class="date-field">
-                                    <span class="date-field-label" data-i18n="dateYearLabel">السنة:</span>
-                                    <select id="event-year"></select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="calc-group calc-toggle-group">
-                            <span data-i18n="labelAddTime">إضافة الوقت</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="toggle-time">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="form-group hidden" id="time-group">
-                            <div class="time-header">
-                                <label data-i18n="labelEventTime">وقت المناسبة</label>
-                                <div class="format-toggle">
-                                    <span id="format-label">12h</span>
-                                    <label class="toggle-switch mini">
-                                        <input type="checkbox" id="toggle-format">
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="time-selector-container">
-                                <select id="event-hour"></select>
-                                <select id="event-minute"></select>
-                                <select id="event-ampm">
-                                    <option value="AM" data-i18n="timeAM">AM</option>
-                                    <option value="PM" data-i18n="timePM">PM</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="calc-group calc-divider">
+                        <div class="calc-group">
                             <label for="calc-qty" data-i18n="calcQuantityLabel">عدد البطاقات</label>
                             <input type="text" id="calc-qty" name="عدد_البطاقات" class="calc-input"
                                 placeholder="أدخل العدد (الأدنى 30)" data-i18n="calcQuantityPlaceholder" required
@@ -198,6 +138,15 @@
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                             <span data-i18n="calcMinWarning">أقل عدد للطلب هو 30 بطاقة وأقصى عدد هو 1000</span>
+                        </div>
+
+                        <div class="form-group date-control-block">
+                            <p class="date-note">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <span data-i18n="dateNote">يشترط عند طلب بطاقة دعوة مطبوعة أن يتم تقديم الطلب قبل موعد استلام البطاقة بما لا يقل عن سبعة أيام</span>
+                            </p>
                         </div>
 
                         <div class="form-group">
@@ -373,6 +322,75 @@
                         <div id="template-lightbox" aria-hidden="true">
                             <button type="button" id="lightbox-close" aria-label="Close">×</button>
                             <img id="lightbox-image" src="" alt="">
+                        </div>
+
+                        <div class="calc-group calc-toggle-group">
+                            <span data-i18n="labelEventDate">تاريخ المناسبة</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-date">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group hidden" id="date-group">
+                            <div class="date-selector-container">
+                                <div class="date-field">
+                                    <span class="date-field-label" data-i18n="dateDayLabel">اليوم:</span>
+                                    <select id="event-day"></select>
+                                </div>
+                                <div class="date-field">
+                                    <span class="date-field-label" data-i18n="dateMonthLabel">الشهر:</span>
+                                    <select id="event-month"></select>
+                                </div>
+                                <div class="date-field">
+                                    <span class="date-field-label" data-i18n="dateYearLabel">السنة:</span>
+                                    <select id="event-year"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="calc-group calc-toggle-group">
+                            <span data-i18n="labelAddTime">إضافة الوقت</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-time">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group hidden" id="time-group">
+                            <div class="time-header">
+                                <label data-i18n="labelEventTime">وقت المناسبة</label>
+                                <div class="format-toggle">
+                                    <span id="format-label">12h</span>
+                                    <label class="toggle-switch mini">
+                                        <input type="checkbox" id="toggle-format">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="time-selector-container">
+                                <select id="event-hour"></select>
+                                <select id="event-minute"></select>
+                                <select id="event-ampm">
+                                    <option value="AM" data-i18n="timeAM">AM</option>
+                                    <option value="PM" data-i18n="timePM">PM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="calc-group calc-toggle-group">
+                            <span data-i18n="labelAddLocation">إضافة موقع</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-location">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group hidden" id="location-group">
+                            <label for="event-location" data-i18n="labelEventLocation">الموقع أو اسم القاعة</label>
+                            <input type="text" id="event-location" name="موقع_المناسبة" autocomplete="off"
+                                data-lpignore="true" data-form-type="other"
+                                placeholder="اكتب الموقع أو اسم القاعة" data-i18n="phEventLocation">
                         </div>
 
                         <div class="calc-group calc-toggle-group" id="security-group">

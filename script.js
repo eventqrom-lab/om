@@ -106,6 +106,9 @@ const translations = {
         phWeddingName2: "الاسم الثاني",
         labelAddTime: "إضافة الوقت",
         labelEventTime: "وقت المناسبة",
+        labelAddLocation: "إضافة موقع",
+        labelEventLocation: "الموقع أو اسم القاعة",
+        phEventLocation: "اكتب الموقع أو اسم القاعة",
         timeAM: "صباحاً",
         timePM: "مساءً",
         currencyShort: "ر.ع",
@@ -258,6 +261,9 @@ const translations = {
         phWeddingName2: "Second Name",
         labelAddTime: "Add Time",
         labelEventTime: "Event Time",
+        labelAddLocation: "Add Location",
+        labelEventLocation: "Location or Hall Name",
+        phEventLocation: "Enter the location or hall name",
         timeAM: "AM",
         timePM: "PM",
         currencyShort: "OMR",
@@ -324,8 +330,35 @@ const translations = {
 let currentLang = 'ar';
 
 const templates = {
-    "9x5.5cm": [], // e.g. { id: "T001", src: "images/templates/9x5.5/T001.jpg" }
-    "9x16cm": []
+    "9x5.5cm": [
+        {
+            id: "11",
+            src: "images/wedding-9x5-ready-template-11.jpg",
+            eventType: "زفاف"
+        },
+        {
+            id: "13",
+            src: "images/other-9x5-ready-template-13.jpg",
+            eventType: "أخرى"
+        }
+    ],
+    "9x16cm": [
+        {
+            id: "10",
+            src: "images/wedding-9x16-ready-template-10.jpg",
+            eventType: "زفاف"
+        },
+        {
+            id: "12",
+            src: "images/birthday-9x16-ready-template-12.jpg",
+            eventType: "عيد ميلاد"
+        },
+        {
+            id: "14",
+            src: "images/business-9x16-ready-template-14.jpg",
+            eventType: "فعالية أعمال"
+        }
+    ]
 };
 
 const monthNames = {
@@ -669,7 +702,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const sizeTemplates = templates[size] || [];
+        const selectedEventType = eventTypeSelect ? eventTypeSelect.value : "";
+        const sizeTemplates = (templates[size] || []).filter((template) => {
+            return !template.eventType || template.eventType === selectedEventType;
+        });
         templateGrid.classList.remove('hidden');
         selectSizeFirstMsg.classList.add('hidden');
 
@@ -687,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.dataset.templateId = template.id;
 
             const image = document.createElement('img');
-            image.src = template.src;
+            image.src = template.thumbnailSrc || template.src;
             image.alt = `${currentLang === 'ar' ? 'نموذج' : 'Template'} #${template.id}`;
 
             const label = document.createElement('span');
@@ -697,10 +733,16 @@ document.addEventListener('DOMContentLoaded', () => {
             card.appendChild(label);
 
             card.addEventListener('click', () => {
+                const wasSelected = card.classList.contains('selected');
+
+                if (wasSelected) {
+                    openTemplateLightbox(template.src);
+                    return;
+                }
+
                 templateGrid.querySelectorAll('.template-card').forEach((item) => item.classList.remove('selected'));
                 card.classList.add('selected');
                 if (selectedTemplateInput) selectedTemplateInput.value = template.id;
-                openTemplateLightbox(template.src);
             });
 
             templateGrid.appendChild(card);
@@ -732,6 +774,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (designReadyRadio && designReadyRadio.checked) renderTemplates();
         });
     });
+
+    if (eventTypeSelect) {
+        eventTypeSelect.addEventListener('change', () => {
+            if (designReadyRadio && designReadyRadio.checked) renderTemplates();
+        });
+    }
 
     if (lightboxClose) lightboxClose.addEventListener('click', closeTemplateLightbox);
     if (templateLightbox) {
@@ -1022,6 +1070,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Location Toggle Logic
+    const toggleLocation = document.getElementById('toggle-location');
+    const locationGroup = document.getElementById('location-group');
+    const eventLocationInput = document.getElementById('event-location');
+
+    if (toggleLocation && locationGroup && eventLocationInput) {
+        function setLocationFieldEnabled(isEnabled) {
+            locationGroup.classList.toggle('hidden', !isEnabled);
+            eventLocationInput.disabled = !isEnabled;
+            eventLocationInput.required = isEnabled;
+            if (!isEnabled) eventLocationInput.value = '';
+        }
+
+        setLocationFieldEnabled(toggleLocation.checked);
+        toggleLocation.addEventListener('change', (e) => {
+            setLocationFieldEnabled(e.target.checked);
+        });
+    }
+
     // Form Submission Handling
     const inquiryForm = document.getElementById('inquiry-form');
     const formMessage = document.getElementById('form-message');
@@ -1224,6 +1291,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 eventTime = currentLang === 'ar' ? "لم يحدد" : "Not specified";
             }
 
+            const eventLocation = document.getElementById('toggle-location').checked
+                ? (document.getElementById('event-location').value.trim() || (currentLang === 'ar' ? "لم يحدد" : "Not specified"))
+                : (currentLang === 'ar' ? "لم يحدد" : "Not specified");
+
             const weddingDetailInput = document.querySelector('input[name="تفاصيل_الزفاف"]:checked');
             const weddingDetailType = weddingDetailInput
                 ? (weddingDetailInput.id === 'wedding-letters'
@@ -1255,6 +1326,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 "نوع_المناسبة": rawObject["نوع_المناسبة"],
                 "تاريخ_المناسبة": eventDate,
                 "الوقت": eventTime,
+                "الموقع": eventLocation,
                 "تفاصيل_بطاقة_الزفاف": weddingDetailType,
                 "الأحرف_المختارة": selectedLetters,
                 "الأسماء_المكتوبة": selectedNames,
