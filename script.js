@@ -87,7 +87,7 @@ const translations = {
         btnSending: "جاري الإرسال...",
         msgSuccess: "تم إرسال طلبك بنجاح! رقم طلبك هو: <br><strong style='font-size: 1.2em; color: var(--primary-color); display: block; margin: 10px 0;'>{orderId}</strong> سنتواصل معك قريباً لتأكيد الطلب.",
         btnWhatsapp: "تواصل عبر واتساب",
-        btnInstagram: "تواصل عبر انستجرام",
+        btnInstagram: "تواصل عبر إنستغرام",
         faqTitle: "الأسئلة الشائعة",
         faqQ1: "هل يمكن مشاركة بطاقة الـ QR مع أكثر من شخص؟",
         faqA1: "لا، كل رمز QR يتم إنشاؤه بشكل فريد ومخصص لدخول واحد فقط، لضمان تجربة دخول آمنة ومنظمة لجميع الضيوف.",
@@ -117,11 +117,14 @@ const translations = {
         currencyShort: "ر.ع",
         valLetters: "الرجاء اختيار الحرفين بوضوح",
         valRequiredOptions: "يرجى اختيار خيار واحد من كل قسم: نوع الدعوة، مقاس بطاقة الدعوة، ونوع التصميم.",
+        valRequiredField: "يرجى تعبئة جميع الحقول المطلوبة قبل إرسال الطلب.",
+        valRequiredTemplate: "يرجى اختيار رقم النموذج المطلوب.",
+        valRequiredWeddingDetails: "يرجى اختيار طريقة تخصيص بطاقة الزفاف وتعبئة التفاصيل المطلوبة.",
         showcaseTitle: "نماذج من بطاقاتنا",
         showcaseDesc: "تصاميم رقمية أنيقة مع QR مخصص لكل مناسبة",
         cardAlt1: "نموذج بطاقة دعوة رقمية 1",
         cardAlt2: "نموذج بطاقة دعوة رقمية 2",
-        dateNote: "يشترط عند طلب بطاقة دعوة مطبوعة أن يتم تقديم الطلب قبل موعد استلام البطاقة بما لا يقل عن سبعة أيام",
+        dateNote: "يتم استلام البطاقات المطبوعة قبل موعد المناسبة بـ7 أيام، لضمان تجهيزها ومراجعتها وتسليمها في الوقت المناسب.",
         dateDayLabel: "اليوم:",
         dateMonthLabel: "الشهر:",
         dateYearLabel: "السنة:",
@@ -186,7 +189,7 @@ const translations = {
     en: {
         navHome: "Home",
         navOffers: "Order",
-        navInquiry: "Inquiry",
+        navInquiry: "Contact",
         heroTitleStart: "Smart Digital Invitations",
         heroTitleHighlight: "with QR Technology",
         heroDesc: "Elevate your event with modern and innovative invitations. Elegant design, seamless organization, and an unforgettable experience.",
@@ -197,14 +200,14 @@ const translations = {
         mockupScan: "Scan to enter",
         offersTitle: "Order",
         offersDesc: "Choose the quantity and add your personal touch with a design that reflects your refined taste.",
-        calcQuantityLabel: "Total Cards Requested",
+        calcQuantityLabel: "Number of Cards",
         calcQuantityPlaceholder: "Enter quantity (Min 30)",
         calcCustomDesignLabel: "Add Custom Design",
         perCard: "per unit",
         calcMinWarning: "Minimum order is 30 units, maximum is 1000",
         calcMaxWarning: "Maximum order is 1000 units",
         calcUnitPriceLabel: "Unit Price:",
-        calcTotalPriceLabel: "Total Project Value:",
+        calcTotalPriceLabel: "Total Order Value:",
         calcOrderBtn: "Order Now",
         calcMsgWithDesign: "with custom design",
         calcMsgWithoutDesign: "without custom design",
@@ -285,11 +288,14 @@ const translations = {
         currencyShort: "OMR",
         valLetters: "Please select both letters clearly",
         valRequiredOptions: "Please select one option from each section: invitation type, card size, and design type.",
+        valRequiredField: "Please complete all required fields before submitting your order.",
+        valRequiredTemplate: "Please select the required template number.",
+        valRequiredWeddingDetails: "Please select a wedding card personalization option and complete the required details.",
         showcaseTitle: "Samples of Our Cards",
         showcaseDesc: "Elegant digital designs with QR codes for every occasion",
         cardAlt1: "Digital invitation card sample 1",
         cardAlt2: "Digital invitation card sample 2",
-        dateNote: "The event date must be seven days or more after submitting the order",
+        dateNote: "Printed cards are delivered 7 days before the event date to allow enough time for preparation, review, and timely delivery.",
         dateDayLabel: "Day:",
         dateMonthLabel: "Month:",
         dateYearLabel: "Year:",
@@ -513,6 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const newLang = currentLang === 'ar' ? 'en' : 'ar';
             setLanguage(newLang);
+            if (designReadyRadio && designReadyRadio.checked) renderTemplates();
         });
     }
 
@@ -1044,13 +1051,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeGroup = document.getElementById('time-group');
 
     if (toggleTime && timeGroup) {
-        toggleTime.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                timeGroup.classList.remove('hidden');
-            } else {
-                timeGroup.classList.add('hidden');
-            }
-        });
+        function setTimeFieldsEnabled(isEnabled) {
+            timeGroup.classList.toggle('hidden', !isEnabled);
+            [hourSelect, minuteSelect, ampmSelect].forEach((select) => {
+                if (!select) return;
+                select.disabled = !isEnabled;
+                select.required = isEnabled && !select.classList.contains('hidden');
+            });
+        }
+
+        setTimeFieldsEnabled(toggleTime.checked);
+        toggleTime.addEventListener('change', (e) => setTimeFieldsEnabled(e.target.checked));
+        if (formatToggle) {
+            formatToggle.addEventListener('change', () => setTimeFieldsEnabled(toggleTime.checked));
+        }
     }
 
     // Location Toggle Logic
@@ -1091,37 +1105,37 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 name: "نوع_التصميم",
                 containerSelector: ".design-type-options"
+            },
+            {
+                name: "تفاصيل_الزفاف",
+                containerSelector: ".wedding-detail-options",
+                condition: () => {
+                    const container = inquiryForm.querySelector(".wedding-detail-options");
+                    return container && !container.closest("#letters-group").classList.contains("hidden");
+                }
             }
         ];
 
-        function validateRequiredOptionGroups() {
-            let firstInvalidGroup = null;
-
+        function validateRequiredOptionGroups(invalidTargets) {
             requiredOptionGroups.forEach((group) => {
+                const shouldValidate = !group.condition || group.condition();
                 const selected = inquiryForm.querySelector(`input[name="${group.name}"]:checked`);
                 const container = inquiryForm.querySelector(group.containerSelector);
-                const isInvalid = !selected;
+                const isInvalid = shouldValidate && !selected;
 
                 if (container) {
                     container.classList.toggle('option-group-invalid', isInvalid);
                 }
 
-                if (isInvalid && !firstInvalidGroup) {
-                    firstInvalidGroup = container;
+                if (isInvalid && container) {
+                    invalidTargets.push({
+                        target: container,
+                        message: group.name === "تفاصيل_الزفاف"
+                            ? translations[currentLang].valRequiredWeddingDetails
+                            : translations[currentLang].valRequiredOptions
+                    });
                 }
             });
-
-            if (firstInvalidGroup) {
-                if (formMessage) {
-                    formMessage.textContent = translations[currentLang].valRequiredOptions;
-                    formMessage.classList.remove('hidden');
-                    formMessage.classList.add('error');
-                }
-                firstInvalidGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return false;
-            }
-
-            return true;
         }
 
         function setFormError(message, target) {
@@ -1145,6 +1159,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const qtyValue = convertToEnglish(calcQtyInput.value.trim());
             const qty = Number(qtyValue);
             const isValidQuantity = /^\d+$/.test(qtyValue) && qty >= 30 && qty <= 1000;
+            calcQtyInput.classList.toggle('invalid-input', !isValidQuantity);
 
             if (!isValidQuantity) {
                 const message = currentLang === 'ar'
@@ -1166,6 +1181,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (calcWarning) calcWarning.classList.add('hidden');
             return true;
+        }
+
+        function validateRequiredFields(invalidTargets) {
+            inquiryForm.querySelectorAll('input[required], select[required], textarea[required]').forEach((field) => {
+                if (field.disabled || field.type === 'radio' || field.type === 'checkbox' || field.type === 'hidden') return;
+
+                const isInvalid = !field.value.trim();
+                field.classList.toggle('invalid-input', isInvalid);
+                if (field.id === 'phone') {
+                    const phoneGroup = field.closest('.input-group-with-prefix');
+                    if (phoneGroup) phoneGroup.classList.toggle('phone-invalid', isInvalid);
+                }
+                if (isInvalid) {
+                    invalidTargets.push({
+                        target: field.closest('.input-group-with-prefix') || field,
+                        focusTarget: field,
+                        message: translations[currentLang].valRequiredField
+                    });
+                }
+            });
+        }
+
+        function validateTemplateSelection(invalidTargets) {
+            const readyTemplateSelected = designReadyRadio && designReadyRadio.checked;
+            const isInvalid = readyTemplateSelected && selectedTemplateInput && !selectedTemplateInput.value;
+
+            if (templateGrid) templateGrid.classList.toggle('option-group-invalid', Boolean(isInvalid));
+            if (isInvalid) {
+                invalidTargets.push({
+                    target: templateGallery || templateGrid,
+                    message: translations[currentLang].valRequiredTemplate
+                });
+            }
+        }
+
+        function getFirstTargetInDocumentOrder(items) {
+            return items.reduce((first, item) => {
+                if (!first) return item;
+                const position = first.target.compareDocumentPosition(item.target);
+                return position & Node.DOCUMENT_POSITION_PRECEDING ? item : first;
+            }, null);
+        }
+
+        function validateCompleteOrder() {
+            const invalidTargets = [];
+            validateRequiredFields(invalidTargets);
+            validateRequiredOptionGroups(invalidTargets);
+            validateTemplateSelection(invalidTargets);
+
+            const firstInvalid = getFirstTargetInDocumentOrder(invalidTargets);
+            if (!firstInvalid) return true;
+
+            setFormError(firstInvalid.message, firstInvalid.target);
+            if (firstInvalid.focusTarget && typeof firstInvalid.focusTarget.focus === 'function') {
+                firstInvalid.focusTarget.focus({ preventScroll: true });
+            }
+            return false;
         }
 
         function validatePhoneNumber() {
@@ -1205,13 +1277,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        inquiryForm.querySelectorAll('input, select, textarea').forEach((field) => {
+            const clearInvalidState = () => {
+                if (field.checkValidity()) field.classList.remove('invalid-input');
+                if (field.id === 'phone' && field.value.trim()) {
+                    const phoneGroup = field.closest('.input-group-with-prefix');
+                    if (phoneGroup) phoneGroup.classList.remove('phone-invalid');
+                }
+                const formGroup = field.closest('.form-group');
+                if (formGroup) formGroup.classList.remove('field-group-invalid');
+            };
+            field.addEventListener('input', clearInvalidState);
+            field.addEventListener('change', clearInvalidState);
+        });
+
+        if (templateGrid) {
+            templateGrid.addEventListener('click', () => templateGrid.classList.remove('option-group-invalid'));
+        }
+
         inquiryForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submit-btn');
             const formMessage = document.getElementById('form-message');
 
-            if (!validateRequiredOptionGroups()) {
+            if (!validateCompleteOrder()) {
                 return;
             }
 
@@ -1220,12 +1310,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (!validatePhoneNumber()) {
-                return;
-            }
-            
-            // Basic validation check
-            if (!inquiryForm.checkValidity()) {
-                inquiryForm.reportValidity();
                 return;
             }
 
