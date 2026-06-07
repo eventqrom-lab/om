@@ -240,6 +240,12 @@ ul {
     gap: 16px;
 }
 
+.invoice-section-title {
+    color: var(--luxury-gold);
+    font-size: 1.1rem;
+    margin: 0 0 4px;
+}
+
 .invoice-row {
     display: flex;
     justify-content: space-between;
@@ -254,6 +260,31 @@ ul {
 .invoice-row .value {
     color: var(--text-ivory);
     font-weight: 500;
+}
+
+.invoice-discount-row .value,
+.invoice-total .value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.invoice-price-old {
+    color: #8f8f8f;
+    text-decoration: line-through;
+}
+
+.invoice-discount-amount,
+.invoice-total-discount .value {
+    color: #F87171;
+    font-weight: 700;
+}
+
+.invoice-price-final {
+    color: var(--luxury-gold);
+    font-weight: 700;
 }
 
 .invoice-total {
@@ -1078,87 +1109,63 @@ input:checked + .slider:before {
     margin-top: 16px;
 }
 
+.template-gallery-title {
+    color: var(--text-ivory);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
 .template-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 12px;
     margin-top: 12px;
 }
 
 .template-card {
-    border: 2px solid transparent;
-    border-radius: 8px;
-    overflow: hidden;
+    border: 1px solid rgba(198, 167, 105, 0.6);
+    border-radius: 10px;
+    background: rgba(198, 167, 105, 0.06);
     cursor: pointer;
     text-align: center;
-    transition: border-color 0.2s;
-    justify-self: center;
-    width: fit-content;
+    transition: var(--transition);
 }
 
 .template-card.selected {
     border-color: var(--primary-color);
-}
-
-.template-card img {
-    width: auto;
-    height: 150px;
-    max-width: 100%;
-    object-fit: contain;
-    background: transparent;
-    display: block;
+    background: rgba(198, 167, 105, 0.2);
+    box-shadow: 0 0 0 2px rgba(198, 167, 105, 0.18);
+    transform: translateY(-2px);
 }
 
 .template-card span {
     display: block;
-    font-size: 0.75rem;
-    padding: 4px;
-    color: var(--text-muted, #aaa);
-    min-width: 92px;
-}
-
-#template-lightbox {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-#template-lightbox.active {
-    display: flex;
-}
-
-#template-lightbox img {
-    max-width: 90vw;
-    max-height: 80vh;
-    border-radius: 8px;
-    object-fit: contain;
-}
-
-#lightbox-close {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 2rem;
-    color: white;
-    cursor: pointer;
-    background: none;
-    border: none;
-    line-height: 1;
-}
-
-body.lightbox-open {
-    overflow: hidden;
+    padding: 13px 12px;
+    color: var(--luxury-gold);
+    font-size: 0.95rem;
+    font-weight: 700;
+    direction: rtl;
 }
 
 .template-size-msg {
     color: var(--text-muted, #aaa);
     font-size: 0.9rem;
     margin-top: 8px;
+}
+
+.template-instagram-note {
+    display: inline-block;
+    margin-top: 14px;
+    color: var(--luxury-gold);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.template-instagram-note:hover {
+    color: var(--text-ivory);
 }
 
 .calc-warning {
@@ -1253,7 +1260,6 @@ body.lightbox-open {
     text-decoration: line-through;
     text-decoration-color: rgba(143, 143, 143, 0.9);
     text-decoration-thickness: 1px;
-    text-decoration-skip-ink: auto;
 }
 
 .total-final-price {
@@ -1261,6 +1267,54 @@ body.lightbox-open {
     align-items: baseline;
     gap: 8px;
     color: var(--luxury-gold);
+}
+
+.delivery-old-price {
+    color: #888;
+    font-size: 0.9em;
+    margin-left: 8px;
+    text-decoration: line-through;
+}
+
+.item-old-price {
+    color: #888;
+    font-size: 0.9em;
+    margin-left: 8px;
+    text-decoration: line-through;
+}
+
+.discount-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 4px 12px;
+    margin-left: 20px;
+    border: 1px solid rgba(158, 61, 61, 0.3);
+    border-radius: 4px;
+    background: var(--luxury-red-soft);
+    color: #F87171;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.free-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 4px 12px;
+    margin-left: 20px;
+    border: 1px solid var(--luxury-gold);
+    border-radius: 4px;
+    background: var(--luxury-gold);
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 @keyframes fadeInDown {
@@ -1274,34 +1328,15 @@ body.lightbox-open {
     }
 }
 
-.free-badge, .discount-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-    height: 24px;
-    line-height: 1;
-}
-
-.free-badge {
-    background: var(--luxury-gold);
-    color: #000;
-    border: 1px solid var(--luxury-gold);
-    margin-left: 20px;
-    font-weight: 800;
-}
-
-.discount-badge {
-    background: var(--luxury-red-soft);
-    color: #F87171;
-    border: 1px solid rgba(158, 61, 61, 0.3);
-    margin-left: 20px;
+.security-note {
+    margin: -8px 0 20px;
+    padding: 12px 14px;
+    border: 1px solid rgba(198, 167, 105, 0.25);
+    border-radius: 8px;
+    background: rgba(198, 167, 105, 0.08);
+    color: var(--text-muted-beige);
+    font-size: 0.88rem;
+    line-height: 1.7;
 }
 
 /* Contact Section */
@@ -2416,21 +2451,6 @@ html[lang="en"] .contact-info h2 {
         max-height: 1.15em;
     }
 
-    .free-badge,
-    .discount-badge {
-        height: 22px;
-        padding: 3px 9px;
-        font-size: 0.65rem;
-        margin-left: 8px;
-        margin-right: 8px;
-        letter-spacing: 0.02em;
-    }
-
-    #calc-design-old-price {
-        margin-left: 4px !important;
-        font-size: 0.82em !important;
-    }
-
     .total-row {
         gap: 8px;
     }
@@ -2973,17 +2993,6 @@ html[lang="en"] .contact-info h2 {
     .result-value small {
         display: inline-flex;
         align-items: center;
-    }
-
-    .discount-badge,
-    .free-badge {
-        font-size: 0.58rem;
-        padding: 2px 7px;
-        height: 20px;
-    }
-
-    #calc-design-old-price {
-        font-size: 0.78em !important;
     }
 
     .total-row {

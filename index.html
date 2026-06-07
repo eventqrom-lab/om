@@ -72,7 +72,7 @@
     <section id="pricing" class="pricing section-padding">
         <div class="container">
             <div class="section-title">
-                <h2 data-i18n="offersTitle">العروض</h2>
+                <h2 data-i18n="offersTitle">للطلب</h2>
                 <p data-i18n="offersDesc">اختر الكمية وأضف لمستك الخاصة بتصميم يعكس ذوقك الراقي</p>
             </div>
             <div class="calculator-container">
@@ -186,7 +186,7 @@
                                     <span class="size-card-preview size-card-preview-large"></span>
                                     <span class="size-card-text">
                                         <span>9×16 cm</span>
-                                        <span class="printed-size-price hidden" data-i18n="printedLargeSizeFee">(+0.070 للبطاقة)</span>
+                                        <span class="printed-size-price hidden" data-i18n="printedLargeSizeFee">(+0.100 للبطاقة)</span>
                                     </span>
                                 </label>
                             </div>
@@ -226,11 +226,12 @@
                             <p class="custom-note hidden" id="custom-design-note" data-i18n="customDesignNote">يمكنك وصف التصميم الذي تريده، أو إرسال نموذج مشابه لنصممه لك.</p>
                             <input type="hidden" id="selected-template" name="النموذج_المختار" value="">
                             <div id="template-gallery" class="template-gallery hidden">
-                                <p class="template-gallery-title" data-i18n="templateGalleryTitle">اختر نموذجاً من القائمة</p>
+                                <p class="template-gallery-title" data-i18n="templateGalleryTitle">اختر نموذج</p>
                                 <div class="template-grid" id="template-grid">
                                     <!-- Templates injected by JS based on selected size -->
                                 </div>
                                 <p id="select-size-first-msg" class="template-size-msg hidden" data-i18n="selectSizeFirst">يرجى اختيار مقاس الدعوة لعرض النماذج المناسبة</p>
+                                <a class="template-instagram-note" href="https://www.instagram.com/qrevent.om?igsh=czBsbjhtZDBkZmxh&utm_source=qr" target="_blank" rel="noopener noreferrer" data-i18n="templateInstagramNote">يمكنكم الاطلاع على صور النماذج عبر حسابنا على إنستغرام.</a>
                             </div>
                         </div>
 
@@ -319,11 +320,6 @@
                             </div>
                         </div>
 
-                        <div id="template-lightbox" aria-hidden="true">
-                            <button type="button" id="lightbox-close" aria-label="Close">×</button>
-                            <img id="lightbox-image" src="" alt="">
-                        </div>
-
                         <div class="calc-group calc-toggle-group">
                             <span data-i18n="labelEventDate">تاريخ المناسبة</span>
                             <label class="toggle-switch">
@@ -395,37 +391,50 @@
 
                         <div class="calc-group calc-toggle-group" id="security-group">
                             <div class="toggle-label-container">
-                                <span data-i18n="labelSecurity">موظف سكيورتي</span>
-                                <span class="price-tag" data-i18n="securityPriceNote">+25.000 ريال عماني</span>
+                                <span data-i18n="labelSecurity">حارس أمن</span>
+                                <span class="price-tag" data-i18n="securityPriceNote">+20.000 ريال عماني</span>
                             </div>
                             <label class="toggle-switch">
                                 <input type="checkbox" id="security-toggle" name="السكيورتي">
                                 <span class="slider"></span>
                             </label>
                         </div>
+                        <p class="security-note hidden" id="security-note" data-i18n="securityDurationNote">خدمة حارس الأمن تشمل 4 ساعات فقط، وكل ساعة إضافية بقيمة 5.000 ريال عماني.</p>
 
                         <div id="calc-results" class="calc-results hidden">
                             <div class="result-row">
-                                <span class="result-label" data-i18n="calcBasePriceLabel">قيمة الباقة الأساسية:</span>
-                                <div class="result-value"><span id="calc-base-price">0.00</span> <small data-i18n="currency"></small></div>
+                                <span class="result-label">
+                                    <span data-i18n="calcBasePriceLabel">قيمة الباقة الأساسية:</span>
+                                    <span id="base-discount-badge" class="discount-badge hidden" data-i18n="discount5">خصم 5%</span>
+                                </span>
+                                <div class="result-value">
+                                    <span id="calc-base-old-price" class="item-old-price hidden">0.00</span>
+                                    <span id="calc-base-price">0.00</span> <small data-i18n="currency"></small>
+                                </div>
                             </div>
                             <div class="result-row hidden" id="calc-printing-row">
-                                <span class="result-label" data-i18n="calcPrintingPriceLabel">سعر الطباعه:</span>
-                                <div class="result-value"><span id="calc-printing-price">0.00</span> <small data-i18n="currency"></small></div>
+                                <span class="result-label">
+                                    <span data-i18n="calcPrintingPriceLabel">سعر الطباعه:</span>
+                                    <span id="printing-discount-badge" class="discount-badge hidden" data-i18n="discount10">خصم 10%</span>
+                                </span>
+                                <div class="result-value">
+                                    <span id="calc-printing-old-price" class="item-old-price hidden">0.00</span>
+                                    <span id="calc-printing-price">0.00</span> <small data-i18n="currency"></small>
+                                </div>
                             </div>
                             <div class="result-row hidden" id="calc-design-row">
                                 <span class="result-label">
                                     <span data-i18n="calcDesignPriceLabel">رسوم التصميم الاحترافي:</span>
-                                    <span id="design-discount-badge" class="discount-badge hidden" data-i18n="discount50">خصم 50%</span>
+                                    <span id="design-discount-badge" class="discount-badge hidden" data-i18n="discount30">خصم 30%</span>
                                 </span>
                                 <div class="result-value">
-                                    <span id="calc-design-old-price" style="text-decoration: line-through; color: #888; font-size: 0.9em; margin-left: 8px; display: none;"></span>
+                                    <span id="calc-design-old-price" class="item-old-price hidden">0.00</span>
                                     <span id="calc-design-price">0.00</span> <small data-i18n="currency"></small>
                                 </div>
                             </div>
                             <div class="result-row hidden" id="calc-security-row">
-                                <span class="result-label" data-i18n="calcSecurityLabel">رسوم السكيورتي:</span>
-                                <div class="result-value"><span id="calc-security-price">25.000</span> <small data-i18n="currency"></small></div>
+                                <span class="result-label" data-i18n="calcSecurityLabel">رسوم حارس الأمن:</span>
+                                <div class="result-value"><span id="calc-security-price">20.000</span> <small data-i18n="currency"></small></div>
                             </div>
                             <div class="result-row">
                                 <span class="result-label">
@@ -433,14 +442,14 @@
                                     <span class="free-badge" data-i18n="freeBadge">مجاناً</span>
                                 </span>
                                 <div class="result-value">
-                                    <span style="text-decoration: line-through; color: #888; font-size: 0.9em; margin-left: 8px;">2.000</span>
-                                    <span data-i18n="calcFree">0.00</span> <small data-i18n="currency"></small>
+                                    <span class="delivery-old-price">2.000</span>
+                                    <span data-i18n="calcFree">0.000</span> <small data-i18n="currency"></small>
                                 </div>
                             </div>
                             <div class="result-row total-row">
                                 <span class="result-label" data-i18n="calcTotalPriceLabel">إجمالي قيمة الطلب:</span>
                                 <div class="result-value total-result-value">
-                                    <span id="calc-total-old-price" class="total-old-price hidden">0.00</span>
+                                    <span id="calc-total-old-price" class="total-old-price">0.00</span>
                                     <span class="total-final-price"><span id="calc-total-price">0.00</span> <small data-i18n="currency"></small></span>
                                 </div>
                             </div>

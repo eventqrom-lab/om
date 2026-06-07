@@ -40,7 +40,7 @@ const translations = {
         calcOrderBtn: "اطلب الآن",
         calcMsgWithDesign: "مع تصميم مخصص",
         calcMsgWithoutDesign: "بدون تصميم مخصص",
-        currency: `<img src="images/IMG_1248 (2).png" alt="ر.ع" style="height: 1.35em; vertical-align: -0.2em;">`,
+        currency: "ر.ع",
         inquiryTitle: "للاستفسار",
         inquiryDesc: "نسعد بتواصلكم معنا لتلبية احتياجات مناسباتكم. فريقنا جاهز لخدمتكم.",
         labelName: "الاسم",
@@ -63,18 +63,21 @@ const translations = {
         optPrinted: "دعوة مطبوعة",
         printedFeeNote: "يوجد رسوم للطباعه",
         printedSmallSizeFee: "(+0.050 للبطاقة)",
-        printedLargeSizeFee: "(+0.070 للبطاقة)",
+        printedLargeSizeFee: "(+0.100 للبطاقة)",
         labelDesignType: "نوع التصميم",
         optReadyTemplate: "نموذج جاهز",
         optCustomDesign: `تصميم مخصص <span class="price-tag price-tag-stacked"><span>+0.040 ر.ع للبطاقة</span></span>`,
         optCustomDesignText: "تصميم مخصص",
         customDesignPrice: "+0.040 ر.ع للبطاقة",
-        templateGalleryTitle: "اختر نموذجاً من القائمة",
+        templateGalleryTitle: "اختر نموذج",
+        templateNumberLabel: "رقم:",
+        templateInstagramNote: "يمكنكم الاطلاع على صور النماذج عبر حسابنا على إنستغرام.",
         selectSizeFirst: "يرجى اختيار مقاس الدعوة لعرض النماذج المناسبة",
         templatesComingSoon: "سيتم إضافة النماذج قريباً",
-        labelSecurity: "موظف سكيورتي",
-        securityPriceNote: "+25.000 ريال عماني",
-        calcSecurityLabel: "رسوم السكيورتي:",
+        labelSecurity: "حارس أمن",
+        securityPriceNote: "+20.000 ريال عماني",
+        securityDurationNote: "خدمة حارس الأمن تشمل 4 ساعات فقط، وكل ساعة إضافية بقيمة 5.000 ريال عماني.",
+        calcSecurityLabel: "رسوم حارس الأمن:",
         labelEventDate: "تاريخ المناسبة",
         labelGuests: "عدد الدعوات المتوقع",
         phGuests: "مثال: 100",
@@ -129,6 +132,14 @@ const translations = {
         calcDeliveryLabel: "رسوم التوصيل:",
         calcFree: "0.000",
         freeBadge: "مجاناً",
+        discount30: "خصم 30%",
+        discount40: "خصم 40%",
+        discount35: "خصم 35%",
+        discount50: "خصم 50%",
+        discount25: "خصم 25%",
+        discount15: "خصم 15%",
+        discount10: "خصم 10%",
+        discount5: "خصم 5%",
         pdfTitle: "فاتورة طلب بطاقات",
         pdfCustomerInfo: "بيانات العميل:",
         pdfLabelName: "الاسم:",
@@ -149,10 +160,6 @@ const translations = {
         pdfTotalLabel: "الإجمالي الكلي:",
         pdfYes: "نعم",
         pdfNo: "لا",
-        discount15: "خصم 15%",
-        discount25: "خصم 25%",
-        discount40: "خصم 40%",
-        discount50: "خصم 50%",
         invoiceTitle: "ملخص الطلب",
         invoiceThanks: "شكراً لاختيارك لنا",
         invoiceOrderID: "رقم الطلب:",
@@ -164,6 +171,12 @@ const translations = {
         invoiceQuantity: "الكمية:",
         invoiceDesign: "التصميم:",
         invoiceTotal: "المبلغ الإجمالي:",
+        invoiceDiscountDetails: "تفاصيل الخصومات",
+        invoiceServiceDiscount: "خصم سعر الخدمة:",
+        invoicePrintingDiscount: "خصم الطباعة:",
+        invoiceDesignDiscount: "خصم التصميم:",
+        invoiceDeliveryDiscount: "خصم التوصيل:",
+        invoiceTotalDiscount: "إجمالي الخصومات:",
         invoiceMessage: "سيتم التواصل معك قريباً على رقم هاتفك لتأكيد التفاصيل النهائية.",
         btnNewOrder: "طلب جديد",
         btnCopyOrderId: "نسخ رقم الطلب",
@@ -195,7 +208,7 @@ const translations = {
         calcOrderBtn: "Order Now",
         calcMsgWithDesign: "with custom design",
         calcMsgWithoutDesign: "without custom design",
-        currency: `<img src="images/IMG_1248 (2).png" alt="OMR" style="height: 1.35em; vertical-align: -0.2em;">`,
+        currency: "OMR",
         inquiryTitle: "For Inquiries",
         inquiryDesc: "We are happy to hear from you and meet your event needs. Our team is ready to serve you.",
         labelName: "Name",
@@ -218,18 +231,21 @@ const translations = {
         optPrinted: "Printed Invitation",
         printedFeeNote: "Printing fees apply",
         printedSmallSizeFee: "(+0.050 per card)",
-        printedLargeSizeFee: "(+0.070 per card)",
+        printedLargeSizeFee: "(+0.100 per card)",
         labelDesignType: "Design Type",
         optReadyTemplate: "Ready Template",
         optCustomDesign: `Custom Design <span class="price-tag price-tag-stacked"><span>+0.040 OMR</span><span>per card</span></span>`,
         optCustomDesignText: "Custom Design",
         customDesignPrice: "+0.040 OMR per card",
-        templateGalleryTitle: "Choose a template from the list",
+        templateGalleryTitle: "Choose a template",
+        templateNumberLabel: "Number:",
+        templateInstagramNote: "You can view template images on our Instagram account.",
         selectSizeFirst: "Please select an invitation size to view suitable templates",
         templatesComingSoon: "Templates will be added soon",
-        labelSecurity: "Security Staff",
-        securityPriceNote: "+25.000 OMR",
-        calcSecurityLabel: "Security Fee:",
+        labelSecurity: "Security Guard",
+        securityPriceNote: "+20.000 OMR",
+        securityDurationNote: "Security guard service includes 4 hours only. Each additional hour costs 5.000 OMR.",
+        calcSecurityLabel: "Security Guard Fee:",
         labelEventDate: "Event Date",
         labelGuests: "Expected Number of Invitations",
         phGuests: "e.g. 100",
@@ -284,6 +300,14 @@ const translations = {
         calcDeliveryLabel: "Delivery Fee:",
         calcFree: "0.000",
         freeBadge: "Free",
+        discount30: "30% Discount",
+        discount40: "40% Discount",
+        discount35: "35% Discount",
+        discount50: "50% Discount",
+        discount25: "25% Discount",
+        discount15: "15% Discount",
+        discount10: "10% Discount",
+        discount5: "5% Discount",
         pdfTitle: "Order Invoice",
         pdfCustomerInfo: "Customer Information:",
         pdfLabelName: "Name:",
@@ -304,10 +328,6 @@ const translations = {
         pdfTotalLabel: "Total Amount:",
         pdfYes: "Yes",
         pdfNo: "No",
-        discount15: "15% Discount",
-        discount25: "25% Discount",
-        discount40: "40% Discount",
-        discount50: "50% Discount",
         invoiceTitle: "Order Summary",
         invoiceThanks: "Thank you for choosing us",
         invoiceOrderID: "Order ID:",
@@ -319,6 +339,12 @@ const translations = {
         invoiceQuantity: "Quantity:",
         invoiceDesign: "Design:",
         invoiceTotal: "Total Amount:",
+        invoiceDiscountDetails: "Discount Details",
+        invoiceServiceDiscount: "Service Price Discount:",
+        invoicePrintingDiscount: "Printing Discount:",
+        invoiceDesignDiscount: "Design Discount:",
+        invoiceDeliveryDiscount: "Delivery Discount:",
+        invoiceTotalDiscount: "Total Discounts:",
         invoiceMessage: "We will contact you soon on your phone to confirm final details.",
         btnNewOrder: "New Order",
         btnCopyOrderId: "Copy Order ID",
@@ -333,29 +359,24 @@ const templates = {
     "9x5.5cm": [
         {
             id: "11",
-            src: "images/wedding-9x5-ready-template-11.jpg",
             eventType: "زفاف"
         },
         {
             id: "13",
-            src: "images/other-9x5-ready-template-13.jpg",
             eventType: "أخرى"
         }
     ],
     "9x16cm": [
         {
             id: "10",
-            src: "images/wedding-9x16-ready-template-10.jpg",
             eventType: "زفاف"
         },
         {
             id: "12",
-            src: "images/birthday-9x16-ready-template-12.jpg",
             eventType: "عيد ميلاد"
         },
         {
             id: "14",
-            src: "images/business-9x16-ready-template-14.jpg",
             eventType: "فعالية أعمال"
         }
     ]
@@ -654,9 +675,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectSizeFirstMsg = document.getElementById('select-size-first-msg');
     const selectedTemplateInput = document.getElementById('selected-template');
     const customDesignNote = document.getElementById('custom-design-note');
-    const templateLightbox = document.getElementById('template-lightbox');
-    const lightboxImage = document.getElementById('lightbox-image');
-    const lightboxClose = document.getElementById('lightbox-close');
 
     function updatePrintedSizePrices() {
         const selectedInvitationType = document.querySelector('input[name="نوع_الدعوة"]:checked');
@@ -671,22 +689,6 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('change', updatePrintedSizePrices);
     });
     updatePrintedSizePrices();
-
-    function openTemplateLightbox(src) {
-        if (!templateLightbox || !lightboxImage || !src) return;
-        lightboxImage.src = src;
-        templateLightbox.classList.add('active');
-        templateLightbox.setAttribute('aria-hidden', 'false');
-        document.body.classList.add('lightbox-open');
-    }
-
-    function closeTemplateLightbox() {
-        if (!templateLightbox || !lightboxImage) return;
-        templateLightbox.classList.remove('active');
-        templateLightbox.setAttribute('aria-hidden', 'true');
-        lightboxImage.src = '';
-        document.body.classList.remove('lightbox-open');
-    }
 
     function renderTemplates() {
         if (!templateGallery || !templateGrid || !selectSizeFirstMsg) return;
@@ -722,24 +724,12 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'template-card';
             card.dataset.templateId = template.id;
 
-            const image = document.createElement('img');
-            image.src = template.thumbnailSrc || template.src;
-            image.alt = `${currentLang === 'ar' ? 'نموذج' : 'Template'} #${template.id}`;
-
             const label = document.createElement('span');
-            label.textContent = `${currentLang === 'ar' ? 'نموذج' : 'Template'} #${template.id}`;
+            label.textContent = `${translations[currentLang].templateNumberLabel} #${template.id}`;
 
-            card.appendChild(image);
             card.appendChild(label);
 
             card.addEventListener('click', () => {
-                const wasSelected = card.classList.contains('selected');
-
-                if (wasSelected) {
-                    openTemplateLightbox(template.src);
-                    return;
-                }
-
                 templateGrid.querySelectorAll('.template-card').forEach((item) => item.classList.remove('selected'));
                 card.classList.add('selected');
                 if (selectedTemplateInput) selectedTemplateInput.value = template.id;
@@ -778,13 +768,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (eventTypeSelect) {
         eventTypeSelect.addEventListener('change', () => {
             if (designReadyRadio && designReadyRadio.checked) renderTemplates();
-        });
-    }
-
-    if (lightboxClose) lightboxClose.addEventListener('click', closeTemplateLightbox);
-    if (templateLightbox) {
-        templateLightbox.addEventListener('click', (event) => {
-            if (event.target === templateLightbox) closeTemplateLightbox();
         });
     }
 
@@ -1312,6 +1295,56 @@ document.addEventListener('DOMContentLoaded', () => {
             const printingPrice = document.getElementById('calc-printing-price').textContent + " OMR";
             const designPrice = document.getElementById('calc-design-price').textContent + " OMR";
             const finalPrice = document.getElementById('calc-total-price').textContent + " OMR";
+            const baseFinalValue = parseFloat(document.getElementById('calc-base-price').textContent) || 0;
+            const baseOriginalValue = parseFloat(document.getElementById('calc-base-old-price').textContent) || baseFinalValue;
+            const printingFinalValue = parseFloat(document.getElementById('calc-printing-price').textContent) || 0;
+            const printingOriginalValue = parseFloat(document.getElementById('calc-printing-old-price').textContent) || printingFinalValue;
+            const designFinalValue = parseFloat(document.getElementById('calc-design-price').textContent) || 0;
+            const designOriginalValue = parseFloat(document.getElementById('calc-design-old-price').textContent) || designFinalValue;
+            const finalPriceValue = parseFloat(document.getElementById('calc-total-price').textContent) || 0;
+            const originalTotalValue = parseFloat(document.getElementById('calc-total-old-price').textContent) || finalPriceValue;
+            const baseDiscountValue = Math.max(0, baseOriginalValue - baseFinalValue);
+            const printingDiscountValue = Math.max(0, printingOriginalValue - printingFinalValue);
+            const designDiscountValue = Math.max(0, designOriginalValue - designFinalValue);
+            const deliveryDiscountValue = DELIVERY_PRICE;
+            const totalDiscountValue = Math.max(0, originalTotalValue - finalPriceValue);
+            const formatAmount = (value) => `${value.toFixed(3)} OMR`;
+            const discountRows = [
+                baseDiscountValue > 0 ? {
+                    label: translations[currentLang].invoiceServiceDiscount,
+                    original: baseOriginalValue,
+                    discount: baseDiscountValue,
+                    final: baseFinalValue
+                } : null,
+                printingDiscountValue > 0 ? {
+                    label: translations[currentLang].invoicePrintingDiscount,
+                    original: printingOriginalValue,
+                    discount: printingDiscountValue,
+                    final: printingFinalValue
+                } : null,
+                designDiscountValue > 0 ? {
+                    label: translations[currentLang].invoiceDesignDiscount,
+                    original: designOriginalValue,
+                    discount: designDiscountValue,
+                    final: designFinalValue
+                } : null,
+                {
+                    label: translations[currentLang].invoiceDeliveryDiscount,
+                    original: DELIVERY_PRICE,
+                    discount: deliveryDiscountValue,
+                    final: 0
+                }
+            ].filter(Boolean);
+            const invoiceDiscountRows = discountRows.map((item) => `
+                <div class="invoice-row invoice-discount-row">
+                    <span class="label">${item.label}</span>
+                    <span class="value">
+                        <span class="invoice-price-old">${formatAmount(item.original)}</span>
+                        <span class="invoice-discount-amount">-${formatAmount(item.discount)}</span>
+                        <span class="invoice-price-final">${formatAmount(item.final)}</span>
+                    </span>
+                </div>
+            `).join('');
 
             // Create Organized Object for Web3Forms (Labels in Arabic for professional email)
             const organizedObject = {
@@ -1335,10 +1368,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 "نوع_الدعوة": rawObject["نوع_الدعوة"],
                 "نوع_التصميم": rawObject["نوع_التصميم"],
                 "النموذج_المختار": document.getElementById('selected-template').value || (currentLang === 'ar' ? "لا يوجد" : "None"),
-                "السكيورتي": document.getElementById('security-toggle').checked ? (currentLang === 'ar' ? "نعم (+25.000 ريال عماني)" : "Yes (+25.000 OMR)") : (currentLang === 'ar' ? "لا" : "No"),
+                "حارس_الأمن": document.getElementById('security-toggle').checked ? (currentLang === 'ar' ? "نعم (+20.000 ريال عماني لمدة 4 ساعات، وكل ساعة إضافية 5.000 ريال عماني)" : "Yes (+20.000 OMR for 4 hours, each additional hour is 5.000 OMR)") : (currentLang === 'ar' ? "لا" : "No"),
                 "قيمة_الباقة_الأساسية": basePackagePrice,
+                "خصم_سعر_الخدمة": baseDiscountValue > 0 ? `${formatAmount(baseDiscountValue)} (من ${formatAmount(baseOriginalValue)} إلى ${formatAmount(baseFinalValue)})` : "لا يوجد",
                 "سعر_الطباعه": printingPrice,
+                "خصم_الطباعه": printingDiscountValue > 0 ? `${formatAmount(printingDiscountValue)} (من ${formatAmount(printingOriginalValue)} إلى ${formatAmount(printingFinalValue)})` : "لا يوجد",
                 "رسوم_التصميم": designPrice,
+                "خصم_التصميم": designDiscountValue > 0 ? `${formatAmount(designDiscountValue)} (من ${formatAmount(designOriginalValue)} إلى ${formatAmount(designFinalValue)})` : "لا يوجد",
+                "خصم_التوصيل": `${formatAmount(deliveryDiscountValue)} (من ${formatAmount(DELIVERY_PRICE)} إلى ${formatAmount(0)})`,
+                "إجمالي_الخصومات": formatAmount(totalDiscountValue),
+                "السعر_الأصلي": formatAmount(originalTotalValue),
                 "السعر_النهائي": finalPrice,
                 "ملاحظات_إضافية": rawObject["ملاحظات_إضافية"] || (currentLang === 'ar' ? "لا يوجد" : "None"),
                 "رابط_الفاتورة": "https://eventqrom-lab.github.io/bill/"
@@ -1387,6 +1426,22 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </button>
                                     </div>
                                 </div>
+                                <div class="invoice-divider"></div>
+                                <div class="invoice-details">
+                                    <h4 class="invoice-section-title">${t.invoiceDiscountDetails}</h4>
+                                    ${invoiceDiscountRows}
+                                    <div class="invoice-row invoice-total-discount">
+                                        <span class="label">${t.invoiceTotalDiscount}</span>
+                                        <span class="value">-${formatAmount(totalDiscountValue)}</span>
+                                    </div>
+                                    <div class="invoice-total">
+                                        <span class="label">${t.invoiceTotal}</span>
+                                        <span class="value">
+                                            <span class="invoice-price-old">${formatAmount(originalTotalValue)}</span>
+                                            <span class="invoice-price-final">${formatAmount(finalPriceValue)}</span>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="invoice-footer">
@@ -1423,20 +1478,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const calcTotalPriceSpan = document.getElementById('calc-total-price');
     const calcTotalOldPriceSpan = document.getElementById('calc-total-old-price');
     const calcBasePriceSpan = document.getElementById('calc-base-price');
+    const calcBaseOldPriceSpan = document.getElementById('calc-base-old-price');
+    const baseDiscountBadge = document.getElementById('base-discount-badge');
     const calcDesignPriceSpan = document.getElementById('calc-design-price');
     const calcDesignOldPriceSpan = document.getElementById('calc-design-old-price');
     const designDiscountBadge = document.getElementById('design-discount-badge');
     const calcDesignRow = document.getElementById('calc-design-row');
     const calcPrintingRow = document.getElementById('calc-printing-row');
     const calcPrintingPriceSpan = document.getElementById('calc-printing-price');
+    const calcPrintingOldPriceSpan = document.getElementById('calc-printing-old-price');
+    const printingDiscountBadge = document.getElementById('printing-discount-badge');
     const securityToggle = document.getElementById('security-toggle');
+    const securityNote = document.getElementById('security-note');
     const calcSecurityRow = document.getElementById('calc-security-row');
     const calcSecurityPriceSpan = document.getElementById('calc-security-price');
-    const BASE_CARD_PRICE = 0.040;
+    const BASE_CARD_PRICE = 0.213;
+    const BASE_CARD_DISCOUNT_200 = 0.05;
+    const BASE_CARD_DISCOUNT_500 = 0.10;
+    const BASE_CARD_DISCOUNT_1000 = 0.15;
     const PRINTING_SMALL_PRICE = 0.050;
-    const PRINTING_LARGE_PRICE = 0.070;
+    const PRINTING_LARGE_PRICE = 0.100;
+    const PRINTING_SMALL_PRICE_200 = 0.045;
+    const PRINTING_LARGE_PRICE_200 = 0.095;
+    const PRINTING_SMALL_PRICE_500 = 0.035;
+    const PRINTING_LARGE_PRICE_500 = 0.075;
+    const PRINTING_SMALL_PRICE_1000 = 0.030;
+    const PRINTING_LARGE_PRICE_1000 = 0.065;
     const CUSTOM_DESIGN_PRICE = 0.040;
-    const SECURITY_PRICE = 25;
+    const CUSTOM_DESIGN_DISCOUNT_200 = 0.30;
+    const CUSTOM_DESIGN_DISCOUNT_500 = 0.50;
+    const SECURITY_PRICE = 20;
     const DELIVERY_PRICE = 2;
 
     function getSelectedInvitationType() {
@@ -1447,12 +1518,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return document.querySelector('input[name="حجم_الدعوة"]:checked');
     }
 
-    function getPrintingUnitPrice() {
+    function getPrintingUnitPrice(discountTier = 0) {
         const selectedInvitationType = getSelectedInvitationType();
         const selectedSize = getSelectedInvitationSize();
         const isPrinted = selectedInvitationType && selectedInvitationType.value === 'دعوة مطبوعة';
 
         if (!isPrinted || !selectedSize) return 0;
+        if (discountTier === 1000) {
+            return selectedSize.value === '9x16cm' ? PRINTING_LARGE_PRICE_1000 : PRINTING_SMALL_PRICE_1000;
+        }
+        if (discountTier === 500) {
+            return selectedSize.value === '9x16cm' ? PRINTING_LARGE_PRICE_500 : PRINTING_SMALL_PRICE_500;
+        }
+        if (discountTier === 200) {
+            return selectedSize.value === '9x16cm' ? PRINTING_LARGE_PRICE_200 : PRINTING_SMALL_PRICE_200;
+        }
         return selectedSize.value === '9x16cm' ? PRINTING_LARGE_PRICE : PRINTING_SMALL_PRICE;
     }
 
@@ -1477,72 +1557,85 @@ document.addEventListener('DOMContentLoaded', () => {
         // Valid quantity
         calcWarning.classList.add('hidden');
 
-        const basePrice = qty * BASE_CARD_PRICE;
-        const printingUnitPrice = getPrintingUnitPrice();
+        const discountTier = qty >= 1000 ? 1000 : qty >= 500 ? 500 : qty >= 200 ? 200 : 0;
+        const hasQuantityDiscount = qty >= 200;
+        const originalBasePrice = qty * BASE_CARD_PRICE;
+        const baseDiscount = discountTier === 1000 ? BASE_CARD_DISCOUNT_1000 : discountTier === 500 ? BASE_CARD_DISCOUNT_500 : discountTier === 200 ? BASE_CARD_DISCOUNT_200 : 0;
+        const basePrice = originalBasePrice * (1 - baseDiscount);
+        const originalPrintingUnitPrice = getPrintingUnitPrice();
+        const printingUnitPrice = getPrintingUnitPrice(discountTier);
+        const originalPrintingPrice = qty * originalPrintingUnitPrice;
         const printingPrice = qty * printingUnitPrice;
         const hasCustomDesign = calcDesignToggle.checked;
 
-        let designPrice = 0;
-        let originalDesignPrice = 0;
-        let discountPercent = 0;
-        let discountKey = "";
-
-        if (hasCustomDesign) {
-            originalDesignPrice = qty * CUSTOM_DESIGN_PRICE;
-
-            if (qty >= 500) {
-                discountPercent = 0.40;
-                discountKey = "discount40";
-            } else if (qty >= 300) {
-                discountPercent = 0.25;
-                discountKey = "discount25";
-            } else if (qty >= 200) {
-                discountPercent = 0.15;
-                discountKey = "discount15";
-            }
-
-            designPrice = originalDesignPrice * (1 - discountPercent);
-        }
+        const originalDesignPrice = hasCustomDesign ? qty * CUSTOM_DESIGN_PRICE : 0;
+        const designDiscount = discountTier >= 500 ? CUSTOM_DESIGN_DISCOUNT_500 : discountTier === 200 ? CUSTOM_DESIGN_DISCOUNT_200 : 0;
+        const designPrice = originalDesignPrice * (1 - designDiscount);
 
         const hasSecurity = securityToggle && securityToggle.checked;
         const securityPrice = hasSecurity ? SECURITY_PRICE : 0;
         const totalPrice = basePrice + printingPrice + designPrice + securityPrice;
-        const originalTotalPrice = basePrice + printingPrice + originalDesignPrice + securityPrice + DELIVERY_PRICE;
+        const originalTotalPrice = originalBasePrice + originalPrintingPrice + originalDesignPrice + securityPrice + DELIVERY_PRICE;
 
         if (calcBasePriceSpan) calcBasePriceSpan.textContent = basePrice.toFixed(2);
+        if (calcBaseOldPriceSpan) {
+            calcBaseOldPriceSpan.textContent = originalBasePrice.toFixed(2);
+            calcBaseOldPriceSpan.classList.toggle('hidden', !hasQuantityDiscount);
+        }
+        if (baseDiscountBadge) {
+            const baseDiscountKey = discountTier === 1000 ? 'discount15' : discountTier === 500 ? 'discount10' : 'discount5';
+            baseDiscountBadge.setAttribute('data-i18n', baseDiscountKey);
+            baseDiscountBadge.textContent = translations[currentLang][baseDiscountKey];
+            baseDiscountBadge.classList.toggle('hidden', !hasQuantityDiscount);
+        }
         if (calcPrintingRow) calcPrintingRow.classList.toggle('hidden', printingPrice <= 0);
         if (calcPrintingPriceSpan) calcPrintingPriceSpan.textContent = printingPrice.toFixed(2);
+        if (calcPrintingOldPriceSpan) {
+            calcPrintingOldPriceSpan.textContent = originalPrintingPrice.toFixed(2);
+            calcPrintingOldPriceSpan.classList.toggle('hidden', !hasQuantityDiscount || printingPrice <= 0);
+        }
+        if (printingDiscountBadge) {
+            const selectedSize = getSelectedInvitationSize();
+            const isLargePrinting = selectedSize && selectedSize.value === '9x16cm';
+            const printingDiscountKey = discountTier === 1000
+                ? (isLargePrinting ? 'discount35' : 'discount40')
+                : discountTier === 500
+                    ? (isLargePrinting ? 'discount25' : 'discount30')
+                    : (isLargePrinting ? 'discount5' : 'discount10');
+            printingDiscountBadge.setAttribute('data-i18n', printingDiscountKey);
+            printingDiscountBadge.textContent = translations[currentLang][printingDiscountKey];
+            printingDiscountBadge.classList.toggle('hidden', !hasQuantityDiscount || printingPrice <= 0);
+        }
 
         if (hasCustomDesign) {
             if (calcDesignRow) calcDesignRow.classList.remove('hidden');
             if (calcDesignPriceSpan) calcDesignPriceSpan.textContent = designPrice.toFixed(2);
-
-            if (discountPercent > 0) {
-                if (calcDesignOldPriceSpan) {
-                    calcDesignOldPriceSpan.textContent = originalDesignPrice.toFixed(2);
-                    calcDesignOldPriceSpan.style.display = 'inline';
-                }
-                if (designDiscountBadge) {
-                    designDiscountBadge.classList.remove('hidden');
-                    designDiscountBadge.setAttribute('data-i18n', discountKey);
-                    designDiscountBadge.textContent = translations[currentLang][discountKey];
-                }
-            } else {
-                if (calcDesignOldPriceSpan) calcDesignOldPriceSpan.style.display = 'none';
-                if (designDiscountBadge) designDiscountBadge.classList.add('hidden');
+            if (calcDesignOldPriceSpan) {
+                calcDesignOldPriceSpan.textContent = originalDesignPrice.toFixed(2);
+                calcDesignOldPriceSpan.classList.toggle('hidden', !hasQuantityDiscount);
+            }
+            if (designDiscountBadge) {
+                const designDiscountKey = discountTier >= 500 ? 'discount50' : 'discount30';
+                designDiscountBadge.setAttribute('data-i18n', designDiscountKey);
+                designDiscountBadge.textContent = translations[currentLang][designDiscountKey];
+                designDiscountBadge.classList.toggle('hidden', !hasQuantityDiscount);
             }
         } else {
             if (calcDesignRow) calcDesignRow.classList.add('hidden');
+            if (calcDesignPriceSpan) calcDesignPriceSpan.textContent = '0.00';
+            if (calcDesignOldPriceSpan) {
+                calcDesignOldPriceSpan.textContent = '0.00';
+                calcDesignOldPriceSpan.classList.add('hidden');
+            }
+            if (designDiscountBadge) designDiscountBadge.classList.add('hidden');
         }
 
         if (calcSecurityRow) calcSecurityRow.classList.toggle('hidden', !hasSecurity);
         if (calcSecurityPriceSpan) calcSecurityPriceSpan.textContent = securityPrice.toFixed(3);
+        if (securityNote) securityNote.classList.toggle('hidden', !hasSecurity);
 
         calcTotalPriceSpan.textContent = totalPrice.toFixed(2);
-        if (calcTotalOldPriceSpan) {
-            calcTotalOldPriceSpan.textContent = originalTotalPrice.toFixed(2);
-            calcTotalOldPriceSpan.classList.toggle('hidden', originalTotalPrice <= totalPrice);
-        }
+        if (calcTotalOldPriceSpan) calcTotalOldPriceSpan.textContent = originalTotalPrice.toFixed(2);
         
         // Sync with hidden input for form submission
         const hiddenPrice = document.getElementById('hidden-total-price');
