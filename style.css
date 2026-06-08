@@ -87,6 +87,16 @@ ul {
     padding: 100px 0;
 }
 
+#pricing {
+    scroll-margin-top: 110px;
+}
+
+@media (max-width: 768px) {
+    #pricing {
+        scroll-margin-top: 145px;
+    }
+}
+
 .bg-light {
     background-color: var(--deep-black);
 }
@@ -762,6 +772,30 @@ ul {
     font-weight: 500;
 }
 
+.omr-symbol {
+    display: inline-block;
+    width: auto;
+    height: 1em;
+    vertical-align: -0.15em;
+    object-fit: contain;
+}
+
+.price-tag .omr-symbol,
+.design-option-price .omr-symbol,
+.printed-size-price .omr-symbol,
+.security-note .omr-symbol,
+.faq-answer .omr-symbol {
+    height: 1.1em;
+}
+
+.calc-toggle-group .price-tag {
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    height: auto;
+    gap: 4px;
+}
+
 .calc-toggle-group {
     flex-direction: row;
     align-items: center;
@@ -894,7 +928,10 @@ input:checked + .slider:before {
 }
 
 .printed-size-price {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     margin-top: 4px;
     color: #42b883;
     font-size: 0.72rem;
@@ -1047,6 +1084,10 @@ input:checked + .slider:before {
 .design-option-price {
     grid-row: 3;
     color: #10b981;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     font-size: 0.72rem;
     font-weight: 600;
     line-height: 1.25;
@@ -1226,6 +1267,27 @@ input:checked + .slider:before {
     font-size: 0.85rem;
     color: var(--text-muted);
     font-weight: 400;
+    display: inline-flex;
+    align-items: center;
+}
+
+.result-value small .omr-symbol {
+    height: 1.25em;
+}
+
+.calc-results .invoice-currency {
+    display: inline-flex;
+    align-items: center;
+}
+
+.calc-results .invoice-currency .omr-symbol {
+    width: auto;
+    height: 0.88em;
+}
+
+.calc-results .total-final-price .invoice-currency .omr-symbol {
+    height: 0.78em;
+    vertical-align: -0.04em;
 }
 
 .total-row {
@@ -1266,7 +1328,7 @@ input:checked + .slider:before {
 
 .total-final-price {
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
     gap: 8px;
     color: var(--luxury-gold);
 }
@@ -3722,4 +3784,35 @@ textarea {
     .logo-text {
         font-size: 0.82rem;
     }
+}
+
+/* Invitation size cards: preview, size, then smaller printing price */
+.invitation-size-options .size-option-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.invitation-size-options .size-card-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.2;
+    white-space: normal;
+}
+
+.invitation-size-options .size-card-text > span:first-child {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.invitation-size-options .printed-size-price {
+    margin-top: 0;
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1.25;
 }

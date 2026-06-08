@@ -14,6 +14,8 @@ if ('serviceWorker' in navigator) {
         .catch(() => {});
 }
 
+const omrSymbol = '<img class="omr-symbol" src="images/omr-symbol.png" alt="ريال عماني">';
+
 const translations = {
     ar: {
         navHome: "الرئيسية",
@@ -62,8 +64,8 @@ const translations = {
         optDigital: "دعوة إلكترونية",
         optPrinted: "دعوة مطبوعة",
         printedFeeNote: "يوجد رسوم للطباعه",
-        printedSmallSizeFee: "(+0.050 للبطاقة)",
-        printedLargeSizeFee: "(+0.100 للبطاقة)",
+        printedSmallSizeFee: "(+0.050 ر.ع للبطاقة)",
+        printedLargeSizeFee: "(+0.100 ر.ع للبطاقة)",
         labelDesignType: "نوع التصميم",
         optReadyTemplate: "نموذج جاهز",
         optCustomDesign: `تصميم مخصص <span class="price-tag price-tag-stacked"><span>+0.040 ر.ع للبطاقة</span></span>`,
@@ -75,8 +77,8 @@ const translations = {
         selectSizeFirst: "يرجى اختيار مقاس الدعوة لعرض النماذج المناسبة",
         templatesComingSoon: "سيتم إضافة النماذج قريباً",
         labelSecurity: "حارس أمن",
-        securityPriceNote: "+20.000 ريال عماني",
-        securityDurationNote: "لراحة ضيوفكم وتنظيم دخولهم بكل سلاسة، تشمل خدمة حارس الأمن 4 ساعات، ويمكنكم تمديد الخدمة بكل مرونة مقابل 5.000 ريال عماني لكل ساعة إضافية.",
+        securityPriceNote: "+20.000 ر.ع",
+        securityDurationNote: "لراحة ضيوفكم وتنظيم دخولهم بكل سلاسة، تشمل خدمة حارس الأمن 4 ساعات، ويمكنكم تمديد الخدمة بكل مرونة مقابل 5.000 ر.ع لكل ساعة إضافية.",
         calcSecurityLabel: "رسوم حارس الأمن:",
         labelEventDate: "تاريخ المناسبة",
         labelGuests: "عدد الدعوات المتوقع",
@@ -233,8 +235,8 @@ const translations = {
         optDigital: "Digital Invitation",
         optPrinted: "Printed Invitation",
         printedFeeNote: "Printing fees apply",
-        printedSmallSizeFee: "(+0.050 per card)",
-        printedLargeSizeFee: "(+0.100 per card)",
+        printedSmallSizeFee: "(+0.050 OMR per card)",
+        printedLargeSizeFee: "(+0.100 OMR per card)",
         labelDesignType: "Design Type",
         optReadyTemplate: "Ready Template",
         optCustomDesign: `Custom Design <span class="price-tag price-tag-stacked"><span>+0.040 OMR</span><span>per card</span></span>`,
@@ -551,6 +553,19 @@ document.addEventListener('DOMContentLoaded', () => {
             contactCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
     }
+
+    document.querySelectorAll('a[href="#pricing"]').forEach((link) => {
+        link.addEventListener('click', (e) => {
+            const pricingSection = document.getElementById('pricing');
+            const navbar = document.getElementById('navbar');
+            if (!pricingSection || !navbar) return;
+
+            e.preventDefault();
+            const extraSpace = window.innerWidth <= 768 ? 36 : 24;
+            const targetTop = pricingSection.getBoundingClientRect().top + window.pageYOffset - navbar.offsetHeight - extraSpace;
+            window.scrollTo({ top: Math.max(targetTop, 0), behavior: 'smooth' });
+        });
+    });
 
     // Sticky Navbar Styling on Scroll
     const navbar = document.getElementById('navbar');
@@ -1338,8 +1353,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const eventMonth = eventMonthSelect.options[eventMonthSelect.selectedIndex].textContent;
                 const eventYear = document.getElementById('event-year').value;
                 eventDate = `${eventDay}-${eventMonth}-${eventYear}`;
-            } else {
-                eventDate = currentLang === 'ar' ? "لم يحدد" : "Not specified";
             }
 
             let eventTime = "";
@@ -1354,82 +1367,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     const ampmText = ampm === 'AM' ? translations[currentLang].timeAM : translations[currentLang].timePM;
                     eventTime = `${h}:${m} ${ampmText}`;
                 }
-            } else {
-                eventTime = currentLang === 'ar' ? "لم يحدد" : "Not specified";
             }
 
             const eventLocation = document.getElementById('toggle-location').checked
-                ? (document.getElementById('event-location').value.trim() || (currentLang === 'ar' ? "لم يحدد" : "Not specified"))
-                : (currentLang === 'ar' ? "لم يحدد" : "Not specified");
+                ? document.getElementById('event-location').value.trim()
+                : "";
 
             const weddingDetailInput = document.querySelector('input[name="تفاصيل_الزفاف"]:checked');
             const weddingDetailType = weddingDetailInput
                 ? (weddingDetailInput.id === 'wedding-letters'
                     ? translations[currentLang].optWeddingLetters
                     : translations[currentLang].optWeddingNames)
-                : (currentLang === 'ar' ? "لا يوجد" : "None");
+                : "";
             const l1 = document.getElementById('letter-1').value;
             const l2 = document.getElementById('letter-2').value;
             const name1 = document.getElementById('wedding-name-1').value.trim();
             const name2 = document.getElementById('wedding-name-2').value.trim();
-            const selectedLetters = (l1 && l2) ? `${l1} & ${l2}` : (currentLang === 'ar' ? "لا يوجد" : "None");
-            const selectedNames = (name1 && name2) ? `${name1} & ${name2}` : (currentLang === 'ar' ? "لا يوجد" : "None");
+            const selectedLetters = (l1 && l2) ? `${l1} & ${l2}` : "";
+            const selectedNames = (name1 && name2) ? `${name1} & ${name2}` : "";
 
-            const basePackagePrice = document.getElementById('calc-base-price').textContent + " OMR";
-            const printingPrice = document.getElementById('calc-printing-price').textContent + " OMR";
-            const designPrice = document.getElementById('calc-design-price').textContent + " OMR";
-            const finalPrice = document.getElementById('calc-total-price').textContent + " OMR";
-            const baseFinalValue = parseFloat(document.getElementById('calc-base-price').textContent) || 0;
-            const baseOriginalValue = parseFloat(document.getElementById('calc-base-old-price').textContent) || baseFinalValue;
-            const printingFinalValue = parseFloat(document.getElementById('calc-printing-price').textContent) || 0;
-            const printingOriginalValue = parseFloat(document.getElementById('calc-printing-old-price').textContent) || printingFinalValue;
-            const designFinalValue = parseFloat(document.getElementById('calc-design-price').textContent) || 0;
-            const designOriginalValue = parseFloat(document.getElementById('calc-design-old-price').textContent) || designFinalValue;
             const finalPriceValue = parseFloat(document.getElementById('calc-total-price').textContent) || 0;
-            const originalTotalValue = parseFloat(document.getElementById('calc-total-old-price').textContent) || finalPriceValue;
-            const baseDiscountValue = Math.max(0, baseOriginalValue - baseFinalValue);
-            const printingDiscountValue = Math.max(0, printingOriginalValue - printingFinalValue);
-            const designDiscountValue = Math.max(0, designOriginalValue - designFinalValue);
-            const deliveryDiscountValue = DELIVERY_PRICE;
-            const totalDiscountValue = Math.max(0, originalTotalValue - finalPriceValue);
             const formatAmount = (value) => `${value.toFixed(3)} OMR`;
-            const discountRows = [
-                baseDiscountValue > 0 ? {
-                    label: translations[currentLang].invoiceServiceDiscount,
-                    original: baseOriginalValue,
-                    discount: baseDiscountValue,
-                    final: baseFinalValue
-                } : null,
-                printingDiscountValue > 0 ? {
-                    label: translations[currentLang].invoicePrintingDiscount,
-                    original: printingOriginalValue,
-                    discount: printingDiscountValue,
-                    final: printingFinalValue
-                } : null,
-                designDiscountValue > 0 ? {
-                    label: translations[currentLang].invoiceDesignDiscount,
-                    original: designOriginalValue,
-                    discount: designDiscountValue,
-                    final: designFinalValue
-                } : null,
-                {
-                    label: translations[currentLang].invoiceDeliveryDiscount,
-                    original: DELIVERY_PRICE,
-                    discount: deliveryDiscountValue,
-                    final: 0
-                }
-            ].filter(Boolean);
-            const invoiceDiscountRows = discountRows.map((item) => `
-                <div class="invoice-row invoice-discount-row">
-                    <span class="label">${item.label}</span>
-                    <span class="value">
-                        <span class="invoice-price-old">${formatAmount(item.original)}</span>
-                        <span class="invoice-discount-amount">-${formatAmount(item.discount)}</span>
-                        <span class="invoice-price-final">${formatAmount(item.final)}</span>
-                    </span>
-                </div>
-            `).join('');
-
+            const formatAmountHtml = (value) => `${value.toFixed(3)} ${omrSymbol}`;
             // Create Organized Object for Web3Forms (Labels in Arabic for professional email)
             const organizedObject = {
                 "access_key": rawObject["access_key"],
@@ -1441,31 +1400,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 "اسم_العميل": rawObject["الاسم_الكامل"],
                 "رقم_الجوال": "+968 " + rawObject["رقم_الجوال"],
                 "نوع_المناسبة": rawObject["نوع_المناسبة"],
-                "تاريخ_المناسبة": eventDate,
-                "الوقت": eventTime,
-                "الموقع": eventLocation,
-                "تفاصيل_بطاقة_الزفاف": weddingDetailType,
-                "الأحرف_المختارة": selectedLetters,
-                "الأسماء_المكتوبة": selectedNames,
                 "عدد_الوحدات": rawObject["عدد_البطاقات"],
                 "حجم_الدعوة": rawObject["حجم_الدعوة"],
                 "نوع_الدعوة": rawObject["نوع_الدعوة"],
-                "نوع_التصميم": rawObject["نوع_التصميم"],
-                "النموذج_المختار": document.getElementById('selected-template').value || (currentLang === 'ar' ? "لا يوجد" : "None"),
-                "حارس_الأمن": document.getElementById('security-toggle').checked ? (currentLang === 'ar' ? "نعم (+20.000 ريال عماني لمدة 4 ساعات، وكل ساعة إضافية 5.000 ريال عماني)" : "Yes (+20.000 OMR for 4 hours, each additional hour is 5.000 OMR)") : (currentLang === 'ar' ? "لا" : "No"),
-                "قيمة_الباقة_الأساسية": basePackagePrice,
-                "خصم_سعر_الخدمة": baseDiscountValue > 0 ? `${formatAmount(baseDiscountValue)} (من ${formatAmount(baseOriginalValue)} إلى ${formatAmount(baseFinalValue)})` : "لا يوجد",
-                "سعر_الطباعه": printingPrice,
-                "خصم_الطباعه": printingDiscountValue > 0 ? `${formatAmount(printingDiscountValue)} (من ${formatAmount(printingOriginalValue)} إلى ${formatAmount(printingFinalValue)})` : "لا يوجد",
-                "رسوم_التصميم": designPrice,
-                "خصم_التصميم": designDiscountValue > 0 ? `${formatAmount(designDiscountValue)} (من ${formatAmount(designOriginalValue)} إلى ${formatAmount(designFinalValue)})` : "لا يوجد",
-                "خصم_التوصيل": `${formatAmount(deliveryDiscountValue)} (من ${formatAmount(DELIVERY_PRICE)} إلى ${formatAmount(0)})`,
-                "إجمالي_الخصومات": formatAmount(totalDiscountValue),
-                "السعر_الأصلي": formatAmount(originalTotalValue),
-                "السعر_النهائي": finalPrice,
-                "ملاحظات_إضافية": rawObject["ملاحظات_إضافية"] || (currentLang === 'ar' ? "لا يوجد" : "None"),
-                "رابط_الفاتورة": "https://eventqrom-lab.github.io/bill/"
+                "نوع_التصميم": rawObject["نوع_التصميم"]
             };
+
+            if (isDateEnabled) organizedObject["تاريخ_المناسبة"] = eventDate;
+            if (document.getElementById('toggle-time').checked) organizedObject["الوقت"] = eventTime;
+            if (document.getElementById('toggle-location').checked && eventLocation.trim()) {
+                organizedObject["الموقع"] = eventLocation;
+            }
+            if (weddingDetailInput) {
+                organizedObject["تفاصيل_بطاقة_الزفاف"] = weddingDetailType;
+                if (weddingDetailInput.id === 'wedding-letters' && l1 && l2) {
+                    organizedObject["الأحرف_المختارة"] = selectedLetters;
+                }
+                if (weddingDetailInput.id === 'wedding-names' && name1 && name2) {
+                    organizedObject["الأسماء_المكتوبة"] = selectedNames;
+                }
+            }
+            if (designReadyRadio && designReadyRadio.checked && selectedTemplateInput.value) {
+                organizedObject["رقم_النموذج"] = selectedTemplateInput.value;
+            }
+
+            organizedObject["حارس_الأمن"] = document.getElementById('security-toggle').checked
+                ? (currentLang === 'ar' ? "نعم" : "Yes")
+                : (currentLang === 'ar' ? "لا" : "No");
+
+            if (rawObject["ملاحظات_إضافية"] && rawObject["ملاحظات_إضافية"].trim()) {
+                organizedObject["ملاحظات_إضافية"] = rawObject["ملاحظات_إضافية"].trim();
+            }
+
+            organizedObject["السعر_النهائي_بعد_الخصم"] = formatAmount(finalPriceValue);
+            organizedObject["رابط_الفاتورة"] = "https://eventqrom-lab.github.io/bill/";
 
             const json = JSON.stringify(organizedObject);
 
@@ -1512,18 +1480,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                                 <div class="invoice-divider"></div>
                                 <div class="invoice-details">
-                                    <h4 class="invoice-section-title">${t.invoiceDiscountDetails}</h4>
-                                    ${invoiceDiscountRows}
-                                    <div class="invoice-row invoice-total-discount">
-                                        <span class="label">${t.invoiceTotalDiscount}</span>
-                                        <span class="value">-${formatAmount(totalDiscountValue)}</span>
-                                    </div>
                                     <div class="invoice-total">
                                         <span class="label">${t.invoiceTotal}</span>
-                                        <span class="value">
-                                            <span class="invoice-price-old">${formatAmount(originalTotalValue)}</span>
-                                            <span class="invoice-price-final">${formatAmount(finalPriceValue)}</span>
-                                        </span>
+                                        <span class="value">${formatAmountHtml(finalPriceValue)}</span>
                                     </div>
                                 </div>
                             </div>
