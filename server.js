@@ -11,6 +11,10 @@ const app = express();
 const port = Number(process.env.PORT) || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 const jwtSecret = process.env.JWT_SECRET || (isProduction ? '' : 'development-only-secret');
+const allowedOrigins = new Set([
+  'https://eventqrom-lab.github.io',
+  'https://om-production-7de0.up.railway.app'
+]);
 
 if (!process.env.DATABASE_URL) {
   console.error('DATABASE_URL is required.');
@@ -26,6 +30,17 @@ const pool = new Pool({
   ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false
 });
 
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(express.json({ limit: '250kb' }));
 app.use(express.static(__dirname, { extensions: ['html'] }));
 

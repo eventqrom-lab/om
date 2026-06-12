@@ -12,12 +12,15 @@
     const orderLoginNotice = document.getElementById('order-login-notice');
     let continueOrderAfterLogin = false;
     const token = () => localStorage.getItem(tokenKey);
+    const apiBase = window.location.hostname.endsWith('github.io')
+        ? 'https://om-production-7de0.up.railway.app'
+        : '';
 
     async function api(path, options = {}) {
         const headers = { ...(options.headers || {}) };
         if (options.body) headers['Content-Type'] = 'application/json';
         if (token()) headers.Authorization = `Bearer ${token()}`;
-        const response = await fetch(path, { ...options, headers });
+        const response = await fetch(`${apiBase}${path}`, { ...options, headers });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.message || 'حدث خطأ، حاول مرة أخرى.');
         return data;
