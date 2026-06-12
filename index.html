@@ -18,7 +18,7 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=20260612-account-icon">
+    <link rel="stylesheet" href="style.css?v=20260612-email-only">
 </head>
 
 <body>
@@ -30,6 +30,7 @@
                 <span class="logo-text">Event QR Tech</span>
             </a>
             <div class="nav-right">
+                <a href="#" id="lang-switch" class="lang-btn">English</a>
                 <button type="button" id="account-btn" class="account-btn" aria-label="حسابي وطلباتي" title="حسابي وطلباتي">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <circle cx="12" cy="8" r="4"></circle>
@@ -37,7 +38,6 @@
                     </svg>
                     <span class="sr-only">حسابي وطلباتي</span>
                 </button>
-                <a href="#" id="lang-switch" class="lang-btn">English</a>
             </div>
         </div>
     </header>
@@ -600,28 +600,21 @@
             <button type="button" class="account-close" id="account-close" aria-label="إغلاق">&times;</button>
             <div id="auth-view">
                 <h2 id="account-title">تسجيل الدخول</h2>
-                <p class="account-lead">سجل برقم الهاتف أو البريد الإلكتروني بدون كلمة مرور.</p>
+                <p class="account-lead">سجل ببريدك الإلكتروني بدون كلمة مرور.</p>
                 <p class="order-login-notice hidden" id="order-login-notice">سجل الدخول أولاً لإرسال طلبك. ستبقى جميع تفاصيل الطلب والسعر محفوظة.</p>
-                <div class="auth-methods">
-                    <button type="button" class="auth-method active" data-auth-type="phone">رقم الهاتف</button>
-                    <button type="button" class="auth-method" data-auth-type="email">البريد الإلكتروني</button>
-                </div>
                 <form id="otp-request-form" class="account-form">
                     <label for="auth-name">الاسم</label>
                     <input id="auth-name" type="text" maxlength="150" placeholder="الاسم الكامل">
-                    <label for="auth-identifier" id="auth-identifier-label">رقم الهاتف</label>
-                    <div class="auth-phone-wrap" id="auth-phone-wrap" dir="ltr">
-                        <span>+968</span>
-                        <input id="auth-identifier" type="tel" inputmode="numeric" maxlength="8" placeholder="96001636" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="otp-request-btn">إرسال رمز التحقق عبر واتساب</button>
+                    <label for="auth-identifier">البريد الإلكتروني</label>
+                    <input id="auth-identifier" type="email" inputmode="email" maxlength="320" placeholder="name@example.com" dir="ltr" required>
+                    <button type="submit" class="btn btn-primary btn-block" id="otp-request-btn">إرسال رمز التحقق إلى البريد</button>
                 </form>
                 <form id="otp-verify-form" class="account-form hidden">
                     <p id="otp-sent-message"></p>
                     <label for="otp-code">رمز التحقق</label>
                     <input id="otp-code" class="otp-code" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required>
                     <button type="submit" class="btn btn-primary btn-block">تحقق ودخول</button>
-                    <button type="button" class="account-link-btn" id="otp-back">تغيير رقم الهاتف أو البريد</button>
+                    <button type="button" class="account-link-btn" id="otp-back">تغيير البريد الإلكتروني</button>
                 </form>
                 <div class="account-message hidden" id="account-message"></div>
             </div>
@@ -638,7 +631,7 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="auth.js?v=20260612-account-icon"></script>
+    <script src="auth.js?v=20260612-email-only"></script>
     <script src="script.js?v=20260612-order-login"></script>
 </body>
 

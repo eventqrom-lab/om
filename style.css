@@ -1790,15 +1790,8 @@ body.modal-open { overflow: hidden; }
 .order-login-notice { margin: -8px 0 18px; padding: 12px 14px; border: 1px solid rgba(198,167,105,.35); border-radius: 8px; background: var(--luxury-gold-glow); color: var(--text-main); font-size: .92rem; }
 .account-close { position: absolute; z-index: 5; inset-inline-start: 14px; inset-inline-end: auto; top: 10px; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid transparent; border-radius: 50%; background: transparent; color: var(--text-main); font-size: 30px; line-height: 1; cursor: pointer; touch-action: manipulation; }
 .account-close:hover, .account-close:focus-visible { border-color: var(--luxury-gold); color: var(--luxury-gold); outline: none; }
-.auth-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-.auth-method { padding: 11px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); color: var(--text-main); cursor: pointer; font: inherit; }
-.auth-method.active { border-color: var(--luxury-gold); color: var(--luxury-gold); }
 .account-form { display: grid; gap: 10px; }
 .account-form input { width: 100%; padding: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); color: var(--text-main); font: inherit; }
-.auth-phone-wrap { display: flex; align-items: center; gap: 8px; padding-inline-start: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); }
-.auth-phone-wrap input { border: 0; }
-.auth-phone-wrap.email-mode { padding: 0; }
-.auth-phone-wrap.email-mode span { display: none; }
 .otp-code { text-align: center; letter-spacing: 8px; font-size: 1.35rem !important; }
 .account-link-btn { border: 0; background: transparent; color: var(--luxury-gold); cursor: pointer; font: inherit; padding: 8px; }
 .account-message { margin-top: 14px; padding: 10px; border-radius: 8px; background: rgba(77,124,95,.2); color: var(--text-main); }
@@ -1840,8 +1833,6 @@ body.modal-open { overflow: hidden; }
     }
     .account-modal-card h2 { font-size: 1.55rem; }
     .account-lead { margin-bottom: 16px; font-size: .92rem; }
-    .auth-methods { gap: 6px; margin-bottom: 16px; }
-    .auth-method { min-height: 48px; padding: 9px 6px; font-size: .9rem; }
     .account-form { gap: 8px; }
     .account-form input { min-height: 52px; font-size: 16px; }
     .account-form .btn { min-height: 52px; margin-top: 4px; }

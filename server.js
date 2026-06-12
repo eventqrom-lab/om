@@ -5,7 +5,6 @@ const path = require('path');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const twilio = require('twilio');
 const { Pool } = require('pg');
 
 const app = express();
@@ -73,27 +72,9 @@ async function initializeDatabase() {
   `);
 }
 
-function normalizeIdentifier(type, value) {
+function normalizeEmail(value) {
   const clean = String(value || '').trim().toLowerCase();
-  if (type === 'email' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)) return clean;
-  if (type === 'phone') {
-    let digits = clean.replace(/\D/g, '');
-    if (digits.startsWith('00968')) digits = digits.slice(2);
-    if (digits.startsWith('0') && /^[079]\d{8}$/.test(digits)) digits = digits.slice(1);
-    if (/^[79]\d{7}$/.test(digits)) digits = `968${digits}`;
-    if (/^968[79]\d{7}$/.test(digits)) return `+${digits}`;
-  }
-  return null;
-}
-
-function normalizeWhatsAppAddress(value, omanOnly = false) {
-  const clean = String(value || '').trim().replace(/^whatsapp:/i, '');
-  if (omanOnly) {
-    const phone = normalizeIdentifier('phone', clean);
-    return phone ? `whatsapp:${phone}` : null;
-  }
-  const digits = clean.replace(/\D/g, '');
-  return /^\d{8,15}$/.test(digits) ? `whatsapp:+${digits}` : null;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean) ? clean : null;
 }
 
 function hashOtp(identifier, code) {
@@ -138,31 +119,15 @@ async function sendEmailOtp(email, code) {
   return true;
 }
 
-async function sendWhatsAppOtp(phone, code) {
-  if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN || !process.env.TWILIO_WHATSAPP_FROM) return false;
-  const from = normalizeWhatsAppAddress(process.env.TWILIO_WHATSAPP_FROM);
-  const to = normalizeWhatsAppAddress(phone, true);
-  if (!from || !to) throw new Error('Invalid WhatsApp sender or Omani recipient number');
-
-  const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-  const message = await client.messages.create({
-    from,
-    to,
-    body: `رمز التحقق لمتجر Event QR Tech هو: ${code}\nينتهي خلال 10 دقائق.`
-  });
-  console.log(`WhatsApp OTP accepted by Twilio: sid=${message.sid} status=${message.status} to=${to}`);
-  return true;
-}
-
 app.get('/api/health', async (_req, res) => {
   await pool.query('SELECT 1');
   res.json({ ok: true });
 });
 
 app.post('/api/auth/request-otp', async (req, res) => {
-  const type = req.body.type === 'phone' ? 'phone' : 'email';
-  const identifier = normalizeIdentifier(type, req.body.identifier);
-  if (!identifier) return res.status(400).json({ message: 'البريد الإلكتروني أو رقم الهاتف غير صحيح.' });
+  const type = 'email';
+  const identifier = normalizeEmail(req.body.identifier);
+  if (!identifier) return res.status(400).json({ message: 'البريد الإلكتروني غير صحيح.' });
 
   const recent = await pool.query(
     `SELECT created_at FROM otp_codes
@@ -183,9 +148,7 @@ app.post('/api/auth/request-otp', async (req, res) => {
 
   let sent = false;
   try {
-    sent = type === 'email'
-      ? await sendEmailOtp(identifier, code)
-      : await sendWhatsAppOtp(identifier, code);
+    sent = await sendEmailOtp(identifier, code);
   } catch (error) {
     console.error(`OTP delivery failed for ${identifier}:`, error.message);
   }
@@ -201,14 +164,14 @@ app.post('/api/auth/request-otp', async (req, res) => {
   if (!sent) console.log(`[DEV OTP] ${identifier}: ${code}`);
 
   res.json({
-    message: type === 'phone' ? 'تم إرسال الرمز عبر واتساب.' : 'تم إرسال الرمز إلى بريدك الإلكتروني.',
+    message: 'تم إرسال الرمز إلى بريدك الإلكتروني.',
     ...(isProduction ? {} : { devCode: code })
   });
 });
 
 app.post('/api/auth/verify-otp', async (req, res) => {
-  const type = req.body.type === 'phone' ? 'phone' : 'email';
-  const identifier = normalizeIdentifier(type, req.body.identifier);
+  const type = 'email';
+  const identifier = normalizeEmail(req.body.identifier);
   const code = String(req.body.code || '').trim();
   if (!identifier || !/^\d{6}$/.test(code)) return res.status(400).json({ message: 'بيانات التحقق غير صحيحة.' });
 

@@ -1,6 +1,5 @@
 (function () {
     const tokenKey = 'eventQrAuthToken';
-    let authType = 'phone';
     let currentUser = null;
     const modal = document.getElementById('account-modal');
     const authView = document.getElementById('auth-view');
@@ -66,27 +65,13 @@
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
     }
-    function setAuthType(type) {
-        authType = type;
-        document.querySelectorAll('[data-auth-type]').forEach((button) => button.classList.toggle('active', button.dataset.authType === type));
-        const phone = type === 'phone';
-        document.getElementById('auth-identifier-label').textContent = phone ? 'رقم الهاتف' : 'البريد الإلكتروني';
-        document.getElementById('auth-phone-wrap').classList.toggle('email-mode', !phone);
-        identifierInput.type = phone ? 'tel' : 'email';
-        identifierInput.inputMode = phone ? 'numeric' : 'email';
-        identifierInput.maxLength = phone ? 8 : 320;
-        identifierInput.placeholder = phone ? '96001636' : 'name@example.com';
-        document.getElementById('otp-request-btn').textContent = phone ? 'إرسال رمز التحقق عبر واتساب' : 'إرسال رمز التحقق إلى البريد';
-        identifierInput.value = '';
-        clearMessage();
-    }
     requestForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         clearMessage();
         const button = document.getElementById('otp-request-btn');
         button.disabled = true;
         try {
-            const data = await api('/api/auth/request-otp', { method: 'POST', body: JSON.stringify({ type: authType, identifier: identifierInput.value.trim() }) });
+            const data = await api('/api/auth/request-otp', { method: 'POST', body: JSON.stringify({ identifier: identifierInput.value.trim() }) });
             document.getElementById('otp-sent-message').textContent = data.message;
             requestForm.classList.add('hidden');
             verifyForm.classList.remove('hidden');
@@ -107,7 +92,7 @@
         try {
             const data = await api('/api/auth/verify-otp', {
                 method: 'POST',
-                body: JSON.stringify({ type: authType, identifier: identifierInput.value.trim(), name: nameInput.value.trim(), code: document.getElementById('otp-code').value.trim() })
+                body: JSON.stringify({ identifier: identifierInput.value.trim(), name: nameInput.value.trim(), code: document.getElementById('otp-code').value.trim() })
             });
             localStorage.setItem(tokenKey, data.token);
             currentUser = data.user;
@@ -133,7 +118,6 @@
         const text = button.querySelector('.sr-only');
         if (text) text.textContent = label;
     }
-    document.querySelectorAll('[data-auth-type]').forEach((button) => button.addEventListener('click', () => setAuthType(button.dataset.authType)));
     document.getElementById('account-btn').addEventListener('click', () => open());
     document.getElementById('account-close').addEventListener('click', close);
     document.getElementById('account-return-btn').addEventListener('click', close);
