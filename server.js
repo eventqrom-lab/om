@@ -135,8 +135,8 @@ app.post('/api/auth/request-otp', async (req, res) => {
      ORDER BY created_at DESC LIMIT 1`,
     [type, identifier]
   );
-  if (recent.rows[0] && Date.now() - new Date(recent.rows[0].created_at).getTime() < 60000) {
-    return res.status(429).json({ message: 'انتظر دقيقة قبل طلب رمز جديد.' });
+  if (recent.rows[0] && Date.now() - new Date(recent.rows[0].created_at).getTime() < 30000) {
+    return res.status(429).json({ message: 'انتظر 30 ثانية قبل طلب رمز جديد.' });
   }
 
   const code = String(crypto.randomInt(100000, 1000000));
