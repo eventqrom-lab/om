@@ -125,7 +125,13 @@
         }
     });
     function updateAccountButton() {
-        document.getElementById('account-btn').textContent = currentUser ? 'حسابي وطلباتي' : 'تسجيل / دخول';
+        const button = document.getElementById('account-btn');
+        const label = currentUser ? 'حسابي وطلباتي' : 'تسجيل الدخول';
+        button.setAttribute('aria-label', label);
+        button.setAttribute('title', label);
+        button.classList.toggle('is-authenticated', Boolean(currentUser));
+        const text = button.querySelector('.sr-only');
+        if (text) text.textContent = label;
     }
     document.querySelectorAll('[data-auth-type]').forEach((button) => button.addEventListener('click', () => setAuthType(button.dataset.authType)));
     document.getElementById('account-btn').addEventListener('click', () => open());

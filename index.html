@@ -18,7 +18,7 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=20260612-hidden-fix">
+    <link rel="stylesheet" href="style.css?v=20260612-account-icon">
 </head>
 
 <body>
@@ -30,7 +30,13 @@
                 <span class="logo-text">Event QR Tech</span>
             </a>
             <div class="nav-right">
-                <button type="button" id="account-btn" class="account-btn">حسابي</button>
+                <button type="button" id="account-btn" class="account-btn" aria-label="حسابي وطلباتي" title="حسابي وطلباتي">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M4.5 21a7.5 7.5 0 0 1 15 0"></path>
+                    </svg>
+                    <span class="sr-only">حسابي وطلباتي</span>
+                </button>
                 <a href="#" id="lang-switch" class="lang-btn">English</a>
             </div>
         </div>
@@ -632,7 +638,7 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="auth.js?v=20260612-login-close"></script>
+    <script src="auth.js?v=20260612-account-icon"></script>
     <script src="script.js?v=20260612-order-login"></script>
 </body>
 

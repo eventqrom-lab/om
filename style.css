@@ -1778,7 +1778,10 @@ html[lang="en"] .btn-remove-color {
 }
 
 body.modal-open { overflow: hidden; }
-.account-btn { border: 1px solid var(--luxury-gold); background: transparent; color: var(--text-pure-light); border-radius: 999px; padding: 9px 16px; cursor: pointer; font: inherit; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.account-btn { position: relative; display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 42px; border: 1px solid var(--luxury-gold); background: transparent; color: var(--luxury-gold); border-radius: 50%; padding: 0; cursor: pointer; font: inherit; }
+.account-btn svg { width: 22px; height: 22px; }
+.account-btn.is-authenticated::after { content: ""; position: absolute; inset-inline-end: 1px; bottom: 1px; width: 8px; height: 8px; border: 2px solid var(--deep-black); border-radius: 50%; background: var(--luxury-green); }
 .account-btn:hover { background: var(--luxury-gold); color: var(--deep-black); }
 .account-modal { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.78); backdrop-filter: blur(8px); }
 .account-modal-card { position: relative; width: min(560px,100%); max-height: min(760px,90vh); overflow-y: auto; padding: 32px; border: 1px solid var(--border-color); border-radius: 16px; background: var(--charcoal-card); box-shadow: var(--shadow-lg); }
@@ -1848,7 +1851,9 @@ body.modal-open { overflow: hidden; }
     .orders-heading { margin-top: 14px; }
     .order-history-item { display: grid; gap: 4px; }
     .order-history-item time { margin-top: 3px; }
-    .account-btn, .lang-btn { padding: 7px 10px; font-size: .82rem; }
+    .account-btn { width: 38px; height: 38px; flex-basis: 38px; }
+    .account-btn svg { width: 20px; height: 20px; }
+    .lang-btn { padding: 7px 10px; font-size: .82rem; }
 }
 
 /* FAQ Section */
