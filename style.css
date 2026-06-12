@@ -1817,15 +1817,14 @@ body.modal-open { overflow: hidden; }
         overscroll-behavior: contain;
     }
     .account-close {
-        position: sticky;
+        position: relative;
         z-index: 2;
         display: grid;
         place-items: center;
         width: 38px;
         height: 38px;
-        margin: -20px 0 4px auto;
-        inset-inline-end: auto;
-        top: 4px;
+        margin: -16px 0 14px auto;
+        inset: auto;
         border: 1px solid var(--border-color);
         border-radius: 50%;
         background: var(--charcoal-card);
