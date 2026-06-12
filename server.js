@@ -107,15 +107,17 @@ async function sendEmailOtp(email, code) {
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT) || 465,
     secure: String(process.env.SMTP_SECURE).toLowerCase() !== 'false',
+    family: 4,
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
   });
-  await transporter.sendMail({
+  const info = await transporter.sendMail({
     from: process.env.SMTP_FROM || process.env.SMTP_USER,
     to: email,
     subject: 'رمز التحقق - Event QR Tech',
     text: `رمز التحقق الخاص بك هو: ${code}\nينتهي خلال 10 دقائق.`,
     html: `<div dir="rtl"><h2>Event QR Tech</h2><p>رمز التحقق الخاص بك:</p><p style="font-size:30px;font-weight:bold;letter-spacing:6px">${code}</p><p>ينتهي خلال 10 دقائق.</p></div>`
   });
+  console.log(`Email OTP accepted by Gmail: messageId=${info.messageId} to=${email}`);
   return true;
 }
 
