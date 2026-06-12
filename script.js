@@ -366,26 +366,21 @@ let currentLang = 'ar';
 const templates = {
     "9x5.5cm": [
         {
-            id: "11",
-            eventType: "زفاف"
+            id: "11"
         },
         {
-            id: "13",
-            eventType: "أخرى"
+            id: "13"
         }
     ],
-    "9x16cm": [
+    "9.5x14cm": [
         {
-            id: "10",
-            eventType: "زفاف"
+            id: "10"
         },
         {
-            id: "12",
-            eventType: "عيد ميلاد"
+            id: "12"
         },
         {
-            id: "14",
-            eventType: "فعالية أعمال"
+            id: "14"
         }
     ]
 };
@@ -726,10 +721,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const selectedEventType = eventTypeSelect ? eventTypeSelect.value : "";
-        const sizeTemplates = (templates[size] || []).filter((template) => {
-            return !template.eventType || template.eventType === selectedEventType;
-        });
+        const sizeTemplates = templates[size] || [];
         templateGrid.classList.remove('hidden');
         selectSizeFirstMsg.classList.add('hidden');
 
@@ -786,12 +778,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (designReadyRadio && designReadyRadio.checked) renderTemplates();
         });
     });
-
-    if (eventTypeSelect) {
-        eventTypeSelect.addEventListener('change', () => {
-            if (designReadyRadio && designReadyRadio.checked) renderTemplates();
-        });
-    }
 
     function getCryptoRandomValues(length) {
         const values = new Uint32Array(length);
@@ -1310,11 +1296,16 @@ document.addEventListener('DOMContentLoaded', () => {
             templateGrid.addEventListener('click', () => templateGrid.classList.remove('option-group-invalid'));
         }
 
-        inquiryForm.addEventListener('submit', (e) => {
+        inquiryForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submit-btn');
             const formMessage = document.getElementById('form-message');
+
+            if (!window.eventQrAuth || !window.eventQrAuth.isAuthenticated()) {
+                window.eventQrAuth?.open();
+                return;
+            }
 
             if (!validateCompleteOrder()) {
                 return;
@@ -1332,7 +1323,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
 
             // Generate Unique Order Number
-            const orderId = generateOrderNumber();
+            let orderId = generateOrderNumber();
             document.getElementById('order-number-input').value = orderId;
             
             // Set dynamic subject
@@ -1435,6 +1426,32 @@ document.addEventListener('DOMContentLoaded', () => {
             organizedObject["السعر_النهائي_بعد_الخصم"] = formatAmount(finalPriceValue);
             organizedObject["رابط_الفاتورة"] = "https://eventqrom-lab.github.io/bill/";
 
+            try {
+                const databaseDetails = { ...organizedObject };
+                delete databaseDetails.access_key;
+                delete databaseDetails.botcheck;
+                const saved = await window.eventQrAuth.api('/api/orders', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        customerName: rawObject["الاسم_الكامل"],
+                        customerPhone: "+968 " + rawObject["رقم_الجوال"],
+                        totalPrice: finalPriceValue,
+                        details: databaseDetails
+                    })
+                });
+                orderId = saved.order.order_number;
+                document.getElementById('order-number-input').value = orderId;
+                organizedObject["subject"] = `New Order #${orderId}`;
+                organizedObject["رقم_الطلب"] = orderId;
+            } catch (error) {
+                formMessage.textContent = error.message || (currentLang === 'ar' ? "تعذر حفظ الطلب." : "Could not save the order.");
+                formMessage.classList.remove('hidden');
+                formMessage.classList.add('error');
+                submitBtn.textContent = translations[currentLang]['btnSubmit'];
+                submitBtn.disabled = false;
+                return;
+            }
+
             const json = JSON.stringify(organizedObject);
 
             fetch('https://api.web3forms.com/submit', {
@@ -1493,23 +1510,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                     bindCopyOrderButton(orderId);
+                    window.eventQrAuth.refreshOrders();
                     inquiryForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {
                     console.log(response);
-                    formMessage.textContent = result.message;
+                    formMessage.innerHTML = currentLang === 'ar'
+                        ? `تم حفظ طلبك بنجاح برقم <strong>#${orderId}</strong>، لكن تعذر إرسال إشعار المتجر.`
+                        : `Your order <strong>#${orderId}</strong> was saved, but the store notification could not be sent.`;
                     formMessage.classList.remove('hidden');
-                    formMessage.classList.add('error');
-                    submitBtn.textContent = translations[currentLang]['btnSubmit'];
-                    submitBtn.disabled = false;
+                    formMessage.classList.remove('error');
+                    window.eventQrAuth.refreshOrders();
                 }
             })
             .catch(error => {
                 console.log(error);
-                formMessage.textContent = currentLang === 'ar' ? "عذراً، حدث خطأ ما." : "Something went wrong!";
+                formMessage.innerHTML = currentLang === 'ar'
+                    ? `تم حفظ طلبك بنجاح برقم <strong>#${orderId}</strong>، لكن تعذر إرسال إشعار المتجر.`
+                    : `Your order <strong>#${orderId}</strong> was saved, but the store notification could not be sent.`;
                 formMessage.classList.remove('hidden');
-                formMessage.classList.add('error');
-                submitBtn.textContent = translations[currentLang]['btnSubmit'];
-                submitBtn.disabled = false;
+                formMessage.classList.remove('error');
+                window.eventQrAuth.refreshOrders();
             });
             // Removed final .then that resets button automatically to prevent duplicate clicks while showing success
         });
@@ -1568,15 +1588,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!isPrinted || !selectedSize) return 0;
         if (discountTier === 1000) {
-            return selectedSize.value === '9x16cm' ? PRINTING_LARGE_PRICE_1000 : PRINTING_SMALL_PRICE_1000;
+            return selectedSize.value === '9.5x14cm' ? PRINTING_LARGE_PRICE_1000 : PRINTING_SMALL_PRICE_1000;
         }
         if (discountTier === 500) {
-            return selectedSize.value === '9x16cm' ? PRINTING_LARGE_PRICE_500 : PRINTING_SMALL_PRICE_500;
+            return selectedSize.value === '9.5x14cm' ? PRINTING_LARGE_PRICE_500 : PRINTING_SMALL_PRICE_500;
         }
         if (discountTier === 200) {
-            return selectedSize.value === '9x16cm' ? PRINTING_LARGE_PRICE_200 : PRINTING_SMALL_PRICE_200;
+            return selectedSize.value === '9.5x14cm' ? PRINTING_LARGE_PRICE_200 : PRINTING_SMALL_PRICE_200;
         }
-        return selectedSize.value === '9x16cm' ? PRINTING_LARGE_PRICE : PRINTING_SMALL_PRICE;
+        return selectedSize.value === '9.5x14cm' ? PRINTING_LARGE_PRICE : PRINTING_SMALL_PRICE;
     }
 
     function updateCalculator() {
@@ -1639,7 +1659,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (printingDiscountBadge) {
             const selectedSize = getSelectedInvitationSize();
-            const isLargePrinting = selectedSize && selectedSize.value === '9x16cm';
+            const isLargePrinting = selectedSize && selectedSize.value === '9.5x14cm';
             const printingDiscountKey = discountTier === 1000
                 ? (isLargePrinting ? 'discount35' : 'discount40')
                 : discountTier === 500

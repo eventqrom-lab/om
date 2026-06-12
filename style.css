@@ -918,7 +918,7 @@ input:checked + .slider:before {
 
 .size-card-preview-large {
     width: 32px;
-    height: 57px;
+    height: 47px;
 }
 
 .size-card-text {
@@ -1775,6 +1775,37 @@ html[lang="en"] .btn-remove-color {
 
 .hidden {
     display: none;
+}
+
+body.modal-open { overflow: hidden; }
+.account-btn { border: 1px solid var(--luxury-gold); background: transparent; color: var(--text-pure-light); border-radius: 999px; padding: 9px 16px; cursor: pointer; font: inherit; }
+.account-btn:hover { background: var(--luxury-gold); color: var(--deep-black); }
+.account-modal { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.78); backdrop-filter: blur(8px); }
+.account-modal-card { position: relative; width: min(560px,100%); max-height: min(760px,90vh); overflow-y: auto; padding: 32px; border: 1px solid var(--border-color); border-radius: 16px; background: var(--charcoal-card); box-shadow: var(--shadow-lg); }
+.account-modal-card h2, .orders-heading { color: var(--luxury-gold); }
+.account-lead, #profile-identifier { color: var(--text-muted); margin: 6px 0 22px; }
+.account-close { position: absolute; inset-inline-end: 14px; top: 10px; border: 0; background: transparent; color: var(--text-main); font-size: 30px; cursor: pointer; }
+.auth-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.auth-method { padding: 11px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); color: var(--text-main); cursor: pointer; font: inherit; }
+.auth-method.active { border-color: var(--luxury-gold); color: var(--luxury-gold); }
+.account-form { display: grid; gap: 10px; }
+.account-form input { width: 100%; padding: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); color: var(--text-main); font: inherit; }
+.auth-phone-wrap { display: flex; align-items: center; gap: 8px; padding-inline-start: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); }
+.auth-phone-wrap input { border: 0; }
+.auth-phone-wrap.email-mode { padding: 0; }
+.auth-phone-wrap.email-mode span { display: none; }
+.otp-code { text-align: center; letter-spacing: 8px; font-size: 1.35rem !important; }
+.account-link-btn { border: 0; background: transparent; color: var(--luxury-gold); cursor: pointer; font: inherit; padding: 8px; }
+.account-message { margin-top: 14px; padding: 10px; border-radius: 8px; background: rgba(77,124,95,.2); color: var(--text-main); }
+.account-message.error { background: rgba(158,61,61,.25); }
+.profile-header, .order-history-item { display: flex; justify-content: space-between; gap: 12px; }
+.orders-heading { margin: 22px 0 12px; }
+.orders-list { display: grid; gap: 10px; }
+.order-history-item { flex-wrap: wrap; padding: 14px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); }
+.order-history-item time, .orders-empty { width: 100%; color: var(--text-muted); font-size: .9rem; }
+@media (max-width: 600px) {
+    .account-modal-card { padding: 28px 18px; }
+    .account-btn, .lang-btn { padding: 7px 10px; font-size: .82rem; }
 }
 
 /* FAQ Section */
@@ -2967,7 +2998,7 @@ html[lang="en"] .contact-info h2 {
 
     .size-card-preview-large {
         width: 28px;
-        height: 50px;
+        height: 41px;
     }
 
     .size-card-text {

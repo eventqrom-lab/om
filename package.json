@@ -1,0 +1,22 @@
+{
+  "name": "event-qr-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Event QR ordering website with OTP accounts and PostgreSQL order history",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^8.0.11",
+    "pg": "^8.16.0",
+    "twilio": "^5.7.2"
+  }
+}

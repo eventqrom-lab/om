@@ -18,7 +18,7 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=20260607-validation">
+    <link rel="stylesheet" href="style.css?v=20260612-account">
 </head>
 
 <body>
@@ -30,6 +30,7 @@
                 <span class="logo-text">Event QR Tech</span>
             </a>
             <div class="nav-right">
+                <button type="button" id="account-btn" class="account-btn">حسابي</button>
                 <a href="#" id="lang-switch" class="lang-btn">English</a>
             </div>
         </div>
@@ -182,10 +183,10 @@
                                     </span>
                                 </label>
                                 <label class="size-option-card">
-                                    <input type="radio" name="حجم_الدعوة" value="9x16cm">
+                                    <input type="radio" name="حجم_الدعوة" value="9.5x14cm">
                                     <span class="size-card-preview size-card-preview-large"></span>
                                     <span class="size-card-text">
-                                        <span>9×16 cm</span>
+                                        <span>9.5×14 cm</span>
                                         <span class="printed-size-price hidden" data-i18n="printedLargeSizeFee">(+0.100 ر.ع للبطاقة)</span>
                                     </span>
                                 </label>
@@ -588,8 +589,49 @@
         </div>
     </footer>
 
+    <div class="account-modal hidden" id="account-modal" role="dialog" aria-modal="true" aria-labelledby="account-title">
+        <div class="account-modal-card">
+            <button type="button" class="account-close" id="account-close" aria-label="إغلاق">&times;</button>
+            <div id="auth-view">
+                <h2 id="account-title">حساب الزبون</h2>
+                <p class="account-lead">سجل برقم الهاتف أو البريد الإلكتروني بدون كلمة مرور.</p>
+                <div class="auth-methods">
+                    <button type="button" class="auth-method active" data-auth-type="phone">رقم الهاتف</button>
+                    <button type="button" class="auth-method" data-auth-type="email">البريد الإلكتروني</button>
+                </div>
+                <form id="otp-request-form" class="account-form">
+                    <label for="auth-name">الاسم</label>
+                    <input id="auth-name" type="text" maxlength="150" placeholder="الاسم الكامل">
+                    <label for="auth-identifier" id="auth-identifier-label">رقم الهاتف</label>
+                    <div class="auth-phone-wrap" id="auth-phone-wrap" dir="ltr">
+                        <span>+968</span>
+                        <input id="auth-identifier" type="tel" inputmode="numeric" maxlength="8" placeholder="96001636" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="otp-request-btn">إرسال رمز التحقق عبر واتساب</button>
+                </form>
+                <form id="otp-verify-form" class="account-form hidden">
+                    <p id="otp-sent-message"></p>
+                    <label for="otp-code">رمز التحقق</label>
+                    <input id="otp-code" class="otp-code" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required>
+                    <button type="submit" class="btn btn-primary btn-block">تحقق ودخول</button>
+                    <button type="button" class="account-link-btn" id="otp-back">تغيير رقم الهاتف أو البريد</button>
+                </form>
+                <div class="account-message hidden" id="account-message"></div>
+            </div>
+            <div id="profile-view" class="hidden">
+                <div class="profile-header">
+                    <div><h2>حسابي</h2><p id="profile-identifier"></p></div>
+                    <button type="button" class="account-link-btn" id="logout-btn">تسجيل الخروج</button>
+                </div>
+                <h3 class="orders-heading">طلباتي</h3>
+                <div id="orders-list" class="orders-list"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
-    <script src="script.js?v=20260607-validation"></script>
+    <script src="auth.js?v=20260612"></script>
+    <script src="script.js?v=20260612-database"></script>
 </body>
 
 </html>
