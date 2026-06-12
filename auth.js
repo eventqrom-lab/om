@@ -10,6 +10,8 @@
     const identifierInput = document.getElementById('auth-identifier');
     const nameInput = document.getElementById('auth-name');
     const message = document.getElementById('account-message');
+    const orderLoginNotice = document.getElementById('order-login-notice');
+    let continueOrderAfterLogin = false;
     const token = () => localStorage.getItem(tokenKey);
 
     async function api(path, options = {}) {
@@ -49,7 +51,9 @@
             list.innerHTML = `<p class="orders-empty">${error.message}</p>`;
         }
     }
-    function open() {
+    function open(options = {}) {
+        continueOrderAfterLogin = Boolean(options.continueOrder);
+        orderLoginNotice.classList.toggle('hidden', !continueOrderAfterLogin);
         modal.classList.remove('hidden');
         document.body.classList.add('modal-open');
         currentUser ? showProfile() : showAuth();
@@ -104,7 +108,14 @@
             localStorage.setItem(tokenKey, data.token);
             currentUser = data.user;
             updateAccountButton();
-            await showProfile();
+            if (continueOrderAfterLogin) {
+                continueOrderAfterLogin = false;
+                orderLoginNotice.classList.add('hidden');
+                close();
+                document.getElementById('inquiry-form')?.requestSubmit();
+            } else {
+                close();
+            }
         } catch (error) {
             showMessage(error.message, true);
         }
@@ -113,16 +124,27 @@
         document.getElementById('account-btn').textContent = currentUser ? 'حسابي وطلباتي' : 'تسجيل / دخول';
     }
     document.querySelectorAll('[data-auth-type]').forEach((button) => button.addEventListener('click', () => setAuthType(button.dataset.authType)));
-    document.getElementById('account-btn').addEventListener('click', open);
+    document.getElementById('account-btn').addEventListener('click', () => open());
     document.getElementById('account-close').addEventListener('click', close);
+    document.getElementById('account-return-btn').addEventListener('click', close);
     document.getElementById('otp-back').addEventListener('click', () => { verifyForm.classList.add('hidden'); requestForm.classList.remove('hidden'); clearMessage(); });
     document.getElementById('logout-btn').addEventListener('click', () => { localStorage.removeItem(tokenKey); currentUser = null; verifyForm.classList.add('hidden'); requestForm.classList.remove('hidden'); updateAccountButton(); showAuth(); });
     modal.addEventListener('click', (event) => { if (event.target === modal) close(); });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !modal.classList.contains('hidden')) close();
+    });
     (async function initialize() {
         if (token()) {
             try { currentUser = (await api('/api/me')).user; } catch { localStorage.removeItem(tokenKey); }
         }
         updateAccountButton();
     })();
-    window.eventQrAuth = { api, open, close, isAuthenticated: () => Boolean(currentUser), refreshOrders: showProfile };
+    window.eventQrAuth = {
+        api,
+        open,
+        openForOrder: () => open({ continueOrder: true }),
+        close,
+        isAuthenticated: () => Boolean(currentUser),
+        refreshOrders: showProfile
+    };
 })();
