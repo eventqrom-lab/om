@@ -59,8 +59,12 @@
         currentUser ? showProfile() : showAuth();
     }
     function close() {
+        continueOrderAfterLogin = false;
+        orderLoginNotice.classList.add('hidden');
         modal.classList.add('hidden');
         document.body.classList.remove('modal-open');
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
     }
     function setAuthType(type) {
         authType = type;

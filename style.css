@@ -1785,7 +1785,8 @@ body.modal-open { overflow: hidden; }
 .account-modal-card h2, .orders-heading { color: var(--luxury-gold); }
 .account-lead, #profile-identifier { color: var(--text-muted); margin: 6px 0 22px; }
 .order-login-notice { margin: -8px 0 18px; padding: 12px 14px; border: 1px solid rgba(198,167,105,.35); border-radius: 8px; background: var(--luxury-gold-glow); color: var(--text-main); font-size: .92rem; }
-.account-close { position: absolute; inset-inline-end: 14px; top: 10px; border: 0; background: transparent; color: var(--text-main); font-size: 30px; cursor: pointer; }
+.account-close { position: absolute; z-index: 5; inset-inline-start: 14px; inset-inline-end: auto; top: 10px; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid transparent; border-radius: 50%; background: transparent; color: var(--text-main); font-size: 30px; line-height: 1; cursor: pointer; touch-action: manipulation; }
+.account-close:hover, .account-close:focus-visible { border-color: var(--luxury-gold); color: var(--luxury-gold); outline: none; }
 .auth-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
 .auth-method { padding: 11px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); color: var(--text-main); cursor: pointer; font: inherit; }
 .auth-method.active { border-color: var(--luxury-gold); color: var(--luxury-gold); }
@@ -1826,7 +1827,7 @@ body.modal-open { overflow: hidden; }
         place-items: center;
         width: 38px;
         height: 38px;
-        margin: -20px auto 4px 0;
+        margin: -20px 0 4px auto;
         inset-inline-end: auto;
         top: 4px;
         border: 1px solid var(--border-color);
