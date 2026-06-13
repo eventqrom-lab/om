@@ -83,7 +83,7 @@ async function initializeDatabase() {
     CREATE TABLE IF NOT EXISTS orders (
       id BIGSERIAL PRIMARY KEY,
       order_number VARCHAR(24) NOT NULL UNIQUE,
-      user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
       customer_name VARCHAR(150) NOT NULL,
       customer_phone VARCHAR(30),
       total_price NUMERIC(12,3) NOT NULL CHECK (total_price >= 0),
@@ -99,6 +99,7 @@ async function initializeDatabase() {
     ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS purpose VARCHAR(10) NOT NULL DEFAULT 'login';
     ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS signup_name VARCHAR(150);
     ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS signup_phone VARCHAR(30);
+    ALTER TABLE orders ALTER COLUMN user_id DROP NOT NULL;
   `);
 }
 
@@ -135,6 +136,22 @@ async function requireAuth(req, res, next) {
   } catch {
     res.status(401).json({ message: 'يرجى تسجيل الدخول أولاً.' });
   }
+}
+
+async function optionalAuth(req, _res, next) {
+  const token = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  if (!token) return next();
+  try {
+    const payload = jwt.verify(token, jwtSecret);
+    const result = await pool.query(
+      'SELECT id, identifier_type, identifier, name, phone, created_at FROM users WHERE id = $1',
+      [payload.sub]
+    );
+    req.user = result.rows[0] || null;
+  } catch {
+    req.user = null;
+  }
+  next();
 }
 
 function requireAdmin(req, res, next) {
@@ -377,13 +394,13 @@ app.get('/api/admin/orders', requireAuth, requireAdmin, async (req, res) => {
   let where = '';
   if (search) {
     values.push(`%${search}%`);
-    where = `WHERE o.order_number ILIKE $1 OR o.customer_name ILIKE $1 OR u.identifier ILIKE $1`;
+    where = `WHERE o.order_number ILIKE $1 OR o.customer_name ILIKE $1 OR COALESCE(u.identifier, '') ILIKE $1`;
   }
   const result = await pool.query(
     `SELECT o.order_number, o.customer_name, o.customer_phone, o.total_price, o.currency,
             o.details, o.created_at, u.identifier AS customer_email
      FROM orders o
-     JOIN users u ON u.id = o.user_id
+     LEFT JOIN users u ON u.id = o.user_id
      ${where}
      ORDER BY o.created_at DESC
      LIMIT 500`,
@@ -392,7 +409,7 @@ app.get('/api/admin/orders', requireAuth, requireAdmin, async (req, res) => {
   res.json({ orders: result.rows });
 });
 
-app.post('/api/orders', requireAuth, async (req, res) => {
+app.post('/api/orders', optionalAuth, async (req, res) => {
   const customerName = String(req.body.customerName || '').trim().slice(0, 150);
   const customerPhone = String(req.body.customerPhone || '').trim().slice(0, 30);
   const totalPrice = Number(req.body.totalPrice);
@@ -408,7 +425,14 @@ app.post('/api/orders', requireAuth, async (req, res) => {
       const result = await pool.query(
         `INSERT INTO orders (order_number, user_id, customer_name, customer_phone, total_price, details)
          VALUES ($1, $2, $3, $4, $5, $6) RETURNING order_number, total_price, currency, created_at`,
-        [orderNumber, req.user.id, customerName, customerPhone || null, totalPrice.toFixed(3), { ...details, رقم_الطلب: orderNumber }]
+        [
+          orderNumber,
+          req.user?.id || null,
+          customerName,
+          customerPhone || null,
+          totalPrice.toFixed(3),
+          { ...details, رقم_الطلب: orderNumber, نوع_العميل: req.user ? 'حساب مسجل' : 'طلب ضيف' }
+        ]
       );
       order = result.rows[0];
       break;

@@ -1302,11 +1302,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = document.getElementById('submit-btn');
             const formMessage = document.getElementById('form-message');
 
-            if (!window.eventQrAuth || !window.eventQrAuth.isAuthenticated()) {
-                window.eventQrAuth?.open();
-                return;
-            }
-
             if (!validateCompleteOrder()) {
                 return;
             }
@@ -1461,10 +1456,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Accept': 'application/json'
                 },
                 body: json
-            })
-            .then(async (response) => {
-                let result = await response.json();
-                if (response.status == 200) {
+            }).catch(error => console.log('Store notification failed:', error));
+
+            {
                     const t = translations[currentLang];
                     const thankYouMessage = currentLang === 'ar'
                         ? 'شكرًا لاختيارك متجرنا.<br>نؤكد لك أننا سنقوم بالرد عليك في أقرب وقت ممكن، وسنعمل على تجهيز طلبيتك بكل حرص واهتمام.'
@@ -1510,27 +1504,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                     bindCopyOrderButton(orderId);
-                    window.eventQrAuth.refreshOrders();
+                    if (window.eventQrAuth?.isAuthenticated()) {
+                        window.eventQrAuth.refreshOrders();
+                    }
                     inquiryForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                    console.log(response);
-                    formMessage.innerHTML = currentLang === 'ar'
-                        ? `تم حفظ طلبك بنجاح برقم <strong>#${orderId}</strong>، لكن تعذر إرسال إشعار المتجر.`
-                        : `Your order <strong>#${orderId}</strong> was saved, but the store notification could not be sent.`;
-                    formMessage.classList.remove('hidden');
-                    formMessage.classList.remove('error');
-                    window.eventQrAuth.refreshOrders();
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                formMessage.innerHTML = currentLang === 'ar'
-                    ? `تم حفظ طلبك بنجاح برقم <strong>#${orderId}</strong>، لكن تعذر إرسال إشعار المتجر.`
-                    : `Your order <strong>#${orderId}</strong> was saved, but the store notification could not be sent.`;
-                formMessage.classList.remove('hidden');
-                formMessage.classList.remove('error');
-                window.eventQrAuth.refreshOrders();
-            });
+            }
             // Removed final .then that resets button automatically to prevent duplicate clicks while showing success
         });
     }
