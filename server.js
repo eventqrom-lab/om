@@ -132,6 +132,32 @@ async function requireAuth(req, res, next) {
 }
 
 async function sendEmailOtp(email, code) {
+  const subject = 'رمز التحقق - Event QR Tech';
+  const text = `رمز التحقق الخاص بك هو: ${code}\nينتهي خلال 10 دقائق.`;
+  const html = `<div dir="rtl"><h2>Event QR Tech</h2><p>رمز التحقق الخاص بك:</p><p style="font-size:30px;font-weight:bold;letter-spacing:6px">${code}</p><p>ينتهي خلال 10 دقائق.</p></div>`;
+
+  if (process.env.RESEND_API_KEY) {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: process.env.RESEND_FROM || 'Event QR Tech <onboarding@resend.dev>',
+        to: [email],
+        subject,
+        text,
+        html
+      }),
+      signal: AbortSignal.timeout(15000)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.message || `Resend request failed (${response.status})`);
+    console.log(`Email OTP accepted by Resend: id=${result.id}`);
+    return true;
+  }
+
   if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) return false;
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -146,11 +172,11 @@ async function sendEmailOtp(email, code) {
   const info = await transporter.sendMail({
     from: process.env.SMTP_FROM || process.env.SMTP_USER,
     to: email,
-    subject: 'رمز التحقق - Event QR Tech',
-    text: `رمز التحقق الخاص بك هو: ${code}\nينتهي خلال 10 دقائق.`,
-    html: `<div dir="rtl"><h2>Event QR Tech</h2><p>رمز التحقق الخاص بك:</p><p style="font-size:30px;font-weight:bold;letter-spacing:6px">${code}</p><p>ينتهي خلال 10 دقائق.</p></div>`
+    subject,
+    text,
+    html
   });
-  console.log(`Email OTP accepted by Gmail: messageId=${info.messageId} to=${email}`);
+  console.log(`Email OTP accepted by SMTP: messageId=${info.messageId}`);
   return true;
 }
 
