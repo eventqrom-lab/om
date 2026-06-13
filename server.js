@@ -136,6 +136,31 @@ async function sendEmailOtp(email, code) {
   const text = `رمز التحقق الخاص بك هو: ${code}\nينتهي خلال 10 دقائق.`;
   const html = `<div dir="rtl"><h2>Event QR Tech</h2><p>رمز التحقق الخاص بك:</p><p style="font-size:30px;font-weight:bold;letter-spacing:6px">${code}</p><p>ينتهي خلال 10 دقائق.</p></div>`;
 
+  if (process.env.BREVO_API_KEY) {
+    const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USER;
+    if (!senderEmail) throw new Error('BREVO_SENDER_EMAIL is required');
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        sender: { name: 'Event QR Tech', email: senderEmail },
+        to: [{ email }],
+        subject,
+        textContent: text,
+        htmlContent: html
+      }),
+      signal: AbortSignal.timeout(15000)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.message || `Brevo request failed (${response.status})`);
+    console.log(`Email OTP accepted by Brevo: messageId=${result.messageId}`);
+    return true;
+  }
+
   if (process.env.RESEND_API_KEY) {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
