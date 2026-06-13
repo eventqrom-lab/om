@@ -1798,6 +1798,7 @@ body.modal-open { overflow: hidden; }
 .account-form input { width: 100%; padding: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); color: var(--text-main); font: inherit; }
 .otp-code { text-align: center; letter-spacing: 8px; font-size: 1.35rem !important; }
 .account-link-btn { border: 0; background: transparent; color: var(--luxury-gold); cursor: pointer; font: inherit; padding: 8px; }
+.account-link-btn:disabled { color: var(--text-muted); cursor: not-allowed; opacity: .75; }
 .account-message { margin-top: 14px; padding: 10px; border-radius: 8px; background: rgba(77,124,95,.2); color: var(--text-main); }
 .account-message.error { background: rgba(158,61,61,.25); }
 .profile-header, .order-history-item { display: flex; justify-content: space-between; gap: 12px; }

@@ -11,8 +11,10 @@
     const phoneInput = document.getElementById('auth-phone');
     const message = document.getElementById('account-message');
     const orderLoginNotice = document.getElementById('order-login-notice');
+    const resendButton = document.getElementById('otp-resend');
     let continueOrderAfterLogin = false;
     let authMode = 'login';
+    let resendTimer = null;
     const token = () => localStorage.getItem(tokenKey);
     const apiBase = window.location.hostname.endsWith('github.io')
         ? 'https://om-production-7de0.up.railway.app'
@@ -64,6 +66,57 @@
         requestForm.classList.remove('hidden');
         clearMessage();
     }
+    function startResendCountdown(seconds = 30) {
+        clearInterval(resendTimer);
+        let remaining = seconds;
+        resendButton.disabled = true;
+        resendButton.textContent = `إرسال رمز جديد بعد ${remaining} ثانية`;
+        resendTimer = setInterval(() => {
+            remaining -= 1;
+            if (remaining <= 0) {
+                clearInterval(resendTimer);
+                resendTimer = null;
+                resendButton.disabled = false;
+                resendButton.textContent = 'إرسال رمز جديد';
+                return;
+            }
+            resendButton.textContent = `إرسال رمز جديد بعد ${remaining} ثانية`;
+        }, 1000);
+    }
+    async function requestOtp(button, showVerifyForm = true) {
+        clearMessage();
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = 'جاري إرسال رمز التحقق...';
+        showMessage('جاري إرسال رمز التحقق إلى بريدك الإلكتروني...');
+        try {
+            const data = await api('/api/auth/request-otp', {
+                method: 'POST',
+                body: JSON.stringify({
+                    mode: authMode,
+                    identifier: identifierInput.value.trim(),
+                    name: nameInput.value.trim(),
+                    phone: phoneInput.value.trim()
+                })
+            });
+            document.getElementById('otp-sent-message').textContent = data.message;
+            document.getElementById('otp-code').value = data.devCode || '';
+            if (showVerifyForm) {
+                requestForm.classList.add('hidden');
+                verifyForm.classList.remove('hidden');
+            }
+            showMessage('تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني.');
+            startResendCountdown();
+            document.getElementById('otp-code').focus();
+        } catch (error) {
+            showMessage(error.message, true);
+        } finally {
+            if (button !== resendButton || !resendTimer) {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+    }
     async function showProfile() {
         authView.classList.add('hidden');
         profileView.classList.remove('hidden');
@@ -99,36 +152,7 @@
     }
     requestForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        clearMessage();
-        const button = document.getElementById('otp-request-btn');
-        const originalText = button.textContent;
-        button.disabled = true;
-        button.textContent = 'جاري إرسال رمز التحقق...';
-        showMessage('جاري إرسال رمز التحقق إلى بريدك الإلكتروني...');
-        try {
-            const data = await api('/api/auth/request-otp', {
-                method: 'POST',
-                body: JSON.stringify({
-                    mode: authMode,
-                    identifier: identifierInput.value.trim(),
-                    name: nameInput.value.trim(),
-                    phone: phoneInput.value.trim()
-                })
-            });
-            document.getElementById('otp-sent-message').textContent = data.message;
-            requestForm.classList.add('hidden');
-            verifyForm.classList.remove('hidden');
-            if (data.devCode) {
-                document.getElementById('otp-code').value = data.devCode;
-                showMessage(`وضع التطوير: رمز التحقق ${data.devCode}`);
-            }
-            document.getElementById('otp-code').focus();
-        } catch (error) {
-            showMessage(error.message, true);
-        } finally {
-            button.disabled = false;
-            button.textContent = originalText;
-        }
+        await requestOtp(document.getElementById('otp-request-btn'));
     });
     verifyForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -167,6 +191,7 @@
     document.getElementById('signup-mode-btn').addEventListener('click', () => setAuthMode('signup'));
     document.getElementById('account-close').addEventListener('click', close);
     document.getElementById('account-return-btn').addEventListener('click', close);
+    resendButton.addEventListener('click', async () => requestOtp(resendButton, false));
     document.getElementById('otp-back').addEventListener('click', () => { verifyForm.classList.add('hidden'); requestForm.classList.remove('hidden'); clearMessage(); });
     document.getElementById('logout-btn').addEventListener('click', () => { localStorage.removeItem(tokenKey); currentUser = null; setAuthMode('login'); updateAccountButton(); showAuth(); });
     modal.addEventListener('click', (event) => { if (event.target === modal) close(); });
