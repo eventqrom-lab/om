@@ -11,6 +11,12 @@ const app = express();
 const port = Number(process.env.PORT) || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 const jwtSecret = process.env.JWT_SECRET || (isProduction ? '' : 'development-only-secret');
+const adminEmails = new Set(
+  String(process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map(normalizeEmail)
+    .filter(Boolean)
+);
 const allowedOrigins = new Set([
   'https://eventqrom-lab.github.io',
   'https://om-production-7de0.up.railway.app'
@@ -129,6 +135,13 @@ async function requireAuth(req, res, next) {
   } catch {
     res.status(401).json({ message: 'يرجى تسجيل الدخول أولاً.' });
   }
+}
+
+function requireAdmin(req, res, next) {
+  if (!adminEmails.has(req.user.identifier)) {
+    return res.status(403).json({ message: 'غير مصرح لك بالدخول إلى لوحة الإدارة.' });
+  }
+  next();
 }
 
 async function sendEmailOtp(email, code) {
@@ -354,6 +367,27 @@ app.get('/api/orders', requireAuth, async (req, res) => {
     `SELECT order_number, total_price, currency, created_at
      FROM orders WHERE user_id = $1 ORDER BY created_at DESC LIMIT 100`,
     [req.user.id]
+  );
+  res.json({ orders: result.rows });
+});
+
+app.get('/api/admin/orders', requireAuth, requireAdmin, async (req, res) => {
+  const search = String(req.query.search || '').trim().slice(0, 150);
+  const values = [];
+  let where = '';
+  if (search) {
+    values.push(`%${search}%`);
+    where = `WHERE o.order_number ILIKE $1 OR o.customer_name ILIKE $1 OR u.identifier ILIKE $1`;
+  }
+  const result = await pool.query(
+    `SELECT o.order_number, o.customer_name, o.customer_phone, o.total_price, o.currency,
+            o.details, o.created_at, u.identifier AS customer_email
+     FROM orders o
+     JOIN users u ON u.id = o.user_id
+     ${where}
+     ORDER BY o.created_at DESC
+     LIMIT 500`,
+    values
   );
   res.json({ orders: result.rows });
 });
