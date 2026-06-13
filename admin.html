@@ -568,22 +568,30 @@
         }
 
         @media (max-width: 640px) {
+            html,
             body {
                 line-height: 1.5;
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
             }
             .navbar {
+                width: 100%;
                 height: auto;
-                min-height: 64px;
+                min-height: 70px;
             }
             .nav-container {
-                padding: 0 14px;
-                gap: 12px;
-                min-height: 64px;
+                width: 100%;
+                max-width: 100%;
+                padding: 8px 12px;
+                gap: 8px;
+                min-height: 70px;
             }
             .nav-brand-actions {
                 gap: 8px;
                 width: 100%;
-                justify-content: center;
+                max-width: 100%;
+                justify-content: stretch;
             }
             .logo {
                 font-size: 1rem;
@@ -596,18 +604,28 @@
                 text-align: left;
             }
             .archive-nav-btn {
-                width: min(150px, calc(50vw - 22px));
-                padding: 8px 10px;
-                min-height: 44px;
-                font-size: 0.78rem;
-                flex: 0 1 150px;
+                width: auto;
+                min-width: 0;
+                max-width: none;
+                padding: 8px 6px;
+                min-height: 50px;
+                font-size: 0.82rem;
+                line-height: 1.3;
+                flex: 1 1 0;
+                white-space: nowrap;
             }
             .main-wrapper {
-                padding: 86px 14px 34px;
+                width: 100%;
+                max-width: 100%;
+                padding: 92px 10px 34px;
                 gap: 26px;
             }
+            .preview-section {
+                width: 100%;
+                max-width: 100%;
+            }
             .section-title {
-                font-size: 1.35rem;
+                font-size: 1.25rem;
                 margin-bottom: 14px;
             }
             .input-card {
@@ -635,8 +653,10 @@
                 gap: 10px;
             }
             .invoice-container {
+                width: 100%;
+                max-width: 100%;
                 border-radius: 8px;
-                overflow-x: auto;
+                overflow: hidden;
             }
             .empty-state {
                 padding: 42px 18px;
@@ -650,7 +670,8 @@
                 font-size: 1.05rem;
             }
             .invoice-inner {
-                padding: 24px 16px;
+                width: 100%;
+                padding: 20px 12px;
                 max-width: none;
                 min-width: 0;
             }
@@ -697,16 +718,16 @@
                 table-layout: fixed;
             }
             .invoice-table thead th {
-                padding: 10px;
-                font-size: 0.72rem;
+                padding: 9px 7px;
+                font-size: 0.68rem;
             }
             .invoice-table tbody td {
-                padding: 11px 10px;
-                font-size: 0.82rem;
-                line-height: 1.55;
+                padding: 10px 7px;
+                font-size: 0.76rem;
+                line-height: 1.45;
             }
             .invoice-table .field-label {
-                width: 38%;
+                width: 40%;
                 white-space: normal;
             }
             .invoice-table .field-value {
@@ -754,23 +775,61 @@
                 font-size: 3rem;
             }
             .toast {
-                left: 14px;
-                right: 14px;
+                left: 50%;
+                right: auto;
+                width: calc(100% - 32px);
+                max-width: 360px;
                 bottom: 18px;
-                transform: translateY(100px);
+                transform: translate(-50%, 100px);
                 padding: 13px 16px;
                 text-align: center;
                 font-size: 0.9rem;
             }
             .toast.show {
-                transform: translateY(0);
+                transform: translate(-50%, 0);
+            }
+            .admin-login {
+                align-items: center;
+                padding: max(18px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
+                overflow-y: auto;
+            }
+            .admin-login-card {
+                width: 100%;
+                max-width: 400px;
+                padding: 24px 18px;
+                border-radius: 12px;
+            }
+            .admin-login-card h2 {
+                font-size: 1.45rem;
+                text-align: center;
+            }
+            .admin-login-card p {
+                margin-bottom: 18px;
+                font-size: 0.88rem;
+                line-height: 1.7;
+                text-align: center;
+            }
+            .admin-login-card input {
+                min-height: 52px;
+                padding: 13px 14px;
+                font-size: 16px;
+            }
+            .admin-login-card .btn {
+                min-height: 50px;
+            }
+            .admin-login-message {
+                margin-top: 12px;
+                font-size: 0.86rem;
+                text-align: center;
             }
             .archive-modal {
-                padding: 18px 12px;
+                padding: max(10px, env(safe-area-inset-top)) 8px max(10px, env(safe-area-inset-bottom));
             }
             .archive-modal-content {
-                padding: 18px;
-                min-height: calc(100vh - 36px);
+                width: 100%;
+                padding: 16px 12px;
+                min-height: calc(100vh - 20px);
+                border-radius: 10px;
             }
             .archive-modal-title {
                 font-size: 1.35rem;
@@ -1111,12 +1170,16 @@
 
         function orderToInvoice(order) {
             const details = order.details && typeof order.details === 'object' ? order.details : {};
+            const visibleDetails = Object.entries(details).filter(([key]) => {
+                const normalizedKey = String(key).replace(/_/g, ' ').trim();
+                return normalizedKey !== 'نوع العميل';
+            });
             const rawData = [
                 `رقم الطلب: ${order.order_number}`,
                 `اسم العميل: ${order.customer_name}`,
                 `رقم الجوال: ${order.customer_phone || '---'}`,
                 `البريد الإلكتروني: ${order.customer_email || '---'}`,
-                ...Object.entries(details).map(([key, value]) => `${key}: ${value}`),
+                ...visibleDetails.map(([key, value]) => `${key}: ${value}`),
                 `السعر النهائي: ${Number(order.total_price).toFixed(3)} ${order.currency}`
             ].join('\n');
             return {
@@ -1498,7 +1561,9 @@
                 hasValue(data.themeColor) ? row('لون الثيم', `<div class="color-preview"><span class="color-dot" style="background:${escapeHTML(data.themeColor)};"></span><span dir="ltr">${escapeHTML(data.themeColor)}</span></div>`, { html: true }) : '',
                 hasValue(data.customDesign) ? row('تصميم مخصص', `<span class="status-badge ${isYes ? 'status-paid' : 'status-pending'}">${escapeHTML(data.customDesign)}</span>`, { html: true }) : '',
                 row('ملاحظات إضافية', data.notes),
-                ...data.extraFields.map(field => row(field.label, field.value))
+                ...data.extraFields
+                    .filter(field => String(field.label).replace(/_/g, ' ').trim() !== 'نوع العميل')
+                    .map(field => row(field.label, field.value))
             ].join('');
 
             const html = `
