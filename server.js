@@ -414,6 +414,7 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
   const customerPhone = String(req.body.customerPhone || '').trim().slice(0, 30);
   const totalPrice = Number(req.body.totalPrice);
   const details = req.body.details && typeof req.body.details === 'object' ? req.body.details : {};
+  const orderUser = req.user && !adminEmails.has(req.user.identifier) ? req.user : null;
   if (!customerName || !Number.isFinite(totalPrice) || totalPrice < 0) {
     return res.status(400).json({ message: 'بيانات الطلب غير مكتملة.' });
   }
@@ -427,11 +428,11 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
          VALUES ($1, $2, $3, $4, $5, $6) RETURNING order_number, total_price, currency, created_at`,
         [
           orderNumber,
-          req.user?.id || null,
+          orderUser?.id || null,
           customerName,
           customerPhone || null,
           totalPrice.toFixed(3),
-          { ...details, رقم_الطلب: orderNumber, نوع_العميل: req.user ? 'حساب مسجل' : 'طلب ضيف' }
+          { ...details, رقم_الطلب: orderNumber, نوع_العميل: orderUser ? 'حساب مسجل' : 'طلب ضيف' }
         ]
       );
       order = result.rows[0];

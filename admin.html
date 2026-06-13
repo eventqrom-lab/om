@@ -1369,7 +1369,9 @@
                     if (fieldKey && value) {
                         data[fieldKey] = value;
                         matched = true;
-                    } else if (value && !/^(subject|from_name|access_key|botcheck|---|رابط_الفاتورة)$/i.test(rawKey)) {
+                    } else if (/^(subject|from_name|access_key|botcheck|---|رابط_الفاتورة)$/i.test(rawKey)) {
+                        matched = true;
+                    } else if (value) {
                         data.extraFields.push({
                             label: rawKey.replace(/_/g, ' ').trim(),
                             value
