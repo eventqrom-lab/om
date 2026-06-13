@@ -1257,7 +1257,8 @@
                 .replace(/\s+/g, ' ')
                 .trim();
 
-            for (const [keyPattern, fieldKey] of Object.entries(FIELD_MAP)) {
+            const patterns = Object.entries(FIELD_MAP).sort((a, b) => b[0].length - a[0].length);
+            for (const [keyPattern, fieldKey] of patterns) {
                 if (cleanedKey.includes(keyPattern.toLowerCase())) {
                     return fieldKey;
                 }
@@ -1278,18 +1279,28 @@
             'الجوال': 'phone',
             'phone': 'phone',
             'mobile': 'phone',
+            'البريد الإلكتروني': 'customerEmail',
+            'email': 'customerEmail',
             'نوع المناسبة': 'eventType',
             'المناسبة': 'eventType',
             'event type': 'eventType',
             'event': 'eventType',
+            'حجم الدعوة': 'invitationSize',
+            'نوع الدعوة': 'invitationType',
+            'نوع التصميم': 'designType',
             'تاريخ المناسبة': 'eventDate',
             'التاريخ': 'eventDate',
             'date': 'eventDate',
             'الوقت': 'eventTime',
             'time': 'eventTime',
+            'الموقع': 'location',
+            'تفاصيل بطاقة الزفاف': 'weddingDetails',
             'الأحرف المختارة': 'letters',
             'الأحرف': 'letters',
             'letters': 'letters',
+            'الأسماء المكتوبة': 'writtenNames',
+            'رقم النموذج': 'templateNumber',
+            'حارس الأمن': 'securityGuard',
             'لون الثيم': 'themeColor',
             'اللون': 'themeColor',
             'color': 'themeColor',
@@ -1318,15 +1329,25 @@
                 orderId: '---',
                 customerName: '---',
                 phone: '---',
-                eventType: '---',
-                eventDate: '---',
-                eventTime: '---',
-                letters: 'لا يوجد',
-                themeColor: '#81c406',
-                quantity: '---',
-                customDesign: 'لا',
+                customerEmail: '',
+                eventType: '',
+                invitationSize: '',
+                invitationType: '',
+                designType: '',
+                eventDate: '',
+                eventTime: '',
+                location: '',
+                weddingDetails: '',
+                letters: '',
+                writtenNames: '',
+                templateNumber: '',
+                securityGuard: '',
+                themeColor: '',
+                quantity: '',
+                customDesign: '',
                 finalPrice: '0.00 OMR',
-                notes: 'لا يوجد'
+                notes: '',
+                extraFields: []
             };
 
             if (!text || !text.trim()) return data;
@@ -1347,6 +1368,12 @@
                     const fieldKey = findFieldKey(rawKey);
                     if (fieldKey && value) {
                         data[fieldKey] = value;
+                        matched = true;
+                    } else if (value && !/^(subject|from_name|access_key|botcheck|---|رابط_الفاتورة)$/i.test(rawKey)) {
+                        data.extraFields.push({
+                            label: rawKey.replace(/_/g, ' ').trim(),
+                            value
+                        });
                         matched = true;
                     }
                 }
@@ -1422,7 +1449,9 @@
             const rawText = document.getElementById('raw-input').value;
             const data = parseRawInput(rawText);
             const safeData = Object.fromEntries(
-                Object.entries(data).map(([key, value]) => [key, escapeHTML(value)])
+                Object.entries(data)
+                    .filter(([key]) => key !== 'extraFields')
+                    .map(([key, value]) => [key, escapeHTML(value)])
             );
 
             const today = new Date();
@@ -1434,7 +1463,41 @@
             const priceParts = String(data.finalPrice || '0.00 OMR').trim().split(/\s+/);
             const priceAmount = escapeHTML(priceParts[0] || '0.00');
             const priceCurrency = data.finalPrice.includes('OMR') ? 'OMR' : data.finalPrice.includes('ر.ع') ? 'ر.ع' : '';
-            const quantityText = data.quantity === '---' ? '---' : `${safeData.quantity} بطاقة`;
+            const quantityText = data.quantity ? `${safeData.quantity} بطاقة` : '';
+            const hasValue = value => {
+                const clean = String(value || '').trim().toLowerCase();
+                return clean && !['---', 'لا يوجد', 'none', 'null', 'undefined'].includes(clean);
+            };
+            const isSelected = value => hasValue(value) && !['لا', 'no', 'false'].includes(String(value).trim().toLowerCase());
+            const row = (label, value, options = {}) => {
+                if (!hasValue(value)) return '';
+                const direction = options.ltr ? ' dir="ltr" style="text-align:right;"' : '';
+                const className = options.customer ? ' customer-value' : '';
+                return `<tr><td class="field-label">${escapeHTML(label)}</td><td class="field-value${className}"${direction}>${options.html ? value : escapeHTML(value)}</td></tr>`;
+            };
+            const detailRows = [
+                row('رقم الطلب', data.orderId, { ltr: true }),
+                row('اسم العميل', data.customerName, { customer: true }),
+                row('رقم الجوال', data.phone, { ltr: true }),
+                row('البريد الإلكتروني', data.customerEmail, { ltr: true }),
+                row('نوع المناسبة', data.eventType),
+                row('عدد الوحدات', quantityText),
+                row('حجم الدعوة', data.invitationSize),
+                row('نوع الدعوة', data.invitationType),
+                row('نوع التصميم', data.designType),
+                row('تاريخ المناسبة', data.eventDate),
+                row('الوقت', data.eventTime),
+                row('الموقع', data.location),
+                row('تفاصيل بطاقة الزفاف', data.weddingDetails),
+                row('الأحرف المختارة', data.letters),
+                row('الأسماء المكتوبة', data.writtenNames),
+                row('رقم النموذج', data.templateNumber),
+                isSelected(data.securityGuard) ? row('حارس الأمن', data.securityGuard) : '',
+                hasValue(data.themeColor) ? row('لون الثيم', `<div class="color-preview"><span class="color-dot" style="background:${escapeHTML(data.themeColor)};"></span><span dir="ltr">${escapeHTML(data.themeColor)}</span></div>`, { html: true }) : '',
+                hasValue(data.customDesign) ? row('تصميم مخصص', `<span class="status-badge ${isYes ? 'status-paid' : 'status-pending'}">${escapeHTML(data.customDesign)}</span>`, { html: true }) : '',
+                row('ملاحظات إضافية', data.notes),
+                ...data.extraFields.map(field => row(field.label, field.value))
+            ].join('');
 
             const html = `
             <div class="invoice-inner" id="invoice-to-print">
@@ -1468,61 +1531,7 @@
                             <th>التفاصيل</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="field-label">رقم الطلب</td>
-                            <td class="field-value" dir="ltr" style="text-align:right;">${safeData.orderId}</td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">اسم العميل</td>
-                            <td class="field-value customer-value" dir="rtl">${safeData.customerName}</td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">رقم الجوال</td>
-                            <td class="field-value" dir="ltr" style="text-align:right;">${safeData.phone}</td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">نوع المناسبة</td>
-                            <td class="field-value">${safeData.eventType}</td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">تاريخ المناسبة</td>
-                            <td class="field-value">${safeData.eventDate}</td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">الوقت</td>
-                            <td class="field-value">${safeData.eventTime}</td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">الأحرف المختارة</td>
-                            <td class="field-value">${safeData.letters}</td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">لون الثيم</td>
-                            <td class="field-value">
-                                <div class="color-preview">
-                                    <span class="color-dot" style="background:${data.themeColor};"></span>
-                                    <span dir="ltr">${safeData.themeColor}</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">عدد الوحدات</td>
-                            <td class="field-value">${quantityText}</td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">تصميم مخصص</td>
-                            <td class="field-value">
-                                <span class="status-badge ${isYes ? 'status-paid' : 'status-pending'}">
-                                    ${safeData.customDesign}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="field-label">ملاحظات إضافية</td>
-                            <td class="field-value">${safeData.notes}</td>
-                        </tr>
-                    </tbody>
+                    <tbody>${detailRows}</tbody>
                 </table>
 
                 <div class="invoice-total">
