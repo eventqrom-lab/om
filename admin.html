@@ -76,9 +76,11 @@
             display: flex;
             align-items: center;
             gap: 14px;
+            width: 100%;
+            justify-content: center;
         }
         .archive-nav-btn {
-            width: auto;
+            width: 150px;
             padding: 9px 18px;
             font-size: 0.85rem;
             min-height: 40px;
@@ -89,13 +91,7 @@
             max-width: 1100px;
             margin: 0 auto;
             padding: 100px 24px 60px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
-        }
-        @media (max-width: 900px) {
-            .main-wrapper { grid-template-columns: 1fr; padding-top: 90px; }
+            display: block;
         }
 
         .section-title {
@@ -213,7 +209,7 @@
         }
 
         /* Preview */
-        .preview-section { display: flex; flex-direction: column; gap: 20px; }
+        .preview-section { display: flex; flex-direction: column; gap: 20px; width: min(700px, 100%); margin: 0 auto; }
         .invoice-container {
             background: #fff;
             border-radius: var(--border-radius);
@@ -586,7 +582,8 @@
             }
             .nav-brand-actions {
                 gap: 8px;
-                min-width: 0;
+                width: 100%;
+                justify-content: center;
             }
             .logo {
                 font-size: 1rem;
@@ -599,10 +596,11 @@
                 text-align: left;
             }
             .archive-nav-btn {
-                padding: 8px 12px;
-                min-height: 36px;
+                width: min(150px, calc(50vw - 22px));
+                padding: 8px 10px;
+                min-height: 44px;
                 font-size: 0.78rem;
-                flex: 0 0 auto;
+                flex: 0 1 150px;
             }
             .main-wrapper {
                 padding: 86px 14px 34px;
@@ -1012,23 +1010,7 @@
     </nav>
 
     <div class="main-wrapper">
-        <!-- Input Section -->
-        <div class="input-section">
-            <h2 class="section-title">بيانات الفاتورة</h2>
-            <div class="input-card">
-                <div class="form-group">
-                    <label>الصق</label>
-                    <textarea id="raw-input" placeholder="الصق"></textarea>
-                </div>
-
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary" onclick="generateInvoice()">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                        معاينة الفاتورة
-                    </button>
-                </div>
-            </div>
-        </div>
+        <textarea id="raw-input" class="hidden" aria-hidden="true"></textarea>
 
         <!-- Preview Section -->
         <div class="preview-section">
@@ -1040,7 +1022,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/>
                     </svg>
                     <h3>لا توجد فاتورة بعد</h3>
-                    <p>الصق البيانات في الخانة واضغط "معاينة الفاتورة"</p>
+                    <p>اضغط «الفواتير» ثم اختر الطلب لمعاينة فاتورته</p>
                 </div>
             </div>
 
@@ -1153,6 +1135,7 @@
             adminOrders = data.orders.map(orderToInvoice);
             document.getElementById('admin-login').classList.add('hidden');
             renderArchiveTable();
+            if (!document.getElementById('invoice-to-print')) openArchiveModal();
         }
 
         document.getElementById('admin-email-form').addEventListener('submit', async (event) => {
@@ -1270,6 +1253,7 @@
             const cleanedKey = rawKey
                 .toLowerCase()
                 .replace(/[()]/g, '')
+                .replace(/_/g, ' ')
                 .replace(/\s+/g, ' ')
                 .trim();
 
@@ -1425,7 +1409,7 @@
                 data.eventDate = dateMatch[1].padStart(2,'0') + '-' + dateMatch[2].padStart(2,'0') + '-' + dateMatch[3];
             }
 
-            const orderRegex = /(ORD-[\w-]+)/i;
+            const orderRegex = /((?:EQR|ORD)-[\w-]+)/i;
             const orderMatch = text.match(orderRegex);
             if (orderMatch) {
                 data.orderId = orderMatch[1];
@@ -1629,7 +1613,7 @@
             showToast('جاري إنشاء PDF...');
 
             try {
-                const orderId = (document.getElementById('raw-input').value.match(/(ORD-[\w-]+)/i) || ['invoice'])[0];
+                const orderId = (document.getElementById('raw-input').value.match(/((?:EQR|ORD)-[\w-]+)/i) || ['invoice'])[0];
                 await saveElementAsPDF(element, orderId);
                 showToast('تم التحميل بنجاح');
             } catch (err) {
