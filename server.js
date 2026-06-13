@@ -138,6 +138,9 @@ async function sendEmailOtp(email, code) {
     port: Number(process.env.SMTP_PORT) || 465,
     secure: String(process.env.SMTP_SECURE).toLowerCase() !== 'false',
     family: 4,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
   });
   const info = await transporter.sendMail({

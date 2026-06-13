@@ -20,12 +20,21 @@
 
     async function api(path, options = {}) {
         const headers = { ...(options.headers || {}) };
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 20000);
         if (options.body) headers['Content-Type'] = 'application/json';
         if (token()) headers.Authorization = `Bearer ${token()}`;
-        const response = await fetch(`${apiBase}${path}`, { ...options, headers });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.message || 'حدث خطأ، حاول مرة أخرى.');
-        return data;
+        try {
+            const response = await fetch(`${apiBase}${path}`, { ...options, headers, signal: controller.signal });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.message || 'حدث خطأ، حاول مرة أخرى.');
+            return data;
+        } catch (error) {
+            if (error.name === 'AbortError') throw new Error('تأخر الخادم في الرد. تحقق من إعدادات البريد وحاول مرة أخرى.');
+            throw error;
+        } finally {
+            clearTimeout(timeout);
+        }
     }
     function showMessage(text, isError = false) {
         message.textContent = text;
@@ -92,7 +101,10 @@
         event.preventDefault();
         clearMessage();
         const button = document.getElementById('otp-request-btn');
+        const originalText = button.textContent;
         button.disabled = true;
+        button.textContent = 'جاري إرسال رمز التحقق...';
+        showMessage('جاري إرسال رمز التحقق إلى بريدك الإلكتروني...');
         try {
             const data = await api('/api/auth/request-otp', {
                 method: 'POST',
@@ -115,6 +127,7 @@
             showMessage(error.message, true);
         } finally {
             button.disabled = false;
+            button.textContent = originalText;
         }
     });
     verifyForm.addEventListener('submit', async (event) => {
