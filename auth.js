@@ -8,9 +8,11 @@
     const verifyForm = document.getElementById('otp-verify-form');
     const identifierInput = document.getElementById('auth-identifier');
     const nameInput = document.getElementById('auth-name');
+    const phoneInput = document.getElementById('auth-phone');
     const message = document.getElementById('account-message');
     const orderLoginNotice = document.getElementById('order-login-notice');
     let continueOrderAfterLogin = false;
+    let authMode = 'login';
     const token = () => localStorage.getItem(tokenKey);
     const apiBase = window.location.hostname.endsWith('github.io')
         ? 'https://om-production-7de0.up.railway.app'
@@ -34,6 +36,24 @@
     function showAuth() {
         authView.classList.remove('hidden');
         profileView.classList.add('hidden');
+    }
+    function setAuthMode(mode) {
+        authMode = mode;
+        const isSignup = mode === 'signup';
+        document.getElementById('account-title').textContent = isSignup ? 'إنشاء حساب' : 'تسجيل الدخول';
+        document.getElementById('account-lead').textContent = isSignup
+            ? 'أنشئ حسابك باسمك ورقمك وبريدك الإلكتروني بدون كلمة مرور.'
+            : 'أدخل بريد حسابك المسجل وسنرسل لك رمز التحقق.';
+        document.getElementById('login-mode-btn').classList.toggle('active', !isSignup);
+        document.getElementById('signup-mode-btn').classList.toggle('active', isSignup);
+        document.getElementById('login-mode-btn').setAttribute('aria-selected', String(!isSignup));
+        document.getElementById('signup-mode-btn').setAttribute('aria-selected', String(isSignup));
+        document.querySelectorAll('.signup-field').forEach((field) => field.classList.toggle('hidden', !isSignup));
+        nameInput.required = isSignup;
+        phoneInput.required = isSignup;
+        verifyForm.classList.add('hidden');
+        requestForm.classList.remove('hidden');
+        clearMessage();
     }
     async function showProfile() {
         authView.classList.add('hidden');
@@ -74,7 +94,15 @@
         const button = document.getElementById('otp-request-btn');
         button.disabled = true;
         try {
-            const data = await api('/api/auth/request-otp', { method: 'POST', body: JSON.stringify({ identifier: identifierInput.value.trim() }) });
+            const data = await api('/api/auth/request-otp', {
+                method: 'POST',
+                body: JSON.stringify({
+                    mode: authMode,
+                    identifier: identifierInput.value.trim(),
+                    name: nameInput.value.trim(),
+                    phone: phoneInput.value.trim()
+                })
+            });
             document.getElementById('otp-sent-message').textContent = data.message;
             requestForm.classList.add('hidden');
             verifyForm.classList.remove('hidden');
@@ -95,7 +123,7 @@
         try {
             const data = await api('/api/auth/verify-otp', {
                 method: 'POST',
-                body: JSON.stringify({ identifier: identifierInput.value.trim(), name: nameInput.value.trim(), code: document.getElementById('otp-code').value.trim() })
+                body: JSON.stringify({ mode: authMode, identifier: identifierInput.value.trim(), code: document.getElementById('otp-code').value.trim() })
             });
             localStorage.setItem(tokenKey, data.token);
             currentUser = data.user;
@@ -122,10 +150,12 @@
         if (text) text.textContent = label;
     }
     document.getElementById('account-btn').addEventListener('click', () => open());
+    document.getElementById('login-mode-btn').addEventListener('click', () => setAuthMode('login'));
+    document.getElementById('signup-mode-btn').addEventListener('click', () => setAuthMode('signup'));
     document.getElementById('account-close').addEventListener('click', close);
     document.getElementById('account-return-btn').addEventListener('click', close);
     document.getElementById('otp-back').addEventListener('click', () => { verifyForm.classList.add('hidden'); requestForm.classList.remove('hidden'); clearMessage(); });
-    document.getElementById('logout-btn').addEventListener('click', () => { localStorage.removeItem(tokenKey); currentUser = null; verifyForm.classList.add('hidden'); requestForm.classList.remove('hidden'); updateAccountButton(); showAuth(); });
+    document.getElementById('logout-btn').addEventListener('click', () => { localStorage.removeItem(tokenKey); currentUser = null; setAuthMode('login'); updateAccountButton(); showAuth(); });
     modal.addEventListener('click', (event) => { if (event.target === modal) close(); });
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && !modal.classList.contains('hidden')) close();

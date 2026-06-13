@@ -600,11 +600,21 @@
             <button type="button" class="account-close" id="account-close" aria-label="إغلاق">&times;</button>
             <div id="auth-view">
                 <h2 id="account-title">تسجيل الدخول</h2>
-                <p class="account-lead">سجل ببريدك الإلكتروني بدون كلمة مرور.</p>
+                <p class="account-lead" id="account-lead">سجل ببريدك الإلكتروني بدون كلمة مرور.</p>
                 <p class="order-login-notice hidden" id="order-login-notice">سجل الدخول أولاً لإرسال طلبك. ستبقى جميع تفاصيل الطلب والسعر محفوظة.</p>
+                <div class="auth-mode-switch" role="tablist" aria-label="نوع الحساب">
+                    <button type="button" class="auth-mode-btn active" id="login-mode-btn" role="tab" aria-selected="true">تسجيل الدخول</button>
+                    <button type="button" class="auth-mode-btn" id="signup-mode-btn" role="tab" aria-selected="false">إنشاء حساب</button>
+                </div>
                 <form id="otp-request-form" class="account-form">
-                    <label for="auth-name">الاسم</label>
-                    <input id="auth-name" type="text" maxlength="150" placeholder="الاسم الكامل">
+                    <div class="signup-field hidden">
+                        <label for="auth-name">الاسم</label>
+                        <input id="auth-name" type="text" maxlength="150" placeholder="الاسم الكامل" autocomplete="name">
+                    </div>
+                    <div class="signup-field hidden">
+                        <label for="auth-phone">رقم الهاتف</label>
+                        <input id="auth-phone" type="tel" maxlength="30" placeholder="+968 0000 0000" dir="ltr" autocomplete="tel">
+                    </div>
                     <label for="auth-identifier">البريد الإلكتروني</label>
                     <input id="auth-identifier" type="email" inputmode="email" maxlength="320" placeholder="name@example.com" dir="ltr" required>
                     <button type="submit" class="btn btn-primary btn-block" id="otp-request-btn">إرسال رمز التحقق إلى البريد</button>
@@ -631,7 +641,7 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="auth.js?v=20260612-github-api"></script>
+    <script src="auth.js?v=20260613-auth-modes"></script>
     <script src="script.js?v=20260612-order-login"></script>
 </body>
 

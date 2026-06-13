@@ -1787,10 +1787,14 @@ body.modal-open { overflow: hidden; }
 .account-modal-card { position: relative; width: min(560px,100%); max-height: min(760px,90vh); overflow-y: auto; padding: 32px; border: 1px solid var(--border-color); border-radius: 16px; background: var(--charcoal-card); box-shadow: var(--shadow-lg); }
 .account-modal-card h2, .orders-heading { color: var(--luxury-gold); }
 .account-lead, #profile-identifier { color: var(--text-muted); margin: 6px 0 22px; }
+.auth-mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 18px; padding: 5px; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-input); }
+.auth-mode-btn { padding: 10px; border: 0; border-radius: 7px; background: transparent; color: var(--text-muted); cursor: pointer; font: inherit; }
+.auth-mode-btn.active { background: var(--luxury-gold); color: var(--deep-black); font-weight: 700; }
 .order-login-notice { margin: -8px 0 18px; padding: 12px 14px; border: 1px solid rgba(198,167,105,.35); border-radius: 8px; background: var(--luxury-gold-glow); color: var(--text-main); font-size: .92rem; }
 .account-close { position: absolute; z-index: 5; inset-inline-start: 14px; inset-inline-end: auto; top: 10px; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid transparent; border-radius: 50%; background: transparent; color: var(--text-main); font-size: 30px; line-height: 1; cursor: pointer; touch-action: manipulation; }
 .account-close:hover, .account-close:focus-visible { border-color: var(--luxury-gold); color: var(--luxury-gold); outline: none; }
 .account-form { display: grid; gap: 10px; }
+.signup-field { display: grid; gap: 10px; }
 .account-form input { width: 100%; padding: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); color: var(--text-main); font: inherit; }
 .otp-code { text-align: center; letter-spacing: 8px; font-size: 1.35rem !important; }
 .account-link-btn { border: 0; background: transparent; color: var(--luxury-gold); cursor: pointer; font: inherit; padding: 8px; }

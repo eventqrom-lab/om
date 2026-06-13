@@ -51,6 +51,7 @@ async function initializeDatabase() {
       identifier_type VARCHAR(10) NOT NULL CHECK (identifier_type IN ('email', 'phone')),
       identifier VARCHAR(320) NOT NULL,
       name VARCHAR(150),
+      phone VARCHAR(30),
       verified_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       UNIQUE(identifier_type, identifier)
@@ -60,6 +61,9 @@ async function initializeDatabase() {
       id BIGSERIAL PRIMARY KEY,
       identifier_type VARCHAR(10) NOT NULL CHECK (identifier_type IN ('email', 'phone')),
       identifier VARCHAR(320) NOT NULL,
+      purpose VARCHAR(10) NOT NULL DEFAULT 'login',
+      signup_name VARCHAR(150),
+      signup_phone VARCHAR(30),
       code_hash VARCHAR(64) NOT NULL,
       attempts SMALLINT NOT NULL DEFAULT 0,
       expires_at TIMESTAMPTZ NOT NULL,
@@ -84,12 +88,23 @@ async function initializeDatabase() {
 
     CREATE INDEX IF NOT EXISTS orders_user_created_idx
       ON orders(user_id, created_at DESC);
+
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(30);
+    ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS purpose VARCHAR(10) NOT NULL DEFAULT 'login';
+    ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS signup_name VARCHAR(150);
+    ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS signup_phone VARCHAR(30);
   `);
 }
 
 function normalizeEmail(value) {
   const clean = String(value || '').trim().toLowerCase();
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean) ? clean : null;
+}
+
+function normalizePhone(value) {
+  const clean = String(value || '').trim().slice(0, 30);
+  const digitCount = clean.replace(/\D/g, '').length;
+  return /^[+()\d\s-]+$/.test(clean) && digitCount >= 7 && digitCount <= 15 ? clean : null;
 }
 
 function hashOtp(identifier, code) {
@@ -105,7 +120,7 @@ async function requireAuth(req, res, next) {
   try {
     const payload = jwt.verify(token, jwtSecret);
     const result = await pool.query(
-      'SELECT id, identifier_type, identifier, name, created_at FROM users WHERE id = $1',
+      'SELECT id, identifier_type, identifier, name, phone, created_at FROM users WHERE id = $1',
       [payload.sub]
     );
     if (!result.rows[0]) throw new Error('User not found');
@@ -144,7 +159,26 @@ app.get('/api/health', async (_req, res) => {
 app.post('/api/auth/request-otp', async (req, res) => {
   const type = 'email';
   const identifier = normalizeEmail(req.body.identifier);
+  const purpose = req.body.mode === 'signup' ? 'signup' : req.body.mode === 'login' ? 'login' : null;
   if (!identifier) return res.status(400).json({ message: 'البريد الإلكتروني غير صحيح.' });
+  if (!purpose) return res.status(400).json({ message: 'اختر تسجيل الدخول أو إنشاء حساب.' });
+
+  const existingUser = await pool.query(
+    'SELECT id FROM users WHERE identifier_type = $1 AND identifier = $2',
+    [type, identifier]
+  );
+  if (purpose === 'login' && !existingUser.rows[0]) {
+    return res.status(404).json({ message: 'لا يوجد حساب مسجل بهذا البريد. اختر إنشاء حساب أولاً.' });
+  }
+  if (purpose === 'signup' && existingUser.rows[0]) {
+    return res.status(409).json({ message: 'هذا البريد مسجل مسبقاً. اختر تسجيل الدخول.' });
+  }
+
+  const signupName = purpose === 'signup' ? String(req.body.name || '').trim().slice(0, 150) : null;
+  const signupPhone = purpose === 'signup' ? normalizePhone(req.body.phone) : null;
+  if (purpose === 'signup' && (!signupName || !signupPhone)) {
+    return res.status(400).json({ message: 'يرجى إدخال الاسم ورقم هاتف صحيح لإنشاء الحساب.' });
+  }
 
   const recent = await pool.query(
     `SELECT created_at FROM otp_codes
@@ -158,9 +192,9 @@ app.post('/api/auth/request-otp', async (req, res) => {
 
   const code = String(crypto.randomInt(100000, 1000000));
   await pool.query(
-    `INSERT INTO otp_codes (identifier_type, identifier, code_hash, expires_at)
-     VALUES ($1, $2, $3, NOW() + INTERVAL '10 minutes')`,
-    [type, identifier, hashOtp(identifier, code)]
+    `INSERT INTO otp_codes (identifier_type, identifier, purpose, signup_name, signup_phone, code_hash, expires_at)
+     VALUES ($1, $2, $3, $4, $5, $6, NOW() + INTERVAL '10 minutes')`,
+    [type, identifier, purpose, signupName, signupPhone, hashOtp(identifier, code)]
   );
 
   let sent = false;
@@ -189,14 +223,15 @@ app.post('/api/auth/request-otp', async (req, res) => {
 app.post('/api/auth/verify-otp', async (req, res) => {
   const type = 'email';
   const identifier = normalizeEmail(req.body.identifier);
+  const purpose = req.body.mode === 'signup' ? 'signup' : req.body.mode === 'login' ? 'login' : null;
   const code = String(req.body.code || '').trim();
-  if (!identifier || !/^\d{6}$/.test(code)) return res.status(400).json({ message: 'بيانات التحقق غير صحيحة.' });
+  if (!identifier || !purpose || !/^\d{6}$/.test(code)) return res.status(400).json({ message: 'بيانات التحقق غير صحيحة.' });
 
   const otpResult = await pool.query(
-    `SELECT id, code_hash, attempts, expires_at FROM otp_codes
-     WHERE identifier_type = $1 AND identifier = $2 AND used_at IS NULL
+    `SELECT id, code_hash, attempts, expires_at, signup_name, signup_phone FROM otp_codes
+     WHERE identifier_type = $1 AND identifier = $2 AND purpose = $3 AND used_at IS NULL
      ORDER BY created_at DESC LIMIT 1`,
-    [type, identifier]
+    [type, identifier, purpose]
   );
   const otp = otpResult.rows[0];
   if (!otp || new Date(otp.expires_at) < new Date() || otp.attempts >= 5) {
@@ -207,17 +242,53 @@ app.post('/api/auth/verify-otp', async (req, res) => {
     return res.status(400).json({ message: 'رمز التحقق غير صحيح.' });
   }
 
-  await pool.query('UPDATE otp_codes SET used_at = NOW() WHERE id = $1', [otp.id]);
-  const userResult = await pool.query(
-    `INSERT INTO users (identifier_type, identifier, name)
-     VALUES ($1, $2, NULLIF($3, ''))
-     ON CONFLICT (identifier_type, identifier)
-     DO UPDATE SET name = COALESCE(NULLIF(EXCLUDED.name, ''), users.name)
-     RETURNING id, identifier_type, identifier, name, created_at`,
-    [type, identifier, String(req.body.name || '').trim().slice(0, 150)]
-  );
-  const user = userResult.rows[0];
-  res.json({ token: createToken(user), user });
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const used = await client.query(
+      'UPDATE otp_codes SET used_at = NOW() WHERE id = $1 AND used_at IS NULL RETURNING id',
+      [otp.id]
+    );
+    if (!used.rows[0]) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ message: 'تم استخدام رمز التحقق مسبقاً.' });
+    }
+
+    let userResult;
+    if (purpose === 'signup') {
+      if (!otp.signup_name || !normalizePhone(otp.signup_phone)) {
+        await client.query('ROLLBACK');
+        return res.status(400).json({ message: 'بيانات إنشاء الحساب غير مكتملة. اطلب رمزاً جديداً.' });
+      }
+      userResult = await client.query(
+        `INSERT INTO users (identifier_type, identifier, name, phone)
+         VALUES ($1, $2, $3, $4)
+         RETURNING id, identifier_type, identifier, name, phone, created_at`,
+        [type, identifier, otp.signup_name, otp.signup_phone]
+      );
+    } else {
+      userResult = await client.query(
+        `SELECT id, identifier_type, identifier, name, phone, created_at
+         FROM users WHERE identifier_type = $1 AND identifier = $2`,
+        [type, identifier]
+      );
+      if (!userResult.rows[0]) {
+        await client.query('ROLLBACK');
+        return res.status(404).json({ message: 'لم يعد هذا الحساب موجوداً.' });
+      }
+    }
+    await client.query('COMMIT');
+    const user = userResult.rows[0];
+    res.json({ token: createToken(user), user });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    if (error.code === '23505') {
+      return res.status(409).json({ message: 'هذا البريد مسجل مسبقاً. اختر تسجيل الدخول.' });
+    }
+    throw error;
+  } finally {
+    client.release();
+  }
 });
 
 app.get('/api/me', requireAuth, async (req, res) => {
