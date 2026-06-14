@@ -467,7 +467,13 @@
             background: transparent;
         }
         .archive-home .archive-modal-content {
-            min-height: calc(100vh - 160px);
+            max-width: 1100px;
+            min-height: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
         }
         .invoice-modal {
             position: fixed;
@@ -515,6 +521,9 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-lg);
             padding: 28px;
+        }
+        .archive-home .archive-modal-header {
+            margin-bottom: 20px;
         }
         .archive-modal-header {
             display: flex;
@@ -565,7 +574,7 @@
         }
         .archive-table-wrap {
             width: 100%;
-            overflow-x: auto;
+            overflow: visible;
             border: 1.5px solid var(--border-color);
             border-radius: var(--border-radius);
         }
@@ -638,6 +647,9 @@
             border-color: var(--luxury-gold);
             background: rgba(198, 167, 105, 0.08);
         }
+        .archive-actions-menu[open] {
+            z-index: 30;
+        }
         .archive-actions-popover {
             position: absolute;
             z-index: 20;
@@ -673,6 +685,60 @@
             border: 1.5px solid var(--border-color);
             border-radius: var(--border-radius);
             background: rgba(198, 167, 105, 0.03);
+        }
+        .delete-confirm-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 7000;
+            display: none;
+            place-items: center;
+            padding: 20px;
+            background: rgba(8, 8, 8, 0.86);
+            backdrop-filter: blur(8px);
+        }
+        .delete-confirm-modal.open {
+            display: grid;
+        }
+        .delete-confirm-card {
+            width: min(420px, 100%);
+            padding: 26px;
+            border: 1.5px solid var(--luxury-gold);
+            border-radius: var(--border-radius);
+            background: var(--charcoal-card);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        .delete-confirm-card h3 {
+            margin-bottom: 10px;
+            color: var(--luxury-gold);
+            font-size: 1.3rem;
+        }
+        .delete-confirm-card p {
+            margin-bottom: 22px;
+            color: var(--text-muted-beige);
+            line-height: 1.7;
+        }
+        .delete-confirm-order {
+            display: block;
+            margin-top: 6px;
+            color: var(--text-ivory);
+            font-weight: 800;
+            direction: ltr;
+        }
+        .delete-confirm-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .delete-confirm-actions .btn {
+            width: 100%;
+        }
+        .delete-confirm-submit {
+            background: #b73b3b;
+            color: #fff;
+        }
+        .delete-confirm-submit:hover {
+            background: #d34a4a;
         }
 
         @media (max-width: 640px) {
@@ -931,6 +997,11 @@
             .archive-home {
                 padding: 0;
             }
+            .archive-home .archive-modal-content {
+                padding: 0;
+                min-height: 0;
+                border-radius: 0;
+            }
             .archive-modal-content {
                 width: 100%;
                 padding: 16px 12px;
@@ -958,7 +1029,7 @@
                 font-size: 0.88rem;
             }
             .archive-table-wrap {
-                overflow-x: auto;
+                overflow: visible;
                 border: 1.5px solid var(--border-color);
             }
             .archive-table {
@@ -1036,6 +1107,18 @@
                 width: 36px;
                 height: 36px;
                 min-height: 36px;
+            }
+            .delete-confirm-modal {
+                padding: 14px;
+            }
+            .delete-confirm-card {
+                padding: 22px 16px;
+            }
+            .delete-confirm-card h3 {
+                font-size: 1.15rem;
+            }
+            .delete-confirm-card p {
+                font-size: 0.86rem;
             }
         }
 
@@ -1276,6 +1359,20 @@
         </div>
     </div>
 
+    <div class="delete-confirm-modal" id="delete-confirm-modal" dir="rtl" aria-hidden="true">
+        <div class="delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="delete-confirm-title">
+            <h3 id="delete-confirm-title">حذف الفاتورة؟</h3>
+            <p>
+                سيتم حذف الفاتورة نهائيًا ولا يمكن استعادتها.
+                <span class="delete-confirm-order" id="delete-confirm-order"></span>
+            </p>
+            <div class="delete-confirm-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteConfirm()">إلغاء</button>
+                <button type="button" class="btn delete-confirm-submit" id="delete-confirm-submit" onclick="confirmDeleteArchivedInvoice()">حذف الفاتورة</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const { jsPDF } = window.jspdf;
         const adminTokenKey = 'eventQrAdminToken';
@@ -1283,6 +1380,7 @@
             ? 'https://om-production-7de0.up.railway.app'
             : '';
         let adminOrders = [];
+        let pendingDeleteInvoiceId = '';
 
         async function adminApi(path, options = {}) {
             const headers = { ...(options.headers || {}) };
@@ -1935,21 +2033,49 @@
         }
 
         async function deleteArchivedInvoice(encodedInvoiceId) {
-            const invoiceId = decodeURIComponent(encodedInvoiceId);
-            if (!confirm(`هل تريد حذف الفاتورة ${invoiceId} نهائيًا؟`)) return;
+            pendingDeleteInvoiceId = decodeURIComponent(encodedInvoiceId);
+            document.getElementById('delete-confirm-order').textContent = pendingDeleteInvoiceId;
+            const modal = document.getElementById('delete-confirm-modal');
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
 
+        function closeDeleteConfirm() {
+            const modal = document.getElementById('delete-confirm-modal');
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            pendingDeleteInvoiceId = '';
+            document.body.style.overflow = '';
+        }
+
+        async function confirmDeleteArchivedInvoice() {
+            const invoiceId = pendingDeleteInvoiceId;
+            if (!invoiceId) return;
+            const submitButton = document.getElementById('delete-confirm-submit');
+            submitButton.disabled = true;
+            submitButton.textContent = 'جاري الحذف...';
             try {
                 await adminApi(`/api/admin/orders/${encodeURIComponent(invoiceId)}`, { method: 'DELETE' });
                 adminOrders = adminOrders.filter(invoice => invoice.id !== invoiceId);
+                closeDeleteConfirm();
                 renderArchiveTable();
                 showToast('تم حذف الفاتورة');
             } catch (error) {
                 showToast(error.message || 'تعذر حذف الفاتورة');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'حذف الفاتورة';
             }
         }
 
         document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') closeInvoiceModal();
+            if (event.key !== 'Escape') return;
+            if (document.getElementById('delete-confirm-modal').classList.contains('open')) {
+                closeDeleteConfirm();
+                return;
+            }
+            closeInvoiceModal();
         });
 
         document.addEventListener('click', function(event) {
@@ -1960,6 +2086,10 @@
 
         document.getElementById('invoice-modal').addEventListener('click', function(event) {
             if (event.target === this) closeInvoiceModal();
+        });
+
+        document.getElementById('delete-confirm-modal').addEventListener('click', function(event) {
+            if (event.target === this) closeDeleteConfirm();
         });
 
         function printInvoice() {
