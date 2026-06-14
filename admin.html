@@ -1038,19 +1038,19 @@
             }
             .archive-table th:nth-child(1),
             .archive-table td:nth-child(1) {
-                width: 32%;
+                width: 30%;
             }
             .archive-table th:nth-child(2),
             .archive-table td:nth-child(2) {
-                width: 25%;
+                width: 23%;
             }
             .archive-table th:nth-child(3),
             .archive-table td:nth-child(3) {
-                width: 16%;
+                width: 22%;
             }
             .archive-table th:nth-child(4),
             .archive-table td:nth-child(4) {
-                width: 27%;
+                width: 25%;
             }
             .archive-table th,
             .archive-table td {
@@ -1432,8 +1432,11 @@
                 orderId: order.order_number,
                 customerName: order.customer_name,
                 phone: order.customer_phone,
-                orderDate: new Intl.DateTimeFormat('ar-OM').format(new Date(order.created_at)),
-                orderTime: new Intl.DateTimeFormat('ar-OM', {
+                createdAt: order.created_at,
+                orderDateTime: new Intl.DateTimeFormat('ar-OM', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
                     hour: 'numeric',
                     minute: '2-digit'
                 }).format(new Date(order.created_at)),
@@ -1967,11 +1970,13 @@
             const content = document.getElementById('archive-content');
             const searchValue = (document.getElementById('archive-search-input').value || '').trim().toLowerCase();
             const invoices = getSavedInvoices();
-            const filteredInvoices = invoices.filter(invoice => {
-                const orderId = String(getArchivedOrderId(invoice)).toLowerCase();
-                const phone = String(invoice.phone || '').toLowerCase();
-                return orderId.includes(searchValue) || phone.includes(searchValue);
-            });
+            const filteredInvoices = invoices
+                .filter(invoice => {
+                    const orderId = String(getArchivedOrderId(invoice)).toLowerCase();
+                    const phone = String(invoice.phone || '').toLowerCase();
+                    return orderId.includes(searchValue) || phone.includes(searchValue);
+                })
+                .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
             if (!invoices.length) {
                 content.innerHTML = '<div class="archive-empty">لا توجد فواتير محفوظة بعد</div>';
@@ -1987,7 +1992,7 @@
                 <tr>
                     <td dir="ltr" style="text-align:right;">${escapeHTML(getArchivedOrderId(invoice))}</td>
                     <td dir="ltr" style="text-align:right;">${escapeHTML(invoice.phone || '---')}</td>
-                    <td>${escapeHTML(invoice.orderTime || '---')}</td>
+                    <td>${escapeHTML(invoice.orderDateTime || '---')}</td>
                     <td>
                         <div class="archive-row-actions">
                             <button type="button" class="btn btn-secondary archive-download-btn" onclick="downloadArchivedInvoice('${encodeURIComponent(invoice.id || '')}')">عرض الفاتورة</button>
@@ -2009,7 +2014,7 @@
                             <tr>
                                 <th>رقم الطلب</th>
                                 <th>رقم هاتف العميل</th>
-                                <th>وقت الطلب</th>
+                                <th>تاريخ ووقت الطلب</th>
                                 <th>الفاتورة</th>
                             </tr>
                         </thead>
