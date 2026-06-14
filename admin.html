@@ -847,49 +847,51 @@
                 font-size: 0.88rem;
             }
             .archive-table-wrap {
-                border: none;
-                overflow: visible;
+                overflow-x: auto;
+                border: 1.5px solid var(--border-color);
             }
             .archive-table {
                 min-width: 0;
-                border-collapse: separate;
-                border-spacing: 0 10px;
+                table-layout: fixed;
             }
-            .archive-table thead {
-                display: none;
+            .archive-table th:nth-child(1),
+            .archive-table td:nth-child(1) {
+                width: 34%;
             }
-            .archive-table,
-            .archive-table tbody,
-            .archive-table tr,
-            .archive-table td {
-                display: block;
-                width: 100%;
+            .archive-table th:nth-child(2),
+            .archive-table td:nth-child(2) {
+                width: 27%;
             }
-            .archive-table tbody tr {
-                border: 1.5px solid var(--border-color);
-                border-radius: var(--border-radius);
-                overflow: hidden;
-                background: rgba(198, 167, 105, 0.035);
+            .archive-table th:nth-child(3),
+            .archive-table td:nth-child(3) {
+                width: 18%;
+            }
+            .archive-table th:nth-child(4),
+            .archive-table td:nth-child(4) {
+                width: 21%;
             }
             .archive-table th,
             .archive-table td {
-                padding: 11px 13px;
+                padding: 10px 5px;
                 border-bottom: 1px solid var(--border-color);
-                font-size: 0.86rem;
+                font-size: 0.68rem;
+                text-align: center !important;
+                line-height: 1.45;
+                overflow-wrap: anywhere;
             }
-            .archive-table td:last-child {
+            .archive-table th {
+                white-space: normal;
+            }
+            .archive-table tbody tr:last-child td {
                 border-bottom: none;
-            }
-            .archive-table td::before {
-                content: attr(data-label);
-                display: block;
-                margin-bottom: 3px;
-                color: var(--luxury-gold);
-                font-size: 0.72rem;
-                font-weight: 800;
             }
             .archive-download-btn {
                 width: 100%;
+                min-height: 34px;
+                padding: 6px 3px;
+                font-size: 0.66rem;
+                line-height: 1.35;
+                white-space: normal;
             }
         }
 
@@ -1119,7 +1121,7 @@
                 <button type="button" class="btn btn-secondary archive-close-btn" onclick="closeArchiveModal()" aria-label="إغلاق">×</button>
             </div>
             <div class="archive-search">
-                <input type="text" id="archive-search-input" placeholder="ابحث باسم العميل أو رقم الطلب" oninput="renderArchiveTable()" autocomplete="off">
+                <input type="text" id="archive-search-input" placeholder="ابحث برقم الطلب أو رقم هاتف العميل" oninput="renderArchiveTable()" autocomplete="off">
             </div>
             <div id="archive-content"></div>
         </div>
@@ -1183,6 +1185,10 @@
                 customerName: order.customer_name,
                 phone: order.customer_phone,
                 orderDate: new Intl.DateTimeFormat('ar-OM').format(new Date(order.created_at)),
+                orderTime: new Intl.DateTimeFormat('ar-OM', {
+                    hour: 'numeric',
+                    minute: '2-digit'
+                }).format(new Date(order.created_at)),
                 rawData,
                 invoiceHTML: ''
             };
@@ -1717,8 +1723,8 @@
             const invoices = getSavedInvoices();
             const filteredInvoices = invoices.filter(invoice => {
                 const orderId = String(getArchivedOrderId(invoice)).toLowerCase();
-                const customerName = String(invoice.customerName || '').toLowerCase();
-                return orderId.includes(searchValue) || customerName.includes(searchValue);
+                const phone = String(invoice.phone || '').toLowerCase();
+                return orderId.includes(searchValue) || phone.includes(searchValue);
             });
 
             if (!invoices.length) {
@@ -1733,11 +1739,10 @@
 
             const rows = filteredInvoices.map(invoice => `
                 <tr>
-                    <td data-label="رقم الطلب" dir="ltr" style="text-align:right;">${escapeHTML(getArchivedOrderId(invoice))}</td>
-                    <td data-label="اسم العميل">${escapeHTML(invoice.customerName || '---')}</td>
-                    <td data-label="رقم العميل" dir="ltr" style="text-align:right;">${escapeHTML(invoice.phone || '---')}</td>
-                    <td data-label="تاريخ الطلب" dir="ltr" style="text-align:right;">${escapeHTML(invoice.orderDate || '---')}</td>
-                    <td data-label="تحميل">
+                    <td dir="ltr" style="text-align:right;">${escapeHTML(getArchivedOrderId(invoice))}</td>
+                    <td dir="ltr" style="text-align:right;">${escapeHTML(invoice.phone || '---')}</td>
+                    <td>${escapeHTML(invoice.orderTime || '---')}</td>
+                    <td>
                         <button type="button" class="btn btn-secondary archive-download-btn" onclick="downloadArchivedInvoice('${encodeURIComponent(invoice.id || '')}')">عرض الفاتورة</button>
                     </td>
                 </tr>
@@ -1749,10 +1754,9 @@
                         <thead>
                             <tr>
                                 <th>رقم الطلب</th>
-                                <th>اسم العميل</th>
-                                <th>رقم العميل</th>
-                                <th>تاريخ الطلب</th>
-                                <th>تحميل</th>
+                                <th>رقم هاتف العميل</th>
+                                <th>وقت الطلب</th>
+                                <th>الفاتورة</th>
                             </tr>
                         </thead>
                         <tbody>${rows}</tbody>
