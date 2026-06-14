@@ -42,7 +42,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
   }
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
@@ -410,6 +410,23 @@ app.get('/api/admin/orders', requireAuth, requireAdmin, async (req, res) => {
     values
   );
   res.json({ orders: result.rows });
+});
+
+app.delete('/api/admin/orders/:orderNumber', requireAuth, requireAdmin, async (req, res) => {
+  const orderNumber = String(req.params.orderNumber || '').trim().slice(0, 24);
+  if (!orderNumber) {
+    return res.status(400).json({ message: 'رقم الطلب غير صالح.' });
+  }
+
+  const result = await pool.query(
+    'DELETE FROM orders WHERE order_number = $1 RETURNING order_number',
+    [orderNumber]
+  );
+  if (!result.rows[0]) {
+    return res.status(404).json({ message: 'تعذر العثور على الفاتورة.' });
+  }
+
+  res.json({ orderNumber: result.rows[0].order_number });
 });
 
 app.post('/api/orders', optionalAuth, async (req, res) => {
