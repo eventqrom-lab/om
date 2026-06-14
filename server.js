@@ -48,6 +48,9 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json({ limit: '250kb' }));
+app.use('/images', express.static(path.join(__dirname, 'images'), {
+  maxAge: '30d'
+}));
 app.use(express.static(__dirname, { extensions: ['html'] }));
 
 async function initializeDatabase() {

@@ -588,31 +588,26 @@
                 min-height: 70px;
             }
             .nav-brand-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 8px;
                 width: 100%;
                 max-width: 100%;
-                justify-content: stretch;
+                min-width: 0;
             }
             .logo {
                 font-size: 1rem;
                 white-space: nowrap;
             }
-            .nav-container > div:last-child {
-                max-width: 120px;
-                font-size: 0.72rem !important;
-                line-height: 1.35;
-                text-align: left;
-            }
             .archive-nav-btn {
-                width: auto;
+                width: 100%;
                 min-width: 0;
                 max-width: none;
                 padding: 8px 6px;
                 min-height: 50px;
                 font-size: 0.82rem;
                 line-height: 1.3;
-                flex: 1 1 0;
-                white-space: nowrap;
+                white-space: normal;
             }
             .main-wrapper {
                 width: 100%;
