@@ -17,7 +17,7 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=20260616-profile-section-pages">
+    <link rel="stylesheet" href="style.css?v=20260616-signup-phone-validation">
 </head>
 
 <body>
@@ -610,7 +610,10 @@
                     </div>
                     <div class="signup-field hidden">
                         <label for="auth-phone">رقم الهاتف</label>
-                        <input id="auth-phone" type="tel" maxlength="30" placeholder="+968 0000 0000" dir="ltr" autocomplete="tel">
+                        <div class="account-phone-field" id="auth-phone-group" dir="ltr">
+                            <span class="account-phone-prefix" aria-hidden="true">+968</span>
+                            <input id="auth-phone" type="tel" inputmode="numeric" maxlength="8" minlength="8" pattern="[97٩٧۹۷][0-9٠-٩۰-۹]{7}" placeholder="00000000" autocomplete="tel-national">
+                        </div>
                     </div>
                     <label for="auth-identifier">البريد الإلكتروني</label>
                     <input id="auth-identifier" type="email" inputmode="email" maxlength="320" placeholder="name@example.com" dir="ltr" required>
@@ -750,7 +753,7 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="auth.js?v=20260616-profile-section-pages"></script>
+    <script src="auth.js?v=20260616-signup-phone-validation-2"></script>
     <script src="script.js?v=20260616-invoice-admin-link"></script>
 </body>
 

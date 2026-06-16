@@ -117,6 +117,12 @@ function normalizePhone(value) {
   return /^[+()\d\s-]+$/.test(clean) && digitCount >= 7 && digitCount <= 15 ? clean : null;
 }
 
+function normalizeOmanMobile(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  const local = digits.startsWith('968') ? digits.slice(3) : digits;
+  return /^[97]\d{7}$/.test(local) ? `+968 ${local}` : null;
+}
+
 function hashOtp(identifier, code) {
   return crypto.createHmac('sha256', jwtSecret).update(`${identifier}:${code}`).digest('hex');
 }
@@ -262,9 +268,9 @@ app.post('/api/auth/request-otp', async (req, res) => {
   }
 
   const signupName = purpose === 'signup' ? String(req.body.name || '').trim().slice(0, 150) : null;
-  const signupPhone = purpose === 'signup' ? normalizePhone(req.body.phone) : null;
+  const signupPhone = purpose === 'signup' ? normalizeOmanMobile(req.body.phone) : null;
   if (purpose === 'signup' && (!signupName || !signupPhone)) {
-    return res.status(400).json({ message: 'يرجى إدخال الاسم ورقم هاتف صحيح لإنشاء الحساب.' });
+    return res.status(400).json({ message: 'يرجى كتابة رقم الهاتف بالشكل الصحيح.' });
   }
 
   const recent = await pool.query(

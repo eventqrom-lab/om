@@ -1797,6 +1797,13 @@ body.modal-open { overflow: hidden; }
 .signup-field { display: grid; gap: 10px; }
 .account-form input { width: 100%; padding: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); color: var(--text-main); font: inherit; }
 .account-form label { color: var(--text-ivory); font-weight: 700; }
+.account-phone-field { display: flex; align-items: center; min-height: 54px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-input); overflow: hidden; transition: var(--transition); }
+.account-phone-field:focus-within { border-color: var(--luxury-gold); box-shadow: 0 0 0 4px rgba(198,167,105,.08); }
+.account-phone-prefix { display: flex; align-items: center; justify-content: center; align-self: stretch; min-width: 74px; padding: 0 14px; border-inline-end: 1px solid var(--border-color); color: var(--luxury-gold); background: rgba(198,167,105,.08); font-weight: 800; user-select: none; pointer-events: none; }
+.account-phone-field input { min-width: 0; height: 52px; border: 0; border-radius: 0; background: transparent; box-shadow: none; direction: ltr; text-align: left; }
+.account-phone-field input:focus { outline: none; border-color: transparent; box-shadow: none; background: transparent; }
+.account-phone-field.phone-invalid { border-color: rgba(182,90,77,.72); box-shadow: 0 0 0 4px rgba(158,61,61,.1); }
+.account-phone-field.phone-invalid .account-phone-prefix { color: #F2747D; border-color: rgba(182,90,77,.45); background: rgba(158,61,61,.12); }
 .otp-code { text-align: center; letter-spacing: 8px; font-size: 1.35rem !important; }
 .account-link-btn { border: 0; background: transparent; color: var(--luxury-gold); cursor: pointer; font: inherit; padding: 8px; }
 .account-link-btn:disabled { color: var(--text-muted); cursor: not-allowed; opacity: .75; }
@@ -1909,6 +1916,22 @@ body.modal-open { overflow: hidden; }
         border-radius: 14px;
         font-size: 16px;
         background: rgba(26,26,26,.94);
+    }
+    .account-phone-field {
+        min-height: 54px;
+        border-radius: 14px;
+        background: rgba(26,26,26,.94);
+    }
+    .account-phone-prefix {
+        min-width: 72px;
+        border-radius: 0;
+    }
+    .account-phone-field input {
+        min-height: 52px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
     }
     .account-form .btn { min-height: 54px; margin-top: 8px; border-radius: 14px; }
     .account-profile-top {

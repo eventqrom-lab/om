@@ -7,6 +7,7 @@
     let authMode = 'login';
     let resendTimer = null;
     let ordersLoaded = false;
+    const authPhoneError = 'يرجى كتابة رقم الهاتف بالشكل الصحيح.';
 
     const modal = $('account-modal');
     const authView = $('auth-view');
@@ -16,6 +17,7 @@
     const identifierInput = $('auth-identifier');
     const nameInput = $('auth-name');
     const phoneInput = $('auth-phone');
+    const phoneGroup = $('auth-phone-group');
     const message = $('account-message');
     const orderLoginNotice = $('order-login-notice');
     const resendButton = $('otp-resend');
@@ -92,6 +94,29 @@
             .replace(/'/g, '&#039;');
     }
 
+    function normalizeAuthPhoneDigits(value) {
+        const arabicDigits = '٠١٢٣٤٥٦٧٨٩';
+        const persianDigits = '۰۱۲۳۴۵۶۷۸۹';
+        return String(value || '')
+            .replace(/[٠-٩]/g, (digit) => arabicDigits.indexOf(digit))
+            .replace(/[۰-۹]/g, (digit) => persianDigits.indexOf(digit))
+            .replace(/\D/g, '')
+            .slice(0, 8);
+    }
+
+    function setAuthPhoneInvalid(isInvalid) {
+        phoneInput.classList.toggle('invalid-input', isInvalid);
+        phoneGroup?.classList.toggle('phone-invalid', isInvalid);
+    }
+
+    function getValidSignupPhone() {
+        const digits = normalizeAuthPhoneDigits(phoneInput.value);
+        phoneInput.value = digits;
+        const isValid = /^[97]\d{7}$/.test(digits);
+        setAuthPhoneInvalid(!isValid);
+        return isValid ? `+968 ${digits}` : null;
+    }
+
     function showAuth() {
         authView.classList.remove('hidden');
         profileView.classList.add('hidden');
@@ -112,6 +137,7 @@
         document.querySelectorAll('.signup-field').forEach((field) => field.classList.toggle('hidden', !isSignup));
         nameInput.required = isSignup;
         phoneInput.required = isSignup;
+        setAuthPhoneInvalid(false);
         verifyForm.classList.add('hidden');
         requestForm.classList.remove('hidden');
         clearMessage(message);
@@ -137,6 +163,12 @@
 
     async function requestOtp(button, showVerifyForm = true) {
         clearMessage(message);
+        const signupPhone = authMode === 'signup' ? getValidSignupPhone() : '';
+        if (authMode === 'signup' && !signupPhone) {
+            showMessage(message, authPhoneError, true);
+            phoneInput.focus();
+            return;
+        }
         const restoreButton = setBusy(button, 'جاري إرسال رمز التحقق...');
         showMessage(message, 'جاري إرسال رمز التحقق إلى بريدك الإلكتروني...');
         try {
@@ -146,7 +178,7 @@
                     mode: authMode,
                     identifier: identifierInput.value.trim(),
                     name: nameInput.value.trim(),
-                    phone: phoneInput.value.trim()
+                    phone: signupPhone
                 })
             });
             $('otp-sent-message').textContent = data.message;
@@ -178,6 +210,7 @@
     function resetProfilePanels() {
         document.querySelectorAll('#profile-view .account-panel').forEach((panel) => panel.classList.add('hidden'));
         document.querySelectorAll('#profile-view [data-account-section]').forEach((trigger) => trigger.classList.remove('active'));
+        profileView.classList.remove('is-section-open');
         clearMessage(profileEditMessage);
         clearMessage(deleteAccountMessage);
     }
@@ -194,6 +227,7 @@
         resetProfilePanels();
         const section = $(sectionId);
         if (!section) return;
+        profileView.classList.add('is-section-open');
         section.classList.remove('hidden');
         document.querySelectorAll(`#profile-view [data-account-section="${sectionId}"]`).forEach((trigger) => {
             trigger.classList.add('active');
@@ -405,6 +439,21 @@
     $('account-btn').addEventListener('click', () => open());
     $('login-mode-btn').addEventListener('click', () => setAuthMode('login'));
     $('signup-mode-btn').addEventListener('click', () => setAuthMode('signup'));
+    phoneInput.addEventListener('input', () => {
+        phoneInput.value = normalizeAuthPhoneDigits(phoneInput.value);
+        if (phoneInput.value.length === 0) {
+            setAuthPhoneInvalid(false);
+            if (message.textContent === authPhoneError) clearMessage(message);
+            return;
+        }
+        const hasInvalidStart = !/^[97]\d{0,7}$/.test(phoneInput.value);
+        setAuthPhoneInvalid(hasInvalidStart);
+        if (hasInvalidStart) {
+            showMessage(message, authPhoneError, true);
+        } else if (message.textContent === authPhoneError) {
+            clearMessage(message);
+        }
+    });
     $('account-close').addEventListener('click', close);
     resendButton.addEventListener('click', async () => requestOtp(resendButton, false));
     $('otp-back').addEventListener('click', () => {
