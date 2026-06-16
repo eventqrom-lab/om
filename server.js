@@ -382,9 +382,126 @@ app.get('/api/me', requireAuth, async (req, res) => {
   res.json({ user: req.user });
 });
 
+app.post('/api/me', requireAuth, async (req, res) => {
+  const name = String(req.body.name || '').trim().slice(0, 150);
+  const phone = normalizePhone(req.body.phone);
+  if (!name || !phone) {
+    return res.status(400).json({ message: 'يرجى إدخال الاسم ورقم هاتف صحيح.' });
+  }
+
+  const result = await pool.query(
+    `UPDATE users
+     SET name = $1, phone = $2
+     WHERE id = $3
+     RETURNING id, identifier_type, identifier, name, phone, created_at`,
+    [name, phone, req.user.id]
+  );
+
+  res.json({ user: result.rows[0] });
+});
+
+app.post('/api/me/delete-otp', requireAuth, async (req, res) => {
+  const identifier = normalizeEmail(req.body.identifier);
+  if (!identifier || identifier !== req.user.identifier) {
+    return res.status(400).json({ message: 'اكتب نفس بريد حسابك المسجل لتأكيد الحذف.' });
+  }
+
+  const recent = await pool.query(
+    `SELECT created_at FROM otp_codes
+     WHERE identifier_type = $1 AND identifier = $2 AND purpose = $3
+     ORDER BY created_at DESC LIMIT 1`,
+    ['email', identifier, 'delete']
+  );
+  if (recent.rows[0] && Date.now() - new Date(recent.rows[0].created_at).getTime() < 30000) {
+    return res.status(429).json({ message: 'انتظر 30 ثانية قبل طلب رمز جديد.' });
+  }
+
+  const code = String(crypto.randomInt(100000, 1000000));
+  await pool.query(
+    `INSERT INTO otp_codes (identifier_type, identifier, purpose, code_hash, expires_at)
+     VALUES ($1, $2, $3, $4, NOW() + INTERVAL '10 minutes')`,
+    ['email', identifier, 'delete', hashOtp(identifier, code)]
+  );
+
+  let sent = false;
+  try {
+    sent = await sendEmailOtp(identifier, code);
+  } catch (error) {
+    console.error(`Account delete OTP delivery failed for ${identifier}:`, error.message);
+  }
+
+  if (!sent && isProduction) {
+    await pool.query(
+      `DELETE FROM otp_codes
+       WHERE identifier_type = $1 AND identifier = $2 AND purpose = $3 AND code_hash = $4 AND used_at IS NULL`,
+      ['email', identifier, 'delete', hashOtp(identifier, code)]
+    );
+    return res.status(503).json({ message: 'خدمة إرسال رمز التحقق غير مهيأة حاليا.' });
+  }
+  if (!sent) console.log(`[DEV DELETE OTP] ${identifier}: ${code}`);
+
+  res.json({
+    message: 'تم إرسال رمز تأكيد حذف الحساب إلى بريدك الإلكتروني.',
+    ...(isProduction ? {} : { devCode: code })
+  });
+});
+
+app.delete('/api/me', requireAuth, async (req, res) => {
+  const identifier = normalizeEmail(req.body.identifier);
+  const code = String(req.body.code || '').trim();
+  if (!identifier || identifier !== req.user.identifier || !/^\d{6}$/.test(code)) {
+    return res.status(400).json({ message: 'بيانات تأكيد الحذف غير صحيحة.' });
+  }
+
+  const otpResult = await pool.query(
+    `SELECT id, code_hash, attempts, expires_at FROM otp_codes
+     WHERE identifier_type = $1 AND identifier = $2 AND purpose = $3 AND used_at IS NULL
+     ORDER BY created_at DESC LIMIT 1`,
+    ['email', identifier, 'delete']
+  );
+  const otp = otpResult.rows[0];
+  if (!otp || new Date(otp.expires_at) < new Date() || otp.attempts >= 5) {
+    return res.status(400).json({ message: 'انتهت صلاحية الرمز. اطلب رمزا جديدا.' });
+  }
+  if (otp.code_hash !== hashOtp(identifier, code)) {
+    await pool.query('UPDATE otp_codes SET attempts = attempts + 1 WHERE id = $1', [otp.id]);
+    return res.status(400).json({ message: 'رمز التحقق غير صحيح.' });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const used = await client.query(
+      'UPDATE otp_codes SET used_at = NOW() WHERE id = $1 AND used_at IS NULL RETURNING id',
+      [otp.id]
+    );
+    if (!used.rows[0]) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ message: 'تم استخدام رمز التحقق مسبقا.' });
+    }
+
+    const deleted = await client.query(
+      'DELETE FROM users WHERE id = $1 AND identifier = $2 RETURNING id',
+      [req.user.id, identifier]
+    );
+    if (!deleted.rows[0]) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ message: 'لم يعد هذا الحساب موجودا.' });
+    }
+
+    await client.query('COMMIT');
+    res.json({ deleted: true });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+});
+
 app.get('/api/orders', requireAuth, async (req, res) => {
   const result = await pool.query(
-    `SELECT order_number, total_price, currency, created_at
+    `SELECT order_number, customer_name, customer_phone, total_price, currency, details, created_at
      FROM orders WHERE user_id = $1 ORDER BY created_at DESC LIMIT 100`,
     [req.user.id]
   );

@@ -1,20 +1,38 @@
 (function () {
     const tokenKey = 'eventQrAuthToken';
+    const $ = (id) => document.getElementById(id);
+
     let currentUser = null;
-    const modal = document.getElementById('account-modal');
-    const authView = document.getElementById('auth-view');
-    const profileView = document.getElementById('profile-view');
-    const requestForm = document.getElementById('otp-request-form');
-    const verifyForm = document.getElementById('otp-verify-form');
-    const identifierInput = document.getElementById('auth-identifier');
-    const nameInput = document.getElementById('auth-name');
-    const phoneInput = document.getElementById('auth-phone');
-    const message = document.getElementById('account-message');
-    const orderLoginNotice = document.getElementById('order-login-notice');
-    const resendButton = document.getElementById('otp-resend');
     let continueOrderAfterLogin = false;
     let authMode = 'login';
     let resendTimer = null;
+    let ordersLoaded = false;
+
+    const modal = $('account-modal');
+    const authView = $('auth-view');
+    const profileView = $('profile-view');
+    const requestForm = $('otp-request-form');
+    const verifyForm = $('otp-verify-form');
+    const identifierInput = $('auth-identifier');
+    const nameInput = $('auth-name');
+    const phoneInput = $('auth-phone');
+    const message = $('account-message');
+    const orderLoginNotice = $('order-login-notice');
+    const resendButton = $('otp-resend');
+    const profileDisplayName = $('profile-display-name');
+    const profileIdentifier = $('profile-identifier');
+    const profileNameInput = $('profile-name-input');
+    const profilePhoneInput = $('profile-phone-input');
+    const profileEditForm = $('profile-edit-form');
+    const profileEditMessage = $('profile-edit-message');
+    const ordersPanel = $('orders-panel');
+    const ordersList = $('orders-list');
+    const deleteRequestForm = $('delete-request-form');
+    const deleteVerifyForm = $('delete-verify-form');
+    const deleteEmailInput = $('delete-email-input');
+    const deleteOtpCode = $('delete-otp-code');
+    const deleteOtpMessage = $('delete-otp-message');
+    const deleteAccountMessage = $('delete-account-message');
     const token = () => localStorage.getItem(tokenKey);
     const apiBase = window.location.hostname.endsWith('github.io')
         ? 'https://om-production-7de0.up.railway.app'
@@ -32,40 +50,73 @@
             if (!response.ok) throw new Error(data.message || 'حدث خطأ، حاول مرة أخرى.');
             return data;
         } catch (error) {
-            if (error.name === 'AbortError') throw new Error('تأخر الخادم في الرد. تحقق من إعدادات البريد وحاول مرة أخرى.');
+            if (error.name === 'AbortError') {
+                throw new Error('تأخر الخادم في الرد. تحقق من إعدادات البريد وحاول مرة أخرى.');
+            }
             throw error;
         } finally {
             clearTimeout(timeout);
         }
     }
-    function showMessage(text, isError = false) {
-        message.textContent = text;
-        message.classList.remove('hidden', 'error');
-        if (isError) message.classList.add('error');
+
+    function showMessage(element, text, isError = false) {
+        if (!element) return;
+        element.textContent = text;
+        element.classList.remove('hidden', 'error');
+        if (isError) element.classList.add('error');
     }
-    const clearMessage = () => message.classList.add('hidden');
+
+    function clearMessage(element) {
+        if (!element) return;
+        element.classList.add('hidden');
+        element.classList.remove('error');
+        element.textContent = '';
+    }
+
+    function setBusy(button, text) {
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = text;
+        return () => {
+            button.disabled = false;
+            button.textContent = originalText;
+        };
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     function showAuth() {
         authView.classList.remove('hidden');
         profileView.classList.add('hidden');
+        resetProfilePanels();
     }
+
     function setAuthMode(mode) {
         authMode = mode;
         const isSignup = mode === 'signup';
-        document.getElementById('account-title').textContent = isSignup ? 'إنشاء حساب' : 'تسجيل الدخول';
-        document.getElementById('account-lead').textContent = isSignup
+        $('account-title').textContent = isSignup ? 'إنشاء حساب' : 'تسجيل الدخول';
+        $('account-lead').textContent = isSignup
             ? 'أنشئ حسابك باسمك ورقمك وبريدك الإلكتروني بدون كلمة مرور.'
             : 'أدخل بريد حسابك المسجل وسنرسل لك رمز التحقق.';
-        document.getElementById('login-mode-btn').classList.toggle('active', !isSignup);
-        document.getElementById('signup-mode-btn').classList.toggle('active', isSignup);
-        document.getElementById('login-mode-btn').setAttribute('aria-selected', String(!isSignup));
-        document.getElementById('signup-mode-btn').setAttribute('aria-selected', String(isSignup));
+        $('login-mode-btn').classList.toggle('active', !isSignup);
+        $('signup-mode-btn').classList.toggle('active', isSignup);
+        $('login-mode-btn').setAttribute('aria-selected', String(!isSignup));
+        $('signup-mode-btn').setAttribute('aria-selected', String(isSignup));
         document.querySelectorAll('.signup-field').forEach((field) => field.classList.toggle('hidden', !isSignup));
         nameInput.required = isSignup;
         phoneInput.required = isSignup;
         verifyForm.classList.add('hidden');
         requestForm.classList.remove('hidden');
-        clearMessage();
+        clearMessage(message);
     }
+
     function startResendCountdown(seconds = 30) {
         clearInterval(resendTimer);
         let remaining = seconds;
@@ -83,12 +134,11 @@
             resendButton.textContent = `إرسال رمز جديد بعد ${remaining} ثانية`;
         }, 1000);
     }
+
     async function requestOtp(button, showVerifyForm = true) {
-        clearMessage();
-        const originalText = button.textContent;
-        button.disabled = true;
-        button.textContent = 'جاري إرسال رمز التحقق...';
-        showMessage('جاري إرسال رمز التحقق إلى بريدك الإلكتروني...');
+        clearMessage(message);
+        const restoreButton = setBusy(button, 'جاري إرسال رمز التحقق...');
+        showMessage(message, 'جاري إرسال رمز التحقق إلى بريدك الإلكتروني...');
         try {
             const data = await api('/api/auth/request-otp', {
                 method: 'POST',
@@ -99,42 +149,111 @@
                     phone: phoneInput.value.trim()
                 })
             });
-            document.getElementById('otp-sent-message').textContent = data.message;
-            document.getElementById('otp-code').value = data.devCode || '';
+            $('otp-sent-message').textContent = data.message;
+            $('otp-code').value = data.devCode || '';
             if (showVerifyForm) {
                 requestForm.classList.add('hidden');
                 verifyForm.classList.remove('hidden');
             }
-            showMessage('تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني.');
+            showMessage(message, 'تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني.');
             startResendCountdown();
-            document.getElementById('otp-code').focus();
+            $('otp-code').focus();
         } catch (error) {
-            showMessage(error.message, true);
+            showMessage(message, error.message, true);
         } finally {
-            if (button !== resendButton || !resendTimer) {
-                button.disabled = false;
-                button.textContent = originalText;
-            }
+            if (button !== resendButton || !resendTimer) restoreButton();
         }
     }
-    async function showProfile() {
-        authView.classList.add('hidden');
-        profileView.classList.remove('hidden');
-        document.getElementById('profile-identifier').textContent = currentUser.name ? `${currentUser.name} - ${currentUser.identifier}` : currentUser.identifier;
-        const list = document.getElementById('orders-list');
-        list.innerHTML = '<p class="orders-empty">جاري تحميل الطلبات...</p>';
+
+    function renderProfileInfo() {
+        if (!currentUser) return;
+        profileDisplayName.textContent = currentUser.name || 'عميل Event QR';
+        profileIdentifier.textContent = currentUser.identifier;
+        profileNameInput.value = currentUser.name || '';
+        profilePhoneInput.value = currentUser.phone || '';
+        deleteEmailInput.value = '';
+        deleteOtpCode.value = '';
+    }
+
+    function resetProfilePanels() {
+        document.querySelectorAll('#profile-view .account-panel').forEach((panel) => panel.classList.add('hidden'));
+        document.querySelectorAll('#profile-view [data-account-section]').forEach((trigger) => trigger.classList.remove('active'));
+        clearMessage(profileEditMessage);
+        clearMessage(deleteAccountMessage);
+    }
+
+    function resetDeleteFlow() {
+        deleteRequestForm.classList.remove('hidden');
+        deleteVerifyForm.classList.add('hidden');
+        deleteOtpMessage.textContent = '';
+        deleteOtpCode.value = '';
+        clearMessage(deleteAccountMessage);
+    }
+
+    function showProfileSection(sectionId) {
+        resetProfilePanels();
+        const section = $(sectionId);
+        if (!section) return;
+        section.classList.remove('hidden');
+        document.querySelectorAll(`#profile-view [data-account-section="${sectionId}"]`).forEach((trigger) => {
+            trigger.classList.add('active');
+        });
+        if (sectionId === 'orders-panel') loadOrders();
+        if (sectionId === 'delete-account-section') resetDeleteFlow();
+    }
+
+    function formatOrderDate(value) {
+        try {
+            return new Intl.DateTimeFormat('ar-OM', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+        } catch {
+            return '';
+        }
+    }
+
+    function orderMeta(order) {
+        const details = order.details || {};
+        const eventType = details['نوع_المناسبة'] || details.eventType || '';
+        const quantity = details['عدد_البطاقات'] || details.quantity || '';
+        return [
+            eventType,
+            quantity ? `${quantity} بطاقة` : ''
+        ].filter(Boolean).map(escapeHtml).join(' · ');
+    }
+
+    async function loadOrders(force = false) {
+        if (ordersLoaded && !force) return;
+        ordersList.innerHTML = '<p class="orders-empty">جاري تحميل الطلبات...</p>';
         try {
             const data = await api('/api/orders');
-            list.innerHTML = data.orders.length ? data.orders.map((order) => `
-                <article class="order-history-item">
-                    <strong>#${order.order_number}</strong>
-                    <span>${Number(order.total_price).toFixed(3)} ${order.currency}</span>
-                    <time>${new Intl.DateTimeFormat('ar-OM', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(order.created_at))}</time>
-                </article>`).join('') : '<p class="orders-empty">لا توجد طلبات محفوظة حتى الآن.</p>';
+            ordersLoaded = true;
+            ordersList.innerHTML = data.orders.length ? data.orders.map((order) => {
+                const total = Number(order.total_price);
+                const totalText = Number.isFinite(total) ? total.toFixed(3) : '0.000';
+                const meta = orderMeta(order);
+                return `
+                    <article class="order-history-item">
+                        <div class="order-history-main">
+                            <strong>#${escapeHtml(order.order_number)}</strong>
+                            <span class="order-history-price">${totalText} ${escapeHtml(order.currency || 'OMR')}</span>
+                        </div>
+                        ${meta ? `<p class="order-history-meta">${meta}</p>` : ''}
+                        <time>${escapeHtml(formatOrderDate(order.created_at))}</time>
+                    </article>`;
+            }).join('') : '<p class="orders-empty">لا توجد طلبات محفوظة حتى الآن.</p>';
         } catch (error) {
-            list.innerHTML = `<p class="orders-empty">${error.message}</p>`;
+            ordersLoaded = false;
+            ordersList.innerHTML = `<p class="orders-empty">${escapeHtml(error.message)}</p>`;
         }
     }
+
+    function showProfile() {
+        authView.classList.add('hidden');
+        profileView.classList.remove('hidden');
+        ordersLoaded = false;
+        renderProfileInfo();
+        resetProfilePanels();
+    }
+
     function open(options = {}) {
         continueOrderAfterLogin = Boolean(options.continueOrder);
         orderLoginNotice.classList.toggle('hidden', !continueOrderAfterLogin);
@@ -142,6 +261,7 @@
         document.body.classList.add('modal-open');
         currentUser ? showProfile() : showAuth();
     }
+
     function close() {
         continueOrderAfterLogin = false;
         orderLoginNotice.classList.add('hidden');
@@ -150,17 +270,23 @@
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
     }
+
     requestForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        await requestOtp(document.getElementById('otp-request-btn'));
+        await requestOtp($('otp-request-btn'));
     });
+
     verifyForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        clearMessage();
+        clearMessage(message);
         try {
             const data = await api('/api/auth/verify-otp', {
                 method: 'POST',
-                body: JSON.stringify({ mode: authMode, identifier: identifierInput.value.trim(), code: document.getElementById('otp-code').value.trim() })
+                body: JSON.stringify({
+                    mode: authMode,
+                    identifier: identifierInput.value.trim(),
+                    code: $('otp-code').value.trim()
+                })
             });
             localStorage.setItem(tokenKey, data.token);
             currentUser = data.user;
@@ -169,16 +295,105 @@
                 continueOrderAfterLogin = false;
                 orderLoginNotice.classList.add('hidden');
                 close();
-                document.getElementById('inquiry-form')?.requestSubmit();
+                $('inquiry-form')?.requestSubmit();
             } else {
                 close();
             }
         } catch (error) {
-            showMessage(error.message, true);
+            showMessage(message, error.message, true);
         }
     });
+
+    profileView.addEventListener('click', (event) => {
+        const trigger = event.target.closest('[data-account-section]');
+        if (!trigger) return;
+        event.preventDefault();
+        showProfileSection(trigger.dataset.accountSection);
+    });
+
+    document.querySelectorAll('[data-account-back]').forEach((button) => {
+        button.addEventListener('click', resetProfilePanels);
+    });
+
+    profileEditForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        clearMessage(profileEditMessage);
+        const saveButton = $('profile-save-btn');
+        const restoreButton = setBusy(saveButton, 'جاري الحفظ...');
+        try {
+            const data = await api('/api/me', {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: profileNameInput.value.trim(),
+                    phone: profilePhoneInput.value.trim()
+                })
+            });
+            currentUser = data.user;
+            renderProfileInfo();
+            updateAccountButton();
+            showMessage(profileEditMessage, 'تم حفظ معلوماتك الشخصية بنجاح.');
+        } catch (error) {
+            showMessage(profileEditMessage, error.message, true);
+        } finally {
+            restoreButton();
+        }
+    });
+
+    deleteRequestForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        clearMessage(deleteAccountMessage);
+        const requestButton = $('delete-otp-request-btn');
+        const restoreButton = setBusy(requestButton, 'جاري إرسال الرمز...');
+        try {
+            const data = await api('/api/me/delete-otp', {
+                method: 'POST',
+                body: JSON.stringify({ identifier: deleteEmailInput.value.trim() })
+            });
+            deleteOtpMessage.textContent = data.message;
+            deleteOtpCode.value = data.devCode || '';
+            deleteRequestForm.classList.add('hidden');
+            deleteVerifyForm.classList.remove('hidden');
+            deleteOtpCode.focus();
+        } catch (error) {
+            showMessage(deleteAccountMessage, error.message, true);
+        } finally {
+            restoreButton();
+        }
+    });
+
+    deleteVerifyForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        clearMessage(deleteAccountMessage);
+        const confirmButton = $('delete-confirm-btn');
+        const restoreButton = setBusy(confirmButton, 'جاري حذف الحساب...');
+        try {
+            await api('/api/me', {
+                method: 'DELETE',
+                body: JSON.stringify({
+                    identifier: deleteEmailInput.value.trim(),
+                    code: deleteOtpCode.value.trim()
+                })
+            });
+            localStorage.removeItem(tokenKey);
+            currentUser = null;
+            updateAccountButton();
+            setAuthMode('login');
+            showAuth();
+            showMessage(message, 'تم حذف حسابك بنجاح.');
+        } catch (error) {
+            showMessage(deleteAccountMessage, error.message, true);
+        } finally {
+            restoreButton();
+        }
+    });
+
+    $('delete-cancel-btn').addEventListener('click', () => {
+        resetDeleteFlow();
+        resetProfilePanels();
+    });
+
     function updateAccountButton() {
-        const button = document.getElementById('account-btn');
+        const button = $('account-btn');
         const label = currentUser ? 'حسابي وطلباتي' : 'تسجيل الدخول';
         button.setAttribute('aria-label', label);
         button.setAttribute('title', label);
@@ -186,30 +401,53 @@
         const text = button.querySelector('.sr-only');
         if (text) text.textContent = label;
     }
-    document.getElementById('account-btn').addEventListener('click', () => open());
-    document.getElementById('login-mode-btn').addEventListener('click', () => setAuthMode('login'));
-    document.getElementById('signup-mode-btn').addEventListener('click', () => setAuthMode('signup'));
-    document.getElementById('account-close').addEventListener('click', close);
-    document.getElementById('account-return-btn').addEventListener('click', close);
+
+    $('account-btn').addEventListener('click', () => open());
+    $('login-mode-btn').addEventListener('click', () => setAuthMode('login'));
+    $('signup-mode-btn').addEventListener('click', () => setAuthMode('signup'));
+    $('account-close').addEventListener('click', close);
     resendButton.addEventListener('click', async () => requestOtp(resendButton, false));
-    document.getElementById('otp-back').addEventListener('click', () => { verifyForm.classList.add('hidden'); requestForm.classList.remove('hidden'); clearMessage(); });
-    document.getElementById('logout-btn').addEventListener('click', () => { localStorage.removeItem(tokenKey); currentUser = null; setAuthMode('login'); updateAccountButton(); showAuth(); });
-    modal.addEventListener('click', (event) => { if (event.target === modal) close(); });
+    $('otp-back').addEventListener('click', () => {
+        verifyForm.classList.add('hidden');
+        requestForm.classList.remove('hidden');
+        clearMessage(message);
+    });
+    $('logout-btn').addEventListener('click', () => {
+        localStorage.removeItem(tokenKey);
+        currentUser = null;
+        setAuthMode('login');
+        updateAccountButton();
+        close();
+    });
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) close();
+    });
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && !modal.classList.contains('hidden')) close();
     });
+
     (async function initialize() {
         if (token()) {
-            try { currentUser = (await api('/api/me')).user; } catch { localStorage.removeItem(tokenKey); }
+            try {
+                currentUser = (await api('/api/me')).user;
+            } catch {
+                localStorage.removeItem(tokenKey);
+            }
         }
         updateAccountButton();
     })();
+
     window.eventQrAuth = {
         api,
         open,
         openForOrder: () => open({ continueOrder: true }),
         close,
         isAuthenticated: () => Boolean(currentUser),
-        refreshOrders: showProfile
+        refreshOrders: () => {
+            ordersLoaded = false;
+            if (currentUser && ordersPanel && !ordersPanel.classList.contains('hidden')) {
+                loadOrders(true);
+            }
+        }
     };
 })();

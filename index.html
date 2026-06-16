@@ -17,7 +17,7 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=20260614-image-speed">
+    <link rel="stylesheet" href="style.css?v=20260616-account-panel">
 </head>
 
 <body>
@@ -629,19 +629,133 @@
                 <div class="account-message hidden" id="account-message"></div>
             </div>
             <div id="profile-view" class="hidden">
-                <div class="profile-header">
-                    <div><h2>حسابي</h2><p id="profile-identifier"></p></div>
-                    <button type="button" class="account-link-btn" id="logout-btn">تسجيل الخروج</button>
+                <div class="account-profile-top">
+                    <span class="account-kicker">حساب المستخدم</span>
+                    <h2>حسابي</h2>
                 </div>
-                <h3 class="orders-heading">طلباتي</h3>
-                <div id="orders-list" class="orders-list"></div>
-                <button type="button" class="btn btn-primary btn-block account-return-btn" id="account-return-btn">العودة إلى الموقع</button>
+
+                <button type="button" class="account-user-card" id="account-user-card" data-account-section="profile-edit-section" aria-label="تعديل المعلومات الشخصية">
+                    <span class="account-user-copy">
+                        <strong id="profile-display-name">عميل Event QR</strong>
+                        <span id="profile-identifier"></span>
+                    </span>
+                    <span class="account-user-avatar" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"></circle>
+                            <path d="M4.5 21a7.5 7.5 0 0 1 15 0"></path>
+                        </svg>
+                    </span>
+                    <span class="account-chevron" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6"></path>
+                        </svg>
+                    </span>
+                </button>
+
+                <div class="account-menu-list" id="account-menu-list">
+                    <button type="button" class="account-menu-item" data-account-section="profile-edit-section" id="profile-edit-btn">
+                        <span class="account-menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                            </svg>
+                        </span>
+                        <span>تعديل المعلومات الشخصية</span>
+                    </button>
+                    <button type="button" class="account-menu-item account-menu-item-strong" data-account-section="orders-panel" id="orders-open-btn">
+                        <span class="account-menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 2h9l5 5v15H6z"></path>
+                                <path d="M14 2v6h6"></path>
+                                <path d="M9 13h6"></path>
+                                <path d="M9 17h6"></path>
+                            </svg>
+                        </span>
+                        <span>طلباتي</span>
+                    </button>
+                    <button type="button" class="account-menu-item" data-account-section="delete-account-section" id="delete-account-open-btn">
+                        <span class="account-menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M17 8l5 5"></path>
+                                <path d="M22 8l-5 5"></path>
+                            </svg>
+                        </span>
+                        <span>حذف حسابي</span>
+                    </button>
+                    <a class="account-menu-item" href="https://api.whatsapp.com/send?phone=96896001636" target="_blank" rel="noopener" id="account-whatsapp-link">
+                        <span class="account-menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21l1.6-3.7A9 9 0 1 1 8 20.1z"></path>
+                                <path d="M9.5 9.5c.3 2.6 2.4 4.7 5 5"></path>
+                                <path d="M9 9h1.4l.7 1.8-.7.7"></path>
+                                <path d="M14.5 14l.7-.7 1.8.7v1.4"></path>
+                            </svg>
+                        </span>
+                        <span>تواصل معنا</span>
+                    </a>
+                    <button type="button" class="account-menu-item account-menu-logout" id="logout-btn">
+                        <span class="account-menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 17l5-5-5-5"></path>
+                                <path d="M15 12H3"></path>
+                                <path d="M21 19V5a2 2 0 0 0-2-2h-5"></path>
+                            </svg>
+                        </span>
+                        <span>تسجيل الخروج</span>
+                    </button>
+                </div>
+
+                <section class="account-panel hidden" id="profile-edit-section" aria-labelledby="profile-edit-title">
+                    <div class="account-panel-header">
+                        <h3 id="profile-edit-title">تعديل المعلومات الشخصية</h3>
+                        <button type="button" class="account-link-btn account-panel-back" data-account-back>عودة</button>
+                    </div>
+                    <form id="profile-edit-form" class="account-form">
+                        <label for="profile-name-input">الاسم</label>
+                        <input id="profile-name-input" type="text" maxlength="150" placeholder="الاسم الكامل" autocomplete="name" required>
+                        <label for="profile-phone-input">رقم الهاتف</label>
+                        <input id="profile-phone-input" type="tel" maxlength="30" placeholder="+968 0000 0000" dir="ltr" autocomplete="tel" required>
+                        <button type="submit" class="btn btn-primary btn-block" id="profile-save-btn">حفظ التغييرات</button>
+                    </form>
+                    <div class="account-message hidden" id="profile-edit-message"></div>
+                </section>
+
+                <section class="account-panel hidden" id="orders-panel" aria-labelledby="orders-heading">
+                    <div class="account-panel-header">
+                        <h3 class="orders-heading" id="orders-heading">طلباتي</h3>
+                        <button type="button" class="account-link-btn account-panel-back" data-account-back>عودة</button>
+                    </div>
+                    <div id="orders-list" class="orders-list"></div>
+                </section>
+
+                <section class="account-panel hidden" id="delete-account-section" aria-labelledby="delete-account-title">
+                    <div class="account-panel-header">
+                        <h3 id="delete-account-title">حذف حسابي</h3>
+                        <button type="button" class="account-link-btn account-panel-back" data-account-back>عودة</button>
+                    </div>
+                    <p class="delete-account-warning">للتأكيد، اكتب نفس بريد حسابك المسجل. سنرسل لك رمز OTP، وبعد إدخاله سيتم حذف الحساب.</p>
+                    <form id="delete-request-form" class="account-form">
+                        <label for="delete-email-input">البريد الإلكتروني المسجل</label>
+                        <input id="delete-email-input" type="email" inputmode="email" maxlength="320" placeholder="name@example.com" dir="ltr" required>
+                        <button type="submit" class="btn btn-primary btn-block" id="delete-otp-request-btn">إرسال رمز الحذف</button>
+                    </form>
+                    <form id="delete-verify-form" class="account-form hidden">
+                        <p id="delete-otp-message"></p>
+                        <label for="delete-otp-code">رمز OTP</label>
+                        <input id="delete-otp-code" class="otp-code" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required>
+                        <button type="submit" class="btn btn-danger btn-block" id="delete-confirm-btn">حذف الحساب نهائيا</button>
+                        <button type="button" class="account-link-btn" id="delete-cancel-btn">إلغاء</button>
+                    </form>
+                    <div class="account-message hidden" id="delete-account-message"></div>
+                </section>
             </div>
         </div>
     </div>
 
     <!-- JavaScript -->
-    <script src="auth.js?v=20260613-otp-resend"></script>
+    <script src="auth.js?v=20260616-account-panel"></script>
     <script src="script.js?v=20260612-order-login"></script>
 </body>
 
