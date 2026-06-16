@@ -1419,7 +1419,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             organizedObject["السعر_النهائي_بعد_الخصم"] = formatAmount(finalPriceValue);
-            organizedObject["رابط_الفاتورة"] = "https://eventqrom-lab.github.io/bill/";
+            organizedObject["رابط_الفاتورة"] = "https://om-production-7de0.up.railway.app/admin.html";
 
             try {
                 const databaseDetails = { ...organizedObject };
