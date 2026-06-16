@@ -1839,6 +1839,14 @@ body.modal-open { overflow: hidden; }
 .order-history-meta { margin: 0; color: var(--text-main); font-size: .92rem; }
 .order-history-item time, .orders-empty { width: 100%; color: var(--text-muted); font-size: .9rem; }
 .account-return-btn { margin-top: 22px; }
+#profile-view.is-section-open .account-profile-top,
+#profile-view.is-section-open .account-user-card,
+#profile-view.is-section-open .account-menu-list,
+#profile-view:has(.account-panel:not(.hidden)) .account-profile-top,
+#profile-view:has(.account-panel:not(.hidden)) .account-user-card,
+#profile-view:has(.account-panel:not(.hidden)) .account-menu-list {
+    display: none;
+}
 @media (max-width: 600px) {
     .account-modal {
         display: flex;
