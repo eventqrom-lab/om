@@ -4536,7 +4536,7 @@ textarea {
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
     .container {
         max-width: 1240px;
     }
@@ -4647,5 +4647,176 @@ textarea {
 
     .template-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 600px) and (max-width: 899px) and (min-height: 600px) {
+    .container {
+        max-width: 760px;
+        padding-inline: 30px;
+    }
+
+    .section-padding {
+        padding: 78px 0;
+    }
+
+    .hero {
+        min-height: 600px;
+        padding-top: 112px;
+        padding-bottom: 70px;
+    }
+
+    html[lang="ar"] .hero-title,
+    html[lang="en"] .hero-title,
+    .hero-title {
+        font-size: clamp(3rem, 7vw, 3.85rem);
+        line-height: 1.16;
+    }
+
+    .hero-desc {
+        max-width: 620px;
+        font-size: 1.08rem;
+    }
+
+    .showcase-single {
+        max-width: 660px;
+    }
+
+    .showcase-single .showcase-item img {
+        max-height: 500px;
+    }
+
+    .calculator-container {
+        width: 100%;
+        max-width: 660px;
+        margin-inline: auto;
+    }
+
+    .calculator-card {
+        width: 100%;
+        padding: 34px 30px;
+        border-radius: 14px;
+        overflow: visible;
+    }
+
+    .calculator-card:hover {
+        transform: none;
+    }
+
+    .inquiry-form {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        width: 100%;
+    }
+
+    .form-group,
+    .calc-group {
+        margin-bottom: 0;
+    }
+
+    .form-row,
+    #wedding-letters-fields,
+    #wedding-names-fields {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .invitation-size-options,
+    .invitation-type-options,
+    .design-type-options,
+    .wedding-detail-options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .type-option-card,
+    .invitation-type-options .type-option-card,
+    .design-option-card {
+        display: grid;
+        grid-template-columns: 46px minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        align-items: center;
+        place-items: initial;
+        min-height: 92px;
+        padding: 16px;
+        gap: 8px 12px;
+        text-align: start;
+    }
+
+    html[dir="rtl"] .type-option-card,
+    html[dir="rtl"] .invitation-type-options .type-option-card,
+    html[dir="rtl"] .design-option-card {
+        place-items: initial;
+        text-align: start;
+    }
+
+    .type-option-icon,
+    .invitation-type-options .type-option-icon,
+    .design-option-icon {
+        grid-row: 1 / span 2;
+        width: 46px;
+        height: 46px;
+    }
+
+    .type-option-text,
+    .invitation-type-options .type-option-text,
+    .design-option-text {
+        grid-row: 1;
+        width: auto;
+        font-size: 0.96rem;
+        text-align: start;
+    }
+
+    .type-option-note,
+    .invitation-type-options .type-option-note,
+    .design-option-price {
+        grid-row: 2;
+        width: auto;
+        font-size: 0.76rem;
+        text-align: start;
+        justify-content: flex-start;
+    }
+
+    .invitation-size-options .size-option-card {
+        display: flex;
+        min-height: 92px;
+        padding: 16px;
+        text-align: start;
+    }
+
+    .date-selector-container {
+        display: grid;
+        grid-template-columns: 1fr 1.3fr 1fr;
+        gap: 12px;
+    }
+
+    .time-selector-container {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .calc-toggle-group,
+    #security-group {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+    }
+
+    .msg-group {
+        max-width: none;
+        width: 100%;
+    }
+
+    .btn-submit-order {
+        width: min(100%, 360px);
+        justify-self: center;
+    }
+
+    .contact-info {
+        max-width: 660px;
+        margin-inline: auto;
+        padding: 42px 34px;
     }
 }
