@@ -17,6 +17,12 @@ const adminEmails = new Set(
     .map(normalizeEmail)
     .filter(Boolean)
 );
+const orderNotificationEmails = new Set(
+  String(process.env.ORDER_NOTIFICATION_EMAILS || process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map(normalizeEmail)
+    .filter(Boolean)
+);
 const allowedOrigins = new Set([
   'https://eventqrom-lab.github.io',
   'https://om-production-7de0.up.railway.app'
@@ -241,6 +247,133 @@ async function sendEmailOtp(email, code) {
     html
   });
   console.log(`Email OTP accepted by SMTP: messageId=${info.messageId}`);
+  return true;
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  }[char]));
+}
+
+function getOrderEmailDetails(details) {
+  const ignoredKeys = new Set([
+    'access_key',
+    'botcheck',
+    'subject',
+    'from_name',
+    '---',
+    '\u0631\u0642\u0645_\u0627\u0644\u0637\u0644\u0628',
+    '\u0627\u0633\u0645_\u0627\u0644\u0639\u0645\u064a\u0644',
+    '\u0631\u0642\u0645_\u0627\u0644\u062c\u0648\u0627\u0644',
+    '\u0627\u0644\u0633\u0639\u0631_\u0627\u0644\u0646\u0647\u0627\u0626\u064a_\u0628\u0639\u062f_\u0627\u0644\u062e\u0635\u0645',
+    '\u0631\u0627\u0628\u0637_\u0627\u0644\u0641\u0627\u062a\u0648\u0631\u0629'
+  ]);
+  return Object.entries(details || {}).filter(([key, value]) => {
+    const cleanKey = String(key || '').trim();
+    const cleanValue = String(value ?? '').trim();
+    return cleanKey && cleanValue && !ignoredKeys.has(cleanKey.toLowerCase());
+  });
+}
+
+function buildOrderNotificationEmail({ order, customerName, customerPhone, details }) {
+  const orderNumber = order.order_number;
+  const total = Number(order.total_price);
+  const totalText = `${Number.isFinite(total) ? total.toFixed(3) : '0.000'} ${order.currency || 'OMR'}`;
+  const dashboardUrl = 'https://om-production-7de0.up.railway.app/admin.html';
+  const rows = [
+    ['Order number', orderNumber],
+    ['Customer', customerName],
+    ['Phone', customerPhone || '---'],
+    ['Total', totalText],
+    ['Invoice dashboard', dashboardUrl],
+    ...getOrderEmailDetails(details).map(([key, value]) => [String(key).replace(/_/g, ' '), value])
+  ];
+  const text = rows.map(([label, value]) => `${label}: ${value}`).join('\n');
+  const tableRows = rows.map(([label, value]) => (
+    `<tr><td style="padding:8px 10px;border:1px solid #ddd;font-weight:700">${escapeHtml(label)}</td><td style="padding:8px 10px;border:1px solid #ddd">${escapeHtml(value)}</td></tr>`
+  )).join('');
+  const html = `<div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.7"><h2>New order #${escapeHtml(orderNumber)}</h2><table style="border-collapse:collapse;width:100%;max-width:760px">${tableRows}</table><p><a href="${dashboardUrl}">Open invoice dashboard</a></p></div>`;
+  return { subject: `New Order #${orderNumber}`, text, html };
+}
+
+async function sendOrderNotification(payload) {
+  const recipients = Array.from(orderNotificationEmails);
+  if (!recipients.length) return false;
+
+  const { subject, text, html } = buildOrderNotificationEmail(payload);
+  const purpose = `Order notification ${payload.order.order_number}`;
+
+  if (process.env.BREVO_API_KEY) {
+    const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USER;
+    if (!senderEmail) throw new Error('BREVO_SENDER_EMAIL is required');
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        sender: { name: 'Event QR Tech', email: senderEmail },
+        to: recipients.map((email) => ({ email })),
+        subject,
+        textContent: text,
+        htmlContent: html
+      }),
+      signal: AbortSignal.timeout(15000)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.message || `Brevo request failed (${response.status})`);
+    console.log(`${purpose} accepted by Brevo: messageId=${result.messageId || 'unknown'}`);
+    return true;
+  }
+
+  if (process.env.RESEND_API_KEY) {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: process.env.RESEND_FROM || 'Event QR Tech <onboarding@resend.dev>',
+        to: recipients,
+        subject,
+        text,
+        html
+      }),
+      signal: AbortSignal.timeout(15000)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.message || `Resend request failed (${response.status})`);
+    console.log(`${purpose} accepted by Resend: id=${result.id || 'unknown'}`);
+    return true;
+  }
+
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) return false;
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT) || 465,
+    secure: String(process.env.SMTP_SECURE).toLowerCase() !== 'false',
+    family: 4,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+  });
+  const info = await transporter.sendMail({
+    from: process.env.SMTP_FROM || process.env.SMTP_USER,
+    to: recipients,
+    subject,
+    text,
+    html
+  });
+  console.log(`${purpose} accepted by SMTP: messageId=${info.messageId || 'unknown'}`);
   return true;
 }
 
@@ -586,6 +719,11 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
   }
   if (!order) return res.status(500).json({ message: 'تعذر إنشاء رقم الطلب.' });
   res.status(201).json({ order });
+  sendOrderNotification({ order, customerName, customerPhone, details })
+    .then((sent) => {
+      if (!sent) console.warn(`Order notification skipped for ${order.order_number}: no email provider or recipients configured.`);
+    })
+    .catch((error) => console.error(`Order notification failed for ${order.order_number}:`, error.message));
 });
 
 app.use('/api', (_req, res) => res.status(404).json({ message: 'Not found' }));

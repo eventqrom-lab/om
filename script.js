@@ -1321,12 +1321,6 @@ document.addEventListener('DOMContentLoaded', () => {
             let orderId = generateOrderNumber();
             document.getElementById('order-number-input').value = orderId;
             
-            // Set dynamic subject
-            const subjectInput = document.getElementById('email-subject');
-            if (subjectInput) {
-                subjectInput.value = `New Order #${orderId}`;
-            }
-
             const formData = new FormData(inquiryForm);
             const rawObject = Object.fromEntries(formData);
             
@@ -1375,13 +1369,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const finalPriceValue = parseFloat(document.getElementById('calc-total-price').textContent) || 0;
             const formatAmount = (value) => `${value.toFixed(3)} OMR`;
             const formatAmountHtml = (value) => `${value.toFixed(3)} ${omrSymbol}`;
-            // Create Organized Object for Web3Forms (Labels in Arabic for professional email)
+            // Create organized order details for the database and admin notification.
             const organizedObject = {
-                "access_key": rawObject["access_key"],
-                "subject": `New Order #${orderId}`,
-                "from_name": rawObject["from_name"],
-                "botcheck": rawObject["botcheck"],
-                "---": "---", // Separator
                 "رقم_الطلب": orderId,
                 "اسم_العميل": rawObject["الاسم_الكامل"],
                 "رقم_الجوال": "+968 " + rawObject["رقم_الجوال"],
@@ -1423,8 +1412,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const databaseDetails = { ...organizedObject };
-                delete databaseDetails.access_key;
-                delete databaseDetails.botcheck;
                 const saved = await window.eventQrAuth.api('/api/orders', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -1436,7 +1423,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 orderId = saved.order.order_number;
                 document.getElementById('order-number-input').value = orderId;
-                organizedObject["subject"] = `New Order #${orderId}`;
                 organizedObject["رقم_الطلب"] = orderId;
             } catch (error) {
                 formMessage.textContent = error.message || (currentLang === 'ar' ? "تعذر حفظ الطلب." : "Could not save the order.");
@@ -1446,17 +1432,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.disabled = false;
                 return;
             }
-
-            const json = JSON.stringify(organizedObject);
-
-            fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: json
-            }).catch(error => console.log('Store notification failed:', error));
 
             {
                     const t = translations[currentLang];
