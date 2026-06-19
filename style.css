@@ -1950,11 +1950,15 @@ body.modal-open { overflow: hidden; }
         font-weight: 700;
     }
     .account-user-card {
-        grid-template-columns: 46px minmax(0, 1fr) 20px;
-        min-height: 70px;
-        margin-bottom: 14px;
-        padding: 10px 12px;
-        gap: 10px;
+        width: fit-content;
+        max-width: 100%;
+        grid-template-columns: 44px minmax(0, max-content) 18px;
+        align-items: center;
+        justify-self: center;
+        min-height: 0;
+        margin: 0 auto 14px;
+        padding: 8px 11px;
+        gap: 8px;
         border-color: rgba(198,167,105,.32);
         border-radius: 14px;
         background: linear-gradient(135deg, rgba(198,167,105,.12), rgba(18,18,18,.92));
@@ -1968,9 +1972,11 @@ body.modal-open { overflow: hidden; }
     }
     .account-user-avatar svg { width: 25px; height: 25px; }
     .account-user-copy {
-        align-self: end;
+        align-self: center;
+        max-width: min(52vw, 190px);
         gap: 1px;
-        padding-block-start: 6px;
+        padding-block-start: 0;
+        text-align: start;
     }
     .account-user-copy strong { font-size: .96rem; }
     .account-user-copy #profile-identifier { font-size: .8rem; }
