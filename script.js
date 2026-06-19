@@ -18,6 +18,8 @@ const omrSymbol = '<img class="omr-symbol" src="images/omr-symbol.png" alt="ري
 
 const translations = {
     ar: {
+        pageTitle: "Event QR Tech Tricks | باقات الدعوات",
+        pageDescription: "دعوات رقمية ذكية بتقنية QR للمناسبات والبطاقات المطبوعة والإلكترونية.",
         navHome: "الرئيسية",
         navOffers: "للطلب",
         navInquiry: "للاستفسار",
@@ -189,6 +191,8 @@ const translations = {
         copyOrderIdFailed: "تعذر النسخ"
     },
     en: {
+        pageTitle: "Event QR Tech Tricks | Invitation Packages",
+        pageDescription: "Smart QR digital invitations for events, printed cards, and digital cards.",
         navHome: "Home",
         navOffers: "Order",
         navInquiry: "Contact",
@@ -447,6 +451,11 @@ function setLanguage(lang) {
     // Update HTML attributes
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.title = translations[lang].pageTitle || document.title;
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription && translations[lang].pageDescription) {
+        metaDescription.setAttribute('content', translations[lang].pageDescription);
+    }
 
     // Update all translatable text
     document.querySelectorAll('[data-i18n]').forEach(element => {
@@ -487,6 +496,7 @@ function setLanguage(lang) {
     }
 
     refreshWeddingLetterOptions();
+    window.dispatchEvent(new CustomEvent('eventQrLanguageChange', { detail: { lang } }));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
