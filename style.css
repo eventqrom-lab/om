@@ -1950,15 +1950,14 @@ body.modal-open { overflow: hidden; }
         font-weight: 700;
     }
     .account-user-card {
-        width: fit-content;
-        max-width: 100%;
-        grid-template-columns: 44px minmax(0, max-content) 18px;
+        width: 100%;
+        grid-template-columns: 44px minmax(0, 1fr) 18px;
+        grid-template-rows: 1fr;
         align-items: center;
-        justify-self: center;
-        min-height: 0;
-        margin: 0 auto 14px;
-        padding: 8px 11px;
-        gap: 8px;
+        min-height: 64px;
+        margin: 0 0 14px;
+        padding: 9px 12px;
+        gap: 10px;
         border-color: rgba(198,167,105,.32);
         border-radius: 14px;
         background: linear-gradient(135deg, rgba(198,167,105,.12), rgba(18,18,18,.92));
@@ -1972,11 +1971,18 @@ body.modal-open { overflow: hidden; }
     }
     .account-user-avatar svg { width: 25px; height: 25px; }
     .account-user-copy {
+        grid-row: 1;
+        justify-self: stretch;
+        justify-items: start;
         align-self: center;
-        max-width: min(52vw, 190px);
         gap: 1px;
         padding-block-start: 0;
         text-align: start;
+    }
+    .account-user-avatar,
+    .account-chevron {
+        grid-row: 1;
+        align-self: center;
     }
     .account-user-copy strong { font-size: .96rem; }
     .account-user-copy #profile-identifier { font-size: .8rem; }
