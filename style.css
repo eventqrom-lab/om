@@ -4154,7 +4154,7 @@ textarea {
 
 /* Tablet and desktop layout reset.
    Kept below the mobile rules so iPad/desktop do not inherit the compact phone layout. */
-@media (min-width: 700px) and (min-height: 600px), (min-width: 1024px) {
+@media (min-width: 900px) and (min-height: 600px), (min-width: 1024px) {
     .container {
         width: 100%;
         max-width: 1180px;
@@ -4601,5 +4601,51 @@ textarea {
     .btn-submit-order {
         max-width: 360px;
         justify-self: center;
+    }
+}
+
+@media (min-width: 900px) and (max-width: 1023px) {
+    .container {
+        max-width: 860px;
+        padding-inline: 28px;
+    }
+
+    .hero {
+        min-height: 620px;
+        padding-top: 118px;
+        padding-bottom: 78px;
+    }
+
+    html[lang="ar"] .hero-title,
+    html[lang="en"] .hero-title,
+    .hero-title {
+        font-size: clamp(3.2rem, 6vw, 4rem);
+    }
+
+    .showcase-single {
+        max-width: 720px;
+    }
+
+    .calculator-container {
+        max-width: 760px;
+    }
+
+    .calculator-card {
+        padding: 38px;
+    }
+
+    .inquiry-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .form-group:has(.invitation-type-options),
+    .form-group:has(.invitation-size-options),
+    .form-group:has(.design-type-options) {
+        grid-column: 1 / -1;
+    }
+
+    .template-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
