@@ -4151,3 +4151,143 @@ textarea {
     font-weight: 600;
     line-height: 1.25;
 }
+
+@media (min-width: 601px) {
+    .account-modal-card:has(#profile-view:not(.hidden)) {
+        width: min(430px, calc(100vw - 48px));
+        max-height: min(760px, 90vh);
+        padding: 30px 28px;
+        border-radius: 18px;
+        background:
+            linear-gradient(180deg, rgba(198,167,105,.1), rgba(198,167,105,.035) 180px, transparent 360px),
+            var(--charcoal-card);
+    }
+
+    .account-modal-card:has(#profile-view:not(.hidden)) .account-close {
+        top: 14px;
+        inset-inline-start: 14px;
+        width: 42px;
+        height: 42px;
+        border-color: rgba(198,167,105,.28);
+        background: rgba(18,18,18,.82);
+        color: var(--text-ivory);
+        font-size: 28px;
+    }
+
+    .account-profile-top {
+        margin: 0 54px 22px;
+    }
+
+    .account-profile-top h2 {
+        color: var(--text-pure-light);
+        font-size: 1.65rem;
+        line-height: 1.25;
+    }
+
+    .account-kicker {
+        color: var(--luxury-gold);
+        font-size: .82rem;
+        font-weight: 700;
+    }
+
+    .account-user-card {
+        grid-template-columns: 52px minmax(0, 1fr) 20px;
+        min-height: 74px;
+        margin-bottom: 14px;
+        padding: 11px 14px;
+        gap: 12px;
+        border-color: rgba(198,167,105,.34);
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(198,167,105,.12), rgba(18,18,18,.92));
+        box-shadow: 0 12px 26px rgba(0,0,0,.26);
+    }
+
+    .account-user-avatar {
+        width: 50px;
+        height: 50px;
+        background: rgba(198,167,105,.13);
+        box-shadow: inset 0 0 0 1px rgba(246,241,232,.06);
+    }
+
+    .account-user-avatar svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .account-user-copy {
+        justify-items: start;
+        gap: 2px;
+        text-align: start;
+    }
+
+    .account-user-copy strong {
+        font-size: 1rem;
+        line-height: 1.25;
+    }
+
+    .account-user-copy #profile-identifier {
+        font-size: .82rem;
+        line-height: 1.25;
+    }
+
+    .account-menu-list {
+        gap: 10px;
+        margin-top: 0;
+        padding: 10px;
+        border: 1px solid rgba(198,167,105,.16);
+        border-radius: 20px;
+        background: rgba(18,18,18,.72);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+    }
+
+    .account-menu-item {
+        grid-template-columns: 46px minmax(0, 1fr) 20px;
+        min-height: 64px;
+        padding: 0 12px;
+        gap: 12px;
+        border: 0;
+        border-radius: 16px;
+        background: rgba(8,8,8,.42);
+        font-size: 1rem;
+    }
+
+    .account-menu-item::after {
+        content: "";
+        grid-column: 3;
+        width: 8px;
+        height: 8px;
+        border-block-start: 2px solid currentColor;
+        border-inline-end: 2px solid currentColor;
+        opacity: .42;
+        transform: rotate(-135deg);
+    }
+
+    #account-whatsapp-link,
+    #logout-btn {
+        grid-template-columns: 46px minmax(0, 1fr);
+    }
+
+    #account-whatsapp-link::after,
+    #logout-btn::after {
+        content: none;
+        display: none;
+    }
+
+    .account-menu-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: rgba(198,167,105,.08);
+        color: var(--luxury-gold);
+    }
+
+    .account-menu-icon svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    .account-menu-logout .account-menu-icon {
+        background: rgba(158,61,61,.14);
+        color: #F2747D;
+    }
+}
