@@ -1824,7 +1824,7 @@ body.modal-open { overflow: hidden; }
 .account-menu-list { display: grid; margin-top: 8px; border-top: 1px solid var(--border-color); }
 .account-menu-item { display: grid; grid-template-columns: 42px minmax(0, 1fr); align-items: center; gap: 12px; width: 100%; min-height: 68px; padding: 0 8px; border: 0; border-bottom: 1px solid var(--border-color); background: transparent; color: var(--text-main); font: inherit; text-align: start; cursor: pointer; }
 .account-menu-item:hover, .account-menu-item.active { color: var(--luxury-gold); background: rgba(198,167,105,.06); }
-.account-menu-item-strong { color: var(--text-pure-light); font-size: 1.2rem; font-weight: 800; }
+.account-menu-item-strong { color: inherit; font-size: inherit; font-weight: inherit; }
 .account-menu-icon { grid-column: 1; display: grid; place-items: center; color: currentColor; }
 .account-menu-icon svg { width: 30px; height: 30px; }
 .account-menu-logout { color: #D95B65; }
@@ -1950,24 +1950,30 @@ body.modal-open { overflow: hidden; }
         font-weight: 700;
     }
     .account-user-card {
-        grid-template-columns: 54px minmax(0, 1fr) 24px;
-        min-height: 88px;
-        margin-bottom: 16px;
-        padding: 14px;
-        gap: 12px;
+        grid-template-columns: 46px minmax(0, 1fr) 20px;
+        min-height: 70px;
+        margin-bottom: 14px;
+        padding: 10px 12px;
+        gap: 10px;
         border-color: rgba(198,167,105,.32);
-        border-radius: 18px;
+        border-radius: 14px;
         background: linear-gradient(135deg, rgba(198,167,105,.12), rgba(18,18,18,.92));
-        box-shadow: 0 18px 38px rgba(0,0,0,.34);
+        box-shadow: 0 12px 26px rgba(0,0,0,.3);
     }
     .account-user-avatar {
-        width: 54px;
-        height: 54px;
+        width: 44px;
+        height: 44px;
         background: rgba(198,167,105,.13);
         box-shadow: inset 0 0 0 1px rgba(246,241,232,.06);
     }
-    .account-user-copy strong { font-size: 1rem; }
-    .account-user-copy #profile-identifier { font-size: .82rem; }
+    .account-user-avatar svg { width: 25px; height: 25px; }
+    .account-user-copy {
+        align-self: end;
+        gap: 1px;
+        padding-block-start: 6px;
+    }
+    .account-user-copy strong { font-size: .96rem; }
+    .account-user-copy #profile-identifier { font-size: .8rem; }
     .account-menu-list {
         gap: 10px;
         margin-top: 0;
@@ -1996,11 +2002,20 @@ body.modal-open { overflow: hidden; }
         opacity: .42;
         transform: rotate(-135deg);
     }
+    #account-whatsapp-link,
+    #logout-btn {
+        grid-template-columns: 42px minmax(0, 1fr);
+    }
+    #account-whatsapp-link::after,
+    #logout-btn::after {
+        content: none;
+        display: none;
+    }
     .account-menu-item:hover,
     .account-menu-item.active {
         background: rgba(198,167,105,.1);
     }
-    .account-menu-item-strong { font-size: 1.08rem; }
+    .account-menu-item-strong { font-size: inherit; }
     .account-menu-icon {
         width: 42px;
         height: 42px;

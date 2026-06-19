@@ -1423,7 +1423,6 @@
                 `رقم الطلب: ${order.order_number}`,
                 `اسم العميل: ${order.customer_name}`,
                 `رقم الجوال: ${order.customer_phone || '---'}`,
-                `البريد الإلكتروني: ${order.customer_email || '---'}`,
                 ...visibleDetails.map(([key, value]) => `${key}: ${value}`),
                 `السعر النهائي: ${Number(order.total_price).toFixed(3)} ${order.currency}`
             ].join('\n');
@@ -1795,7 +1794,6 @@
                 row('رقم الطلب', data.orderId, { ltr: true }),
                 row('اسم العميل', data.customerName, { customer: true }),
                 row('رقم الجوال', data.phone, { ltr: true }),
-                row('البريد الإلكتروني', data.customerEmail, { ltr: true }),
                 row('نوع المناسبة', data.eventType),
                 row('عدد الوحدات', quantityText),
                 row('حجم الدعوة', data.invitationSize),
