@@ -25,6 +25,17 @@ function startNewOrderFromTop() {
     window.location.href = window.location.pathname + window.location.search;
 }
 
+function centerElementInViewport(element) {
+    if (!element) return;
+    const navbar = document.getElementById('navbar');
+    const navbarHeight = navbar ? navbar.getBoundingClientRect().height : 0;
+    const rect = element.getBoundingClientRect();
+    const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    const availableHeight = Math.max(viewportHeight - navbarHeight, rect.height);
+    const targetTop = rect.top + window.scrollY - navbarHeight - ((availableHeight - rect.height) / 2);
+    window.scrollTo({ top: Math.max(0, targetTop), behavior: 'auto' });
+}
+
 const omrSymbol = '<img class="omr-symbol" src="images/omr-symbol.png" alt="ريال عماني">';
 
 const translations = {
@@ -1517,10 +1528,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     requestAnimationFrame(() => {
                         const invoice = inquiryForm.querySelector('.order-invoice');
-                        if (!invoice) return;
-                        const rect = invoice.getBoundingClientRect();
-                        const targetTop = rect.top + window.scrollY - ((window.innerHeight - rect.height) / 2);
-                        window.scrollTo({ top: Math.max(0, targetTop), behavior: 'auto' });
+                        centerElementInViewport(invoice);
+                        window.setTimeout(() => centerElementInViewport(invoice), 250);
                     });
             }
             // Removed final .then that resets button automatically to prevent duplicate clicks while showing success
