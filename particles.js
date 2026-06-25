@@ -29,7 +29,44 @@
         }
 
         function getBaseSpeed() {
-            return width <= 768 ? 0.95 : 0.4;
+            return width <= 768 ? 1.55 : 0.72;
+        }
+
+        function createParticle(isInitial) {
+            const margin = 44;
+            const speed = getBaseSpeed() * (0.72 + Math.random() * 0.78);
+            let x = Math.random() * width;
+            let y = Math.random() * height;
+            let angle = Math.random() * Math.PI * 2;
+
+            if (!isInitial) {
+                const edge = Math.floor(Math.random() * 4);
+                if (edge === 0) {
+                    x = -margin;
+                    y = Math.random() * height;
+                    angle = (Math.random() - 0.5) * 1.35;
+                } else if (edge === 1) {
+                    x = width + margin;
+                    y = Math.random() * height;
+                    angle = Math.PI + (Math.random() - 0.5) * 1.35;
+                } else if (edge === 2) {
+                    x = Math.random() * width;
+                    y = -margin;
+                    angle = Math.PI / 2 + (Math.random() - 0.5) * 1.35;
+                } else {
+                    x = Math.random() * width;
+                    y = height + margin;
+                    angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.35;
+                }
+            }
+
+            return {
+                x,
+                y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                size: 1.8 + Math.random() * 1.4
+            };
         }
 
         function resize() {
@@ -46,23 +83,7 @@
 
             const needed = getParticleCount();
             if (particles.length !== needed) {
-                const columns = Math.ceil(Math.sqrt(needed * (width / Math.max(height, 1))));
-                const rows = Math.ceil(needed / Math.max(columns, 1));
-                const cellWidth = width / Math.max(columns, 1);
-                const cellHeight = height / Math.max(rows, 1);
-
-                particles = Array.from({ length: needed }, (_, index) => {
-                    const column = index % columns;
-                    const row = Math.floor(index / columns);
-
-                    return {
-                        x: Math.min(width, (column + 0.2 + Math.random() * 0.6) * cellWidth),
-                        y: Math.min(height, (row + 0.2 + Math.random() * 0.6) * cellHeight),
-                        vx: (Math.random() - 0.5) * getBaseSpeed(),
-                        vy: (Math.random() - 0.5) * getBaseSpeed(),
-                        size: 1.8 + Math.random() * 1.4
-                    };
-                });
+                particles = Array.from({ length: needed }, () => createParticle(true));
             }
         }
 
@@ -98,19 +119,24 @@
 
                 particle.x += particle.vx;
                 particle.y += particle.vy;
-                particle.vx *= 0.99;
-                particle.vy *= 0.99;
+                particle.vx += (Math.random() - 0.5) * 0.018;
+                particle.vy += (Math.random() - 0.5) * 0.018;
+                particle.vx *= 0.996;
+                particle.vy *= 0.996;
 
-                if (Math.abs(particle.vx) < 0.09) particle.vx += (Math.random() - 0.5) * 0.04;
-                if (Math.abs(particle.vy) < 0.09) particle.vy += (Math.random() - 0.5) * 0.04;
-                particle.vx = Math.max(-1.05, Math.min(1.05, particle.vx));
-                particle.vy = Math.max(-1.05, Math.min(1.05, particle.vy));
+                if (Math.abs(particle.vx) < 0.26) particle.vx += (Math.random() - 0.5) * 0.1;
+                if (Math.abs(particle.vy) < 0.26) particle.vy += (Math.random() - 0.5) * 0.1;
+                particle.vx = Math.max(-1.9, Math.min(1.9, particle.vx));
+                particle.vy = Math.max(-1.9, Math.min(1.9, particle.vy));
 
-                if (particle.x < 0 || particle.x > width) particle.vx *= -1;
-                if (particle.y < 0 || particle.y > height) particle.vy *= -1;
-
-                particle.x = Math.max(0, Math.min(width, particle.x));
-                particle.y = Math.max(0, Math.min(height, particle.y));
+                if (
+                    particle.x < -70 ||
+                    particle.x > width + 70 ||
+                    particle.y < -70 ||
+                    particle.y > height + 70
+                ) {
+                    Object.assign(particle, createParticle(false));
+                }
             }
 
             for (let i = 0; i < particles.length; i += 1) {
@@ -245,12 +271,12 @@
                     },
                     move: {
                         enable: true,
-                        speed: 0.34,
+                        speed: 0.62,
                         direction: 'none',
                         random: true,
                         straight: false,
                         outModes: {
-                            default: 'bounce'
+                            default: 'out'
                         }
                     },
                     number: {
@@ -297,7 +323,7 @@
                                     opacity: 0.32
                                 },
                                 move: {
-                                    speed: 0.62
+                                    speed: 1.2
                                 }
                             }
                         }
@@ -312,6 +338,9 @@
                                 links: {
                                     distance: 148,
                                     opacity: 0.3
+                                },
+                                move: {
+                                    speed: 1.35
                                 }
                             }
                         }
