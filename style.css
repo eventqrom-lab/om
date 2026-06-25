@@ -766,11 +766,57 @@ html[lang="ar"] .hero-title {
 }
 
 .hero-buttons .btn-secondary:hover {
-    background: rgba(212, 175, 55, 0.9);
-    color: #000;
+    background: rgba(236, 216, 163, 0.14);
+    border-color: rgba(236, 216, 163, 0.92);
+    color: #E8D19A;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 22px rgba(236, 216, 163, 0.16);
+    transform: translateY(-2px);
 }
 
 
+
+.hero-buttons .btn-secondary:active {
+    animation: contactTapGlow 420ms ease-out;
+    background: rgba(255, 236, 184, 0.2);
+    border-color: rgba(255, 236, 184, 0.95);
+    color: #F4DEAA;
+    transform: scale(0.98);
+}
+
+@keyframes contactTapGlow {
+    0% {
+        box-shadow: 0 0 0 rgba(255, 236, 184, 0);
+    }
+    45% {
+        box-shadow:
+            0 0 0 4px rgba(255, 236, 184, 0.08),
+            0 0 26px rgba(255, 236, 184, 0.28);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(255, 236, 184, 0);
+    }
+}
+
+@media (hover: none) {
+    .hero-buttons .btn-secondary:hover {
+        background: rgba(0, 0, 0, 0.12);
+        border-color: rgba(212, 175, 55, 0.74);
+        color: var(--luxury-gold);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.04),
+            0 10px 22px rgba(0, 0, 0, 0.08);
+        transform: none;
+    }
+
+    .hero-buttons .btn-secondary:active {
+        background: rgba(255, 236, 184, 0.2);
+        border-color: rgba(255, 236, 184, 0.95);
+        color: #F4DEAA;
+        transform: scale(0.98);
+    }
+}
 
 /* Product Showcase Section */
 .product-showcase {
