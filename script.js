@@ -1492,43 +1492,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     const thankYouMessage = currentLang === 'ar'
                         ? 'شكرًا لاختيارك متجرنا.<br>سنتواصل معك قريبًا لتأكيد الطلب.'
                         : 'Thank you for choosing our store.<br>We will contact you soon to confirm the order.';
+                    document.body.classList.add('order-invoice-open');
                     inquiryForm.innerHTML = `
-                        <div class="order-invoice">
-                            <div class="invoice-header">
-                                <div class="status-icon">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
-                                </div>
-                                <h3>${currentLang === 'ar' ? 'تم استلام طلبك بنجاح' : 'Your Order Has Been Received'}</h3>
-                                <p class="invoice-thanks">${thankYouMessage}</p>
-                            </div>
-                            
-                            <div class="invoice-body">
-                                <div class="invoice-divider"></div>
-                                <div class="invoice-main-id">
-                                    <div class="order-id-actions">
-                                        <span class="label">${t.invoiceOrderID}</span>
-                                        <span class="value">#${orderId}</span>
-                                    </div>
-                                    <button type="button" class="copy-order-btn" id="copy-order-id" aria-label="${t.btnCopyOrderId}">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        <div class="order-invoice-screen">
+                            <div class="order-invoice">
+                                <div class="invoice-header">
+                                    <div class="status-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
                                         </svg>
-                                        <span class="copy-text">${t.btnCopyOrderId}</span>
-                                    </button>
+                                    </div>
+                                    <h3>${currentLang === 'ar' ? 'تم استلام طلبك بنجاح' : 'Your Order Has Been Received'}</h3>
+                                    <p class="invoice-thanks">${thankYouMessage}</p>
                                 </div>
-                                <div class="invoice-details">
-                                    <div class="invoice-total">
-                                        <span class="label">${t.invoiceTotal}</span>
-                                        <span class="value">${formatAmountHtml(finalPriceValue)}</span>
+                                
+                                <div class="invoice-body">
+                                    <div class="invoice-divider"></div>
+                                    <div class="invoice-main-id">
+                                        <div class="order-id-actions">
+                                            <span class="label">${t.invoiceOrderID}</span>
+                                            <span class="value">#${orderId}</span>
+                                        </div>
+                                        <button type="button" class="copy-order-btn" id="copy-order-id" aria-label="${t.btnCopyOrderId}">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                            </svg>
+                                            <span class="copy-text">${t.btnCopyOrderId}</span>
+                                        </button>
+                                    </div>
+                                    <div class="invoice-details">
+                                        <div class="invoice-total">
+                                            <span class="label">${t.invoiceTotal}</span>
+                                            <span class="value">${formatAmountHtml(finalPriceValue)}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <div class="invoice-footer">
-                                <button type="button" onclick="startNewOrderFromTop()" class="btn btn-primary">${t.btnNewOrder}</button>
+                                
+                                <div class="invoice-footer">
+                                    <button type="button" onclick="startNewOrderFromTop()" class="btn btn-primary">${t.btnNewOrder}</button>
+                                </div>
                             </div>
                         </div>
                     `;

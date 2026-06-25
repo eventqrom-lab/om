@@ -148,6 +148,26 @@ ul {
     padding: clamp(14px, 4vw, 24px);
 }
 
+body.order-invoice-open {
+    overflow: hidden;
+}
+
+.order-invoice-screen {
+    position: fixed;
+    inset: 70px 0 0;
+    z-index: 900;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background:
+        radial-gradient(circle at 50% 12%, rgba(198, 167, 105, 0.08), transparent 42%),
+        rgba(0, 0, 0, 0.76);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
 @keyframes fadeInScale {
     from { opacity: 0; transform: scale(0.95) translateY(20px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
@@ -376,6 +396,12 @@ ul {
 }
 
 @media (max-width: 500px) {
+    .order-invoice-screen {
+        inset: 68px 0 0;
+        padding: 14px;
+        align-items: center;
+    }
+
     .order-invoice {
         width: 100%;
         padding: 16px;
