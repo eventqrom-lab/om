@@ -2168,6 +2168,28 @@ body.modal-open { overflow: hidden; }
         background: rgba(198,167,105,.08);
     }
     .account-panel-header .orders-heading { margin-top: 0; }
+    #orders-panel {
+        min-height: auto;
+        height: calc(100dvh - 112px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        overflow: hidden;
+    }
+    #orders-panel .account-panel-header {
+        position: relative;
+        top: auto;
+        flex: 0 0 auto;
+        z-index: 5;
+        margin-bottom: 0;
+        box-shadow: 0 16px 24px rgba(0, 0, 0, .32);
+    }
+    #orders-list {
+        flex: 1 1 auto;
+        min-height: 0;
+        margin: 0 -16px -16px;
+        padding: 18px 16px 22px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
     .delete-account-warning {
         padding: 12px 14px;
         border: 1px solid rgba(158,61,61,.24);
