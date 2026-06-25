@@ -17,7 +17,7 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=20260625-particles-profile-phone">
+    <link rel="stylesheet" href="style.css?v=20260625-one-intro-section">
 </head>
 
 <body>
@@ -41,11 +41,11 @@
         </div>
     </header>
 
-    <div class="intro-particles-section">
-        <div id="particles-bg" aria-hidden="true"></div>
+    <div class="intro-particles-section" style="position: relative; isolation: isolate; overflow: hidden; background: radial-gradient(circle at 18% 24%, rgba(212, 175, 55, 0.12), transparent 34%), radial-gradient(circle at 78% 58%, rgba(212, 175, 55, 0.08), transparent 38%), linear-gradient(180deg, #050505 0%, #080808 52%, #050505 100%);">
+        <div id="particles-bg" aria-hidden="true" style="position: absolute; inset: 0; z-index: 0; min-height: 100%; pointer-events: none;"></div>
 
         <!-- Hero Section -->
-        <section id="home" class="hero">
+        <section id="home" class="hero" style="position: relative; z-index: 1; background-color: transparent; background-image: none;">
             <div class="container hero-container">
                 <div class="hero-content">
                     <h1 class="hero-title">
@@ -64,7 +64,7 @@
         </section>
 
         <!-- Product Showcase Section -->
-        <section id="showcase" class="product-showcase section-padding">
+        <section id="showcase" class="product-showcase section-padding" style="position: relative; z-index: 1; background-color: transparent;">
             <div class="container">
                 <div class="section-title">
                     <p data-i18n="showcaseDesc">تصاميم رقمية أنيقة مع QR مخصص لكل مناسبة</p>
@@ -755,7 +755,143 @@
     <script src="https://unpkg.com/@tsparticles/slim@4.2.1/tsparticles.slim.bundle.min.js"></script>
     <script src="auth.js?v=20260625-profile-phone-validation"></script>
     <script src="script.js?v=20260619-title-language"></script>
-    <script src="particles.js?v=20260625-intro-particles"></script>
+    <script src="particles.js?v=20260625-full-network-no-clump"></script>
+    <script>
+        window.setTimeout(function () {
+            var target = document.getElementById('particles-bg');
+            if (!target || target.querySelector('.particles-fallback-canvas')) return;
+
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            var points = [];
+            var pointer = { active: false, x: 0, y: 0 };
+            var width = 0;
+            var height = 0;
+
+            canvas.className = 'particles-fallback-canvas';
+            canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+            target.appendChild(canvas);
+
+            function count() {
+                return width <= 420 ? 68 : width <= 768 ? 76 : 96;
+            }
+
+            function resize() {
+                var bounds = target.getBoundingClientRect();
+                var ratio = Math.min(window.devicePixelRatio || 1, 2);
+                width = Math.max(bounds.width, 1);
+                height = Math.max(bounds.height, 1);
+                canvas.width = Math.floor(width * ratio);
+                canvas.height = Math.floor(height * ratio);
+                ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+                if (points.length !== count()) {
+                    var total = count();
+                    var columns = Math.ceil(Math.sqrt(total * (width / Math.max(height, 1))));
+                    var rows = Math.ceil(total / Math.max(columns, 1));
+                    var cellWidth = width / Math.max(columns, 1);
+                    var cellHeight = height / Math.max(rows, 1);
+
+                    points = Array.from({ length: total }, function (_, index) {
+                        var column = index % columns;
+                        var row = Math.floor(index / columns);
+
+                        return {
+                            x: Math.min(width, (column + 0.2 + Math.random() * 0.6) * cellWidth),
+                            y: Math.min(height, (row + 0.2 + Math.random() * 0.6) * cellHeight),
+                            vx: (Math.random() - 0.5) * 0.28,
+                            vy: (Math.random() - 0.5) * 0.28,
+                            r: 1.8 + Math.random() * 1.4
+                        };
+                    });
+                }
+            }
+
+            function movePointer(event) {
+                var point = event.touches ? event.touches[0] : event;
+                var bounds = target.getBoundingClientRect();
+                pointer.active = true;
+                pointer.x = point.clientX - bounds.left;
+                pointer.y = point.clientY - bounds.top;
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+
+                points.forEach(function (p) {
+                    if (pointer.active) {
+                        var px = pointer.x - p.x;
+                        var py = pointer.y - p.y;
+                        var pd = Math.hypot(px, py);
+                        if (pd > 1 && pd < 150) {
+                            var force = (1 - pd / 150) * 0.006;
+                            p.vx -= px * force / pd;
+                            p.vy -= py * force / pd;
+                        }
+                    }
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.985;
+                    p.vy *= 0.985;
+                    if (Math.abs(p.vx) < 0.045) p.vx += (Math.random() - 0.5) * 0.018;
+                    if (Math.abs(p.vy) < 0.045) p.vy += (Math.random() - 0.5) * 0.018;
+                    p.vx = Math.max(-0.42, Math.min(0.42, p.vx));
+                    p.vy = Math.max(-0.42, Math.min(0.42, p.vy));
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+                    p.x = Math.max(0, Math.min(width, p.x));
+                    p.y = Math.max(0, Math.min(height, p.y));
+                });
+
+                for (var i = 0; i < points.length; i += 1) {
+                    for (var j = i + 1; j < points.length; j += 1) {
+                        var a = points[i];
+                        var b = points[j];
+                        var d = Math.hypot(a.x - b.x, a.y - b.y);
+                        if (d < 170) {
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.strokeStyle = 'rgba(212,175,55,' + (0.32 * (1 - d / 170)) + ')';
+                            ctx.lineWidth = 0.9;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                if (pointer.active) {
+                    points.forEach(function (p) {
+                        var d = Math.hypot(pointer.x - p.x, pointer.y - p.y);
+                        if (d < 190) {
+                            ctx.beginPath();
+                            ctx.moveTo(pointer.x, pointer.y);
+                            ctx.lineTo(p.x, p.y);
+                            ctx.strokeStyle = 'rgba(212,175,55,' + (0.42 * (1 - d / 190)) + ')';
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    });
+                }
+
+                points.forEach(function (p) {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(212,175,55,.82)';
+                    ctx.fill();
+                });
+
+                requestAnimationFrame(draw);
+            }
+
+            resize();
+            draw();
+            window.addEventListener('resize', resize);
+            window.addEventListener('pointermove', movePointer, { passive: true });
+            window.addEventListener('touchmove', movePointer, { passive: true });
+            window.addEventListener('pointerleave', function () { pointer.active = false; });
+            window.addEventListener('touchend', function () { pointer.active = false; });
+        }, 500);
+    </script>
 </body>
 
 </html>

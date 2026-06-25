@@ -556,6 +556,18 @@ ul {
         radial-gradient(circle at 50% 20%, rgba(255, 239, 188, 0.04), transparent 30%);
 }
 
+.intro-particles-section::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 180px;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent, var(--deep-black));
+}
+
 #particles-bg {
     position: absolute;
     inset: 0;
@@ -563,7 +575,8 @@ ul {
     min-height: 100%;
 }
 
-#particles-bg canvas {
+#particles-bg canvas,
+#particles-bg .particles-fallback-canvas {
     position: absolute !important;
     inset: 0;
     width: 100% !important;
@@ -579,6 +592,10 @@ ul {
 
 .intro-particles-section .hero {
     background-image: none;
+}
+
+.intro-particles-section .hero::after {
+    content: none;
 }
 
 .hero {
