@@ -1384,7 +1384,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const finalPriceValue = parseFloat(document.getElementById('calc-total-price').textContent) || 0;
             const formatAmount = (value) => `${value.toFixed(3)} OMR`;
-            const formatAmountHtml = (value) => `${value.toFixed(3)} ${omrSymbol}`;
+            const formatAmountHtml = (value) => `${omrSymbol}<span>${value.toFixed(3)}</span>`;
             // Create organized order details for the database and admin notification.
             const organizedObject = {
                 "رقم_الطلب": orderId,

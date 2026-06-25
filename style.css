@@ -347,6 +347,15 @@ ul {
     font-size: clamp(1.25rem, 5vw, 1.55rem);
 }
 
+.order-invoice .invoice-total .value {
+    direction: ltr;
+}
+
+.order-invoice .invoice-total .omr-symbol {
+    height: 0.78em;
+    vertical-align: -0.08em;
+}
+
 .invoice-footer {
     text-align: center;
     margin-top: 0;

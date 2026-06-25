@@ -8,7 +8,7 @@
             login: 'تسجيل الدخول',
             signup: 'إنشاء حساب',
             loginLead: 'أدخل بريد حسابك المسجل وسنرسل لك رمز التحقق.',
-            signupLead: 'أنشئ حسابك باسمك ورقمك وبريدك الإلكتروني بدون كلمة مرور.',
+            signupLead: '',
             orderLoginNotice: 'سجل الدخول أولاً لإرسال طلبك. ستبقى جميع تفاصيل الطلب والسعر محفوظة.',
             name: 'الاسم',
             fullName: 'الاسم الكامل',
@@ -58,7 +58,7 @@
             login: 'Log In',
             signup: 'Create Account',
             loginLead: 'Enter your registered email and we will send you a verification code.',
-            signupLead: 'Create an account with your name, phone number, and email. No password needed.',
+            signupLead: '',
             orderLoginNotice: 'Log in first to submit your order. Your order details and price will stay saved.',
             name: 'Name',
             fullName: 'Full Name',
@@ -330,8 +330,10 @@
 
     function renderAuthModeText() {
         const isSignup = authMode === 'signup';
+        const leadText = isSignup ? t('signupLead') : t('loginLead');
         $('account-title').textContent = isSignup ? t('signup') : t('login');
-        $('account-lead').textContent = isSignup ? t('signupLead') : t('loginLead');
+        $('account-lead').textContent = leadText;
+        $('account-lead').classList.toggle('hidden', !leadText);
         $('otp-request-btn').textContent = t('requestOtp');
     }
 
