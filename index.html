@@ -17,7 +17,7 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=20260625-one-intro-section">
+    <link rel="stylesheet" href="style.css?v=20260625-hero-text-legibility">
 </head>
 
 <body>
@@ -755,7 +755,7 @@
     <script src="https://unpkg.com/@tsparticles/slim@4.2.1/tsparticles.slim.bundle.min.js"></script>
     <script src="auth.js?v=20260625-profile-phone-validation"></script>
     <script src="script.js?v=20260619-title-language"></script>
-    <script src="particles.js?v=20260625-full-network-no-clump"></script>
+    <script src="particles.js?v=20260625-mobile-faster-touch"></script>
     <script>
         window.setTimeout(function () {
             var target = document.getElementById('particles-bg');
@@ -774,6 +774,10 @@
 
             function count() {
                 return width <= 420 ? 68 : width <= 768 ? 76 : 96;
+            }
+
+            function baseSpeed() {
+                return width <= 768 ? 0.95 : 0.4;
             }
 
             function resize() {
@@ -798,8 +802,8 @@
                         return {
                             x: Math.min(width, (column + 0.2 + Math.random() * 0.6) * cellWidth),
                             y: Math.min(height, (row + 0.2 + Math.random() * 0.6) * cellHeight),
-                            vx: (Math.random() - 0.5) * 0.28,
-                            vy: (Math.random() - 0.5) * 0.28,
+                            vx: (Math.random() - 0.5) * baseSpeed(),
+                            vy: (Math.random() - 0.5) * baseSpeed(),
                             r: 1.8 + Math.random() * 1.4
                         };
                     });
@@ -831,12 +835,12 @@
 
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vx *= 0.985;
-                    p.vy *= 0.985;
-                    if (Math.abs(p.vx) < 0.045) p.vx += (Math.random() - 0.5) * 0.018;
-                    if (Math.abs(p.vy) < 0.045) p.vy += (Math.random() - 0.5) * 0.018;
-                    p.vx = Math.max(-0.42, Math.min(0.42, p.vx));
-                    p.vy = Math.max(-0.42, Math.min(0.42, p.vy));
+                    p.vx *= 0.99;
+                    p.vy *= 0.99;
+                    if (Math.abs(p.vx) < 0.09) p.vx += (Math.random() - 0.5) * 0.04;
+                    if (Math.abs(p.vy) < 0.09) p.vy += (Math.random() - 0.5) * 0.04;
+                    p.vx = Math.max(-1.05, Math.min(1.05, p.vx));
+                    p.vy = Math.max(-1.05, Math.min(1.05, p.vy));
                     if (p.x < 0 || p.x > width) p.vx *= -1;
                     if (p.y < 0 || p.y > height) p.vy *= -1;
                     p.x = Math.max(0, Math.min(width, p.x));
@@ -886,10 +890,14 @@
             resize();
             draw();
             window.addEventListener('resize', resize);
+            window.addEventListener('pointerdown', movePointer, { passive: true });
             window.addEventListener('pointermove', movePointer, { passive: true });
+            window.addEventListener('pointerup', function () { pointer.active = false; });
+            window.addEventListener('touchstart', movePointer, { passive: true });
             window.addEventListener('touchmove', movePointer, { passive: true });
             window.addEventListener('pointerleave', function () { pointer.active = false; });
             window.addEventListener('touchend', function () { pointer.active = false; });
+            window.addEventListener('touchcancel', function () { pointer.active = false; });
         }, 500);
     </script>
 </body>
