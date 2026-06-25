@@ -802,16 +802,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createShortOrderId() {
-        const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        const timePart = Date.now().toString(36).toUpperCase().slice(-7);
-        const randomValues = getCryptoRandomValues(7);
-        let randomPart = '';
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const digits = '0123456789';
+        const alphabet = `${letters}${digits}`;
+        const randomValues = getCryptoRandomValues(12);
+        const chars = [];
 
-        for (let i = 0; i < randomValues.length; i++) {
-            randomPart += alphabet[randomValues[i] % alphabet.length];
+        for (let i = 0; i < 8; i++) {
+            chars.push(alphabet[randomValues[i] % alphabet.length]);
         }
 
-        return `${timePart}${randomPart}`.slice(0, 14);
+        const letterIndex = randomValues[8] % chars.length;
+        let digitIndex = randomValues[9] % chars.length;
+        if (digitIndex === letterIndex) digitIndex = (digitIndex + 1) % chars.length;
+        chars[letterIndex] = letters[randomValues[10] % letters.length];
+        chars[digitIndex] = digits[randomValues[11] % digits.length];
+        return chars.join('');
     }
 
     function rememberOrderId(orderId) {

@@ -377,6 +377,23 @@ async function sendOrderNotification(payload) {
   return true;
 }
 
+const ORDER_NUMBER_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const ORDER_NUMBER_DIGITS = '0123456789';
+const ORDER_NUMBER_ALPHABET = `${ORDER_NUMBER_LETTERS}${ORDER_NUMBER_DIGITS}`;
+
+function generateOrderNumber() {
+  const chars = Array.from(
+    { length: 8 },
+    () => ORDER_NUMBER_ALPHABET[crypto.randomInt(ORDER_NUMBER_ALPHABET.length)]
+  );
+  const letterIndex = crypto.randomInt(chars.length);
+  let digitIndex = crypto.randomInt(chars.length);
+  while (digitIndex === letterIndex) digitIndex = crypto.randomInt(chars.length);
+  chars[letterIndex] = ORDER_NUMBER_LETTERS[crypto.randomInt(ORDER_NUMBER_LETTERS.length)];
+  chars[digitIndex] = ORDER_NUMBER_DIGITS[crypto.randomInt(ORDER_NUMBER_DIGITS.length)];
+  return chars.join('');
+}
+
 app.get('/api/health', async (_req, res) => {
   await pool.query('SELECT 1');
   res.json({ ok: true });
@@ -696,8 +713,8 @@ app.post('/api/orders', optionalAuth, async (req, res) => {
   }
 
   let order;
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    const orderNumber = `EQR-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    const orderNumber = generateOrderNumber();
     try {
       const result = await pool.query(
         `INSERT INTO orders (order_number, user_id, customer_name, customer_phone, total_price, details)

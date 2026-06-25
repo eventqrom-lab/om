@@ -1521,7 +1521,7 @@
         function getArchivedOrderId(invoice) {
             if (invoice.orderId && invoice.orderId !== '---') return invoice.orderId;
 
-            const rawOrderId = (invoice.rawData || '').match(/(ORD-[\w-]+)/i);
+            const rawOrderId = (invoice.rawData || '').match(/((?:EQR|ORD)-[\w-]+|(?=[A-Z0-9]{8}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{8})/i);
             if (rawOrderId) return rawOrderId[1];
 
             const holder = document.createElement('div');
@@ -1751,7 +1751,7 @@
                 data.eventDate = dateMatch[1].padStart(2,'0') + '-' + dateMatch[2].padStart(2,'0') + '-' + dateMatch[3];
             }
 
-            const orderRegex = /((?:EQR|ORD)-[\w-]+)/i;
+            const orderRegex = /((?:EQR|ORD)-[\w-]+|(?=[A-Z0-9]{8}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{8})/i;
             const orderMatch = text.match(orderRegex);
             if (orderMatch) {
                 data.orderId = orderMatch[1];
@@ -1938,7 +1938,7 @@
             showToast('جاري إنشاء PDF...');
 
             try {
-                const orderId = (document.getElementById('raw-input').value.match(/((?:EQR|ORD)-[\w-]+)/i) || ['invoice'])[0];
+                const orderId = (document.getElementById('raw-input').value.match(/((?:EQR|ORD)-[\w-]+|(?=[A-Z0-9]{8}\b)(?=[A-Z0-9]*[A-Z])(?=[A-Z0-9]*\d)[A-Z0-9]{8})/i) || ['invoice'])[0];
                 await saveElementAsPDF(element, orderId);
                 showToast('تم التحميل بنجاح');
             } catch (err) {
