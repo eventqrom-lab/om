@@ -41,38 +41,42 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <span data-i18n="heroTitleStart">دعوات رقمية ذكية</span>
-                    <br />
-                    <span class="highlight" data-i18n="heroTitleHighlight">بتقنية QR</span>
-                </h1>
-                <p class="hero-desc" data-i18n="heroDesc">ارتقِ بمناسبتك مع دعوات عصرية ومبتكرة تليق بضيوفك. تصميم أنيق،
-                    تنظيم سلس، وتجربة لا تُنسى.</p>
-                <div class="hero-buttons">
-                    <a href="#pricing" class="btn btn-primary" data-i18n="btnOffers">اطلب الان</a>
-                    <a href="#contact" class="btn btn-secondary" data-i18n="btnContact">تواصل معنا</a>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="intro-particles-section">
+        <div id="particles-bg" aria-hidden="true"></div>
 
-    <!-- Product Showcase Section -->
-    <section id="showcase" class="product-showcase section-padding">
-        <div class="container">
-            <div class="section-title">
-                <p data-i18n="showcaseDesc">تصاميم رقمية أنيقة مع QR مخصص لكل مناسبة</p>
-            </div>
-            <div class="showcase-gallery showcase-single">
-                <div class="showcase-item">
-                    <img src="images/showcase-card-800.jpg" width="800" height="590" alt="نموذج بطاقة دعوة" data-i18n-alt="cardAlt1" fetchpriority="high">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span data-i18n="heroTitleStart">دعوات رقمية ذكية</span>
+                        <br />
+                        <span class="highlight" data-i18n="heroTitleHighlight">بتقنية QR</span>
+                    </h1>
+                    <p class="hero-desc" data-i18n="heroDesc">ارتقِ بمناسبتك مع دعوات عصرية ومبتكرة تليق بضيوفك. تصميم أنيق،
+                        تنظيم سلس، وتجربة لا تُنسى.</p>
+                    <div class="hero-buttons">
+                        <a href="#pricing" class="btn btn-primary" data-i18n="btnOffers">اطلب الان</a>
+                        <a href="#contact" class="btn btn-secondary" data-i18n="btnContact">تواصل معنا</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Product Showcase Section -->
+        <section id="showcase" class="product-showcase section-padding">
+            <div class="container">
+                <div class="section-title">
+                    <p data-i18n="showcaseDesc">تصاميم رقمية أنيقة مع QR مخصص لكل مناسبة</p>
+                </div>
+                <div class="showcase-gallery showcase-single">
+                    <div class="showcase-item">
+                        <img src="images/showcase-card-800.jpg" width="800" height="590" alt="نموذج بطاقة دعوة" data-i18n-alt="cardAlt1" fetchpriority="high">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <!-- Pricing Section -->
     <section id="pricing" class="pricing section-padding">
@@ -146,7 +150,7 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                 </svg>
-                                <span data-i18n="dateNote">يشترط عند طلب بطاقة دعوة مطبوعة أن يتم تقديم الطلب قبل موعد استلام البطاقة بما لا يقل عن سبعة أيام</span>
+                                <span data-i18n="dateNote">يجب أن يتم تقديم طلب البطاقات المطبوعة قبل 7 أيام على الأقل من تاريخ المناسبة أو الاستلام.</span>
                             </p>
                         </div>
 
@@ -534,13 +538,13 @@
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">
-                        <span data-i18n="faqQ3">متى يتم استلام البطاقات المطبوعة؟</span>
+                        <span data-i18n="faqQ3">متى يجب تقديم طلب البطاقات المطبوعة؟</span>
                         <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                     </div>
                     <div class="faq-answer">
-                        <p data-i18n="faqA3">يتم استلام البطاقات المطبوعة قبل موعد المناسبة بـ7 أيام، لضمان تجهيز الطلب ومراجعته وتسليمه في الوقت المناسب.</p>
+                        <p data-i18n="faqA3">يجب أن يتم تقديم طلب البطاقات المطبوعة قبل 7 أيام على الأقل من تاريخ المناسبة أو الاستلام.</p>
                     </div>
                 </div>
             </div>
@@ -709,7 +713,7 @@
                         <label for="profile-name-input">الاسم</label>
                         <input id="profile-name-input" type="text" maxlength="150" placeholder="الاسم الكامل" autocomplete="name" required>
                         <label for="profile-phone-input">رقم الهاتف</label>
-                        <input id="profile-phone-input" type="tel" maxlength="30" placeholder="+968 0000 0000" dir="ltr" autocomplete="tel" required>
+                        <input id="profile-phone-input" type="tel" inputmode="numeric" maxlength="8" minlength="8" pattern="[97٩٧۹۷][0-9٠-٩۰-۹]{7}" placeholder="00000000" dir="ltr" autocomplete="tel-national" required>
                         <button type="submit" class="btn btn-primary btn-block" id="profile-save-btn">حفظ التغييرات</button>
                     </form>
                     <div class="account-message hidden" id="profile-edit-message"></div>
@@ -748,8 +752,10 @@
     </div>
 
     <!-- JavaScript -->
+    <script src="https://unpkg.com/@tsparticles/slim@4.2.1/tsparticles.slim.bundle.min.js"></script>
     <script src="auth.js?v=20260619-account-language-errors"></script>
     <script src="script.js?v=20260619-title-language"></script>
+    <script src="particles.js?v=20260625-intro-particles"></script>
 </body>
 
 </html>
