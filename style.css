@@ -1492,14 +1492,20 @@ input:checked + .slider:before {
     align-items: center;
 }
 
+.calc-results .total-final-price .invoice-currency {
+    font-size: 1em;
+    line-height: 1;
+}
+
 .calc-results .invoice-currency .omr-symbol {
     width: auto;
     height: 0.88em;
 }
 
 .calc-results .total-final-price .invoice-currency .omr-symbol {
-    height: 0.78em;
-    vertical-align: -0.04em;
+    height: 0.66em;
+    transform: translateY(0.16em);
+    vertical-align: -0.14em;
 }
 
 .total-row {
@@ -3645,6 +3651,11 @@ html[lang="en"] .contact-info h2 {
 
     .total-row .result-value {
         font-size: 1.18rem;
+    }
+
+    .calc-results .total-final-price .invoice-currency .omr-symbol {
+        height: 0.8em;
+        transform: translateY(0.18em);
     }
 
     .contact-info {
