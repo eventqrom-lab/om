@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Event QR Tech Tricks | باقات الدعوات</title>
     <meta name="description" content="Smart Digital Invitations with QR Technology | دعوات رقمية ذكية بتقنية QR">
     <link rel="icon" type="image/png" href="images/store-logo-192.png">
@@ -17,7 +20,11 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=20260625-lighter-glass-contact">
+    <script>
+        window.EVENT_QR_ASSET_VERSION = String(Date.now());
+        document.write('<link rel="stylesheet" href="style.css?v=' + window.EVENT_QR_ASSET_VERSION + '">');
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
 </head>
 
 <body>
@@ -753,9 +760,14 @@
 
     <!-- JavaScript -->
     <script src="https://unpkg.com/@tsparticles/slim@4.2.1/tsparticles.slim.bundle.min.js"></script>
-    <script src="auth.js?v=20260625-profile-phone-validation"></script>
-    <script src="script.js?v=20260619-title-language"></script>
-    <script src="particles.js?v=20260625-mobile-random-flow"></script>
+    <script>
+        (function () {
+            var version = window.EVENT_QR_ASSET_VERSION || String(Date.now());
+            ['auth.js', 'script.js', 'particles.js'].forEach(function (src) {
+                document.write('<script src="' + src + '?v=' + encodeURIComponent(version) + '"><\/script>');
+            });
+        }());
+    </script>
     <script>
         window.setTimeout(function () {
             var target = document.getElementById('particles-bg');

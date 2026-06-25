@@ -106,7 +106,12 @@
 
     const lang = () => document.documentElement.lang === 'en' ? 'en' : 'ar';
     const t = (key, replacements = {}) => {
-        let value = accountTranslations[lang()][key] || accountTranslations.ar[key] || key;
+        const currentTranslations = accountTranslations[lang()] || accountTranslations.ar;
+        let value = Object.prototype.hasOwnProperty.call(currentTranslations, key)
+            ? currentTranslations[key]
+            : Object.prototype.hasOwnProperty.call(accountTranslations.ar, key)
+                ? accountTranslations.ar[key]
+                : key;
         Object.entries(replacements).forEach(([name, replacement]) => {
             value = value.replace(`{${name}}`, replacement);
         });
