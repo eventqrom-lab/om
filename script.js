@@ -1468,6 +1468,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             
                             <div class="invoice-body">
+                                <div class="invoice-divider"></div>
                                 <div class="invoice-main-id">
                                     <span class="label">${t.invoiceOrderID}</span>
                                     <div class="order-id-actions">
@@ -1481,7 +1482,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </button>
                                     </div>
                                 </div>
-                                <div class="invoice-divider"></div>
                                 <div class="invoice-details">
                                     <div class="invoice-total">
                                         <span class="label">${t.invoiceTotal}</span>
