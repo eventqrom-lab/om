@@ -1470,17 +1470,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="invoice-body">
                                 <div class="invoice-divider"></div>
                                 <div class="invoice-main-id">
-                                    <span class="label">${t.invoiceOrderID}</span>
                                     <div class="order-id-actions">
+                                        <span class="label">${t.invoiceOrderID}</span>
                                         <span class="value">#${orderId}</span>
-                                        <button type="button" class="copy-order-btn" id="copy-order-id" aria-label="${t.btnCopyOrderId}">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                            </svg>
-                                            <span class="copy-text">${t.btnCopyOrderId}</span>
-                                        </button>
                                     </div>
+                                    <button type="button" class="copy-order-btn" id="copy-order-id" aria-label="${t.btnCopyOrderId}">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <span class="copy-text">${t.btnCopyOrderId}</span>
+                                    </button>
                                 </div>
                                 <div class="invoice-details">
                                     <div class="invoice-total">
@@ -1499,7 +1499,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (window.eventQrAuth?.isAuthenticated()) {
                         window.eventQrAuth.refreshOrders();
                     }
-                    inquiryForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    requestAnimationFrame(() => {
+                        const invoice = inquiryForm.querySelector('.order-invoice');
+                        if (!invoice) return;
+                        const rect = invoice.getBoundingClientRect();
+                        const targetTop = rect.top + window.scrollY - ((window.innerHeight - rect.height) / 2);
+                        window.scrollTo({ top: Math.max(0, targetTop), behavior: 'auto' });
+                    });
             }
             // Removed final .then that resets button automatically to prevent duplicate clicks while showing success
         });

@@ -201,7 +201,7 @@ ul {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     background: var(--deep-black);
     padding: 16px 18px;
     border-radius: 8px;
@@ -212,6 +212,7 @@ ul {
 .invoice-main-id .label {
     color: var(--text-muted-beige);
     font-size: 0.9rem;
+    text-align: right;
 }
 
 .invoice-main-id .value {
@@ -219,14 +220,17 @@ ul {
     font-weight: 700;
     font-size: clamp(1.12rem, 4.4vw, 1.35rem);
     letter-spacing: 1px;
+    direction: ltr;
+    text-align: left;
 }
 
 .order-id-actions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 10px;
-    direction: ltr;
+    justify-content: space-between;
+    gap: 14px;
+    direction: rtl;
     width: 100%;
 }
 
@@ -377,9 +381,9 @@ ul {
         padding: 12px;
     }
     .order-id-actions {
-        flex-direction: column;
+        flex-direction: row;
         flex-wrap: nowrap;
-        justify-content: center;
+        justify-content: space-between;
         gap: 8px;
     }
     .invoice-main-id .value {
@@ -4491,7 +4495,15 @@ textarea {
 
     .order-invoice .invoice-main-id,
     .order-invoice .order-id-actions {
-        flex-direction: column;
         align-items: center;
+    }
+
+    .order-invoice .invoice-main-id {
+        flex-direction: column;
+    }
+
+    .order-invoice .order-id-actions {
+        flex-direction: row;
+        justify-content: space-between;
     }
 }
