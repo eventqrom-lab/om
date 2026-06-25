@@ -129,12 +129,22 @@ ul {
     background: var(--charcoal-card);
     border: 1.5px solid var(--border-color);
     border-radius: var(--border-radius);
-    padding: 40px;
-    max-width: 600px;
-    margin: 40px auto;
+    width: min(100%, 430px);
+    aspect-ratio: 1 / 1.06;
+    padding: clamp(18px, 4vw, 28px);
+    margin: 24px auto;
     box-shadow: 0 0 40px rgba(0,0,0,0.5), 0 0 20px rgba(198, 167, 105, 0.1);
     animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
     text-align: right;
+}
+
+.calculator-card.order-complete,
+.calculator-card:has(.order-invoice) {
+    padding: clamp(14px, 4vw, 24px);
 }
 
 @keyframes fadeInScale {
@@ -144,46 +154,56 @@ ul {
 
 .invoice-header {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 0;
 }
 
 .status-icon {
-    width: 64px;
-    height: 64px;
+    width: 52px;
+    height: 52px;
     background: rgba(198, 167, 105, 0.12);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 16px;
+    margin: 0 auto 12px;
     color: var(--luxury-gold);
 }
 
 .status-icon svg {
-    width: 32px;
-    height: 32px;
+    width: 26px;
+    height: 26px;
 }
 
 .invoice-header h3 {
-    font-size: 1.8rem;
+    font-size: clamp(1.35rem, 5vw, 1.65rem);
+    line-height: 1.25;
     color: var(--luxury-gold);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .invoice-thanks {
     color: var(--text-muted-beige);
-    font-size: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.invoice-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 .invoice-main-id {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     background: var(--deep-black);
-    padding: 16px 24px;
+    padding: 14px 18px;
     border-radius: 8px;
-    margin-bottom: 24px;
+    margin-bottom: 0;
 }
 
 .invoice-main-id .label {
@@ -194,7 +214,7 @@ ul {
 .invoice-main-id .value {
     color: var(--luxury-gold);
     font-weight: 700;
-    font-size: 1.4rem;
+    font-size: clamp(1.05rem, 4.2vw, 1.3rem);
     letter-spacing: 1px;
 }
 
@@ -210,7 +230,7 @@ ul {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 38px;
+    min-height: 34px;
     padding: 0 12px;
     border: 1px solid rgba(198, 167, 105, 0.35);
     border-radius: 8px;
@@ -241,7 +261,7 @@ ul {
 .invoice-divider {
     height: 1.5px;
     background: linear-gradient(to right, transparent, var(--border-color), transparent);
-    margin: 24px 0;
+    margin: 0;
 }
 
 .invoice-details {
@@ -301,7 +321,8 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0 0;
+    padding: 4px 0 0;
+    gap: 16px;
 }
 
 .invoice-total .label {
@@ -313,14 +334,19 @@ ul {
 .invoice-total .value {
     color: var(--text-ivory);
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 5vw, 1.5rem);
 }
 
 .invoice-footer {
     text-align: center;
-    margin-top: 40px;
-    padding-top: 32px;
+    margin-top: 0;
+    padding-top: 16px;
     border-top: 1px dashed var(--border-color);
+}
+
+.order-invoice .btn {
+    min-height: 46px;
+    padding: 12px 30px;
 }
 
 .invoice-footer p {
@@ -332,25 +358,44 @@ ul {
 
 @media (max-width: 500px) {
     .order-invoice {
-        padding: 24px 16px;
+        width: 100%;
+        padding: 16px;
+        margin: 12px auto;
+        gap: 12px;
     }
     .invoice-main-id {
-        align-items: stretch;
+        align-items: center;
         flex-direction: column;
+        gap: 8px;
         text-align: center;
+        padding: 12px;
     }
     .order-id-actions {
-        flex-direction: column;
-        gap: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
     }
     .invoice-main-id .value {
-        font-size: 1.2rem;
+        font-size: 1.05rem;
     }
     .copy-order-btn {
-        width: 100%;
+        width: auto;
     }
     .invoice-header h3 {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
+    }
+    .invoice-thanks {
+        font-size: 0.9rem;
+    }
+    .order-invoice .invoice-total {
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .order-invoice .invoice-total .value {
+        justify-content: flex-start;
     }
 }
 

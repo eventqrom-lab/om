@@ -1451,9 +1451,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             {
                     const t = translations[currentLang];
+                    inquiryForm.closest('.calculator-card')?.classList.add('order-complete');
                     const thankYouMessage = currentLang === 'ar'
-                        ? 'شكرًا لاختيارك متجرنا.<br>نؤكد لك أننا سنقوم بالرد عليك في أقرب وقت ممكن، وسنعمل على تجهيز طلبيتك بكل حرص واهتمام.'
-                        : 'Thank you for choosing our store.<br>We confirm that we will respond to you as soon as possible and prepare your order with care and attention.';
+                        ? 'شكرًا لاختيارك متجرنا.<br>سنتواصل معك قريبًا لتأكيد الطلب.'
+                        : 'Thank you for choosing our store.<br>We will contact you soon to confirm the order.';
                     inquiryForm.innerHTML = `
                         <div class="order-invoice">
                             <div class="invoice-header">
