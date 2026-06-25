@@ -32,8 +32,18 @@ function centerElementInViewport(element) {
     const rect = element.getBoundingClientRect();
     const viewportHeight = window.visualViewport?.height || window.innerHeight;
     const availableHeight = Math.max(viewportHeight - navbarHeight, rect.height);
-    const targetTop = rect.top + window.scrollY - navbarHeight - ((availableHeight - rect.height) / 2);
-    window.scrollTo({ top: Math.max(0, targetTop), behavior: 'auto' });
+    const pageTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    const targetTop = rect.top + pageTop - navbarHeight - ((availableHeight - rect.height) / 2);
+    const scrollTarget = Math.max(0, targetTop);
+    window.scrollTo(0, scrollTarget);
+    document.documentElement.scrollTop = scrollTarget;
+    document.body.scrollTop = scrollTarget;
+}
+
+function keepElementCentered(element) {
+    [0, 80, 220, 500, 900].forEach((delay) => {
+        window.setTimeout(() => centerElementInViewport(element), delay);
+    });
 }
 
 const omrSymbol = '<img class="omr-symbol" src="images/omr-symbol.png" alt="ريال عماني">';
@@ -1528,8 +1538,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     requestAnimationFrame(() => {
                         const invoice = inquiryForm.querySelector('.order-invoice');
-                        centerElementInViewport(invoice);
-                        window.setTimeout(() => centerElementInViewport(invoice), 250);
+                        keepElementCentered(invoice);
                     });
             }
             // Removed final .then that resets button automatically to prevent duplicate clicks while showing success
