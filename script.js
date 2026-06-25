@@ -555,6 +555,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contactHeroBtn && contactCard) {
         contactHeroBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            contactHeroBtn.blur();
+            contactHeroBtn.classList.remove('contact-flash');
+            void contactHeroBtn.offsetWidth;
+            contactHeroBtn.classList.add('contact-flash');
+            window.setTimeout(() => contactHeroBtn.classList.remove('contact-flash'), 460);
             contactCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
     }
