@@ -28,6 +28,10 @@
             return 96;
         }
 
+        function getBaseSpeed() {
+            return width <= 768 ? 0.95 : 0.4;
+        }
+
         function resize() {
             const bounds = target.getBoundingClientRect();
             const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
@@ -54,8 +58,8 @@
                     return {
                         x: Math.min(width, (column + 0.2 + Math.random() * 0.6) * cellWidth),
                         y: Math.min(height, (row + 0.2 + Math.random() * 0.6) * cellHeight),
-                        vx: (Math.random() - 0.5) * 0.28,
-                        vy: (Math.random() - 0.5) * 0.28,
+                        vx: (Math.random() - 0.5) * getBaseSpeed(),
+                        vy: (Math.random() - 0.5) * getBaseSpeed(),
                         size: 1.8 + Math.random() * 1.4
                     };
                 });
@@ -94,13 +98,13 @@
 
                 particle.x += particle.vx;
                 particle.y += particle.vy;
-                particle.vx *= 0.985;
-                particle.vy *= 0.985;
+                particle.vx *= 0.99;
+                particle.vy *= 0.99;
 
-                if (Math.abs(particle.vx) < 0.045) particle.vx += (Math.random() - 0.5) * 0.018;
-                if (Math.abs(particle.vy) < 0.045) particle.vy += (Math.random() - 0.5) * 0.018;
-                particle.vx = Math.max(-0.42, Math.min(0.42, particle.vx));
-                particle.vy = Math.max(-0.42, Math.min(0.42, particle.vy));
+                if (Math.abs(particle.vx) < 0.09) particle.vx += (Math.random() - 0.5) * 0.04;
+                if (Math.abs(particle.vy) < 0.09) particle.vy += (Math.random() - 0.5) * 0.04;
+                particle.vx = Math.max(-1.05, Math.min(1.05, particle.vx));
+                particle.vy = Math.max(-1.05, Math.min(1.05, particle.vy));
 
                 if (particle.x < 0 || particle.x > width) particle.vx *= -1;
                 if (particle.y < 0 || particle.y > height) particle.vy *= -1;
@@ -155,10 +159,14 @@
         draw();
 
         window.addEventListener('resize', resize);
+        window.addEventListener('pointerdown', updatePointer, { passive: true });
         window.addEventListener('pointermove', updatePointer, { passive: true });
+        window.addEventListener('pointerup', clearPointer);
         window.addEventListener('pointerleave', clearPointer);
+        window.addEventListener('touchstart', updatePointer, { passive: true });
         window.addEventListener('touchmove', updatePointer, { passive: true });
         window.addEventListener('touchend', clearPointer);
+        window.addEventListener('touchcancel', clearPointer);
         window.addEventListener('pagehide', function () {
             window.cancelAnimationFrame(animationFrame);
         });
@@ -237,7 +245,7 @@
                     },
                     move: {
                         enable: true,
-                        speed: 0.24,
+                        speed: 0.34,
                         direction: 'none',
                         random: true,
                         straight: false,
@@ -289,7 +297,7 @@
                                     opacity: 0.32
                                 },
                                 move: {
-                                    speed: 0.2
+                                    speed: 0.62
                                 }
                             }
                         }
