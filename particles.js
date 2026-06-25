@@ -23,9 +23,9 @@
         target.appendChild(canvas);
 
         function getParticleCount() {
-            if (width <= 420) return 68;
-            if (width <= 768) return 76;
-            return 96;
+            if (width <= 420) return 38;
+            if (width <= 768) return 48;
+            return 64;
         }
 
         function getBaseSpeed() {
@@ -71,7 +71,7 @@
 
         function resize() {
             const bounds = target.getBoundingClientRect();
-            const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
 
             width = Math.max(bounds.width, 1);
             height = Math.max(bounds.height, 1);
@@ -280,7 +280,7 @@
                         }
                     },
                     number: {
-                        value: 96
+                        value: 64
                     },
                     opacity: {
                         value: {
@@ -316,7 +316,7 @@
                         options: {
                             particles: {
                                 number: {
-                                    value: 76
+                                    value: 48
                                 },
                                 links: {
                                     distance: 158,
@@ -333,7 +333,7 @@
                         options: {
                             particles: {
                                 number: {
-                                    value: 68
+                                    value: 38
                                 },
                                 links: {
                                     distance: 148,
