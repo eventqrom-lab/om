@@ -14,6 +14,17 @@ if ('serviceWorker' in navigator) {
         .catch(() => {});
 }
 
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+window.addEventListener('beforeunload', () => window.scrollTo(0, 0));
+window.addEventListener('pageshow', () => window.scrollTo(0, 0));
+
+function startNewOrderFromTop() {
+    window.scrollTo(0, 0);
+    window.location.href = window.location.pathname + window.location.search;
+}
+
 const omrSymbol = '<img class="omr-symbol" src="images/omr-symbol.png" alt="ريال عماني">';
 
 const translations = {
@@ -1496,7 +1507,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             
                             <div class="invoice-footer">
-                                <button onclick="window.location.reload()" class="btn btn-primary">${t.btnNewOrder}</button>
+                                <button type="button" onclick="startNewOrderFromTop()" class="btn btn-primary">${t.btnNewOrder}</button>
                             </div>
                         </div>
                     `;
