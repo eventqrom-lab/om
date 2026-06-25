@@ -36,7 +36,7 @@
             requestDeleteCode: 'إرسال رمز الحذف',
             deleteForever: 'حذف الحساب نهائيا',
             cancel: 'إلغاء',
-            phoneError: 'يرجى كتابة رقم الهاتف بالشكل الصحيح.',
+            phoneError: 'رقم الهاتف يجب أن يكون 8 أرقام ويبدأ بـ 9 أو 7.',
             sendingOtp: 'جاري إرسال رمز التحقق...',
             sendingOtpMessage: 'جاري إرسال رمز التحقق إلى بريدك الإلكتروني...',
             otpSent: 'تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني.',
@@ -86,7 +86,7 @@
             requestDeleteCode: 'Send Delete Code',
             deleteForever: 'Delete Account Permanently',
             cancel: 'Cancel',
-            phoneError: 'Please enter a valid phone number.',
+            phoneError: 'Phone number must be 8 digits and start with 9 or 7.',
             sendingOtp: 'Sending verification code...',
             sendingOtpMessage: 'Sending the verification code to your email...',
             otpSent: 'A new verification code has been sent to your email.',
@@ -119,7 +119,7 @@
         'اختر تسجيل الدخول أو إنشاء حساب.': 'Choose log in or create account.',
         'لا يوجد حساب مسجل بهذا البريد. اختر إنشاء حساب أولاً.': 'No account is registered with this email. Create an account first.',
         'هذا البريد مسجل مسبقاً. اختر تسجيل الدخول.': 'This email is already registered. Please log in.',
-        'يرجى كتابة رقم الهاتف بالشكل الصحيح.': 'Please enter a valid phone number.',
+        'يرجى كتابة رقم الهاتف بالشكل الصحيح.': 'Phone number must be 8 digits and start with 9 or 7.',
         'انتظر 30 ثانية قبل طلب رمز جديد.': 'Please wait 30 seconds before requesting a new code.',
         'خدمة إرسال رمز التحقق غير مهيأة حالياً.': 'The verification email service is not configured right now.',
         'خدمة إرسال رمز التحقق غير مهيأة حاليا.': 'The verification email service is not configured right now.',
@@ -132,7 +132,7 @@
         'بيانات إنشاء الحساب غير مكتملة. اطلب رمزاً جديداً.': 'The account details are incomplete. Request a new code.',
         'لم يعد هذا الحساب موجوداً.': 'This account no longer exists.',
         'لم يعد هذا الحساب موجودا.': 'This account no longer exists.',
-        'يرجى إدخال الاسم ورقم هاتف صحيح.': 'Please enter a name and a valid phone number.',
+        'يرجى إدخال الاسم ورقم هاتف صحيح.': 'Please enter a name and an 8-digit phone number starting with 9 or 7.',
         'اكتب نفس بريد حسابك المسجل لتأكيد الحذف.': 'Enter the same email registered to your account to confirm deletion.',
         'بيانات تأكيد الحذف غير صحيحة.': 'The deletion confirmation details are invalid.',
         'رقم الطلب غير صالح.': 'The order number is invalid.',
@@ -289,11 +289,12 @@
     function normalizeAuthPhoneDigits(value) {
         const arabicDigits = '٠١٢٣٤٥٦٧٨٩';
         const persianDigits = '۰۱۲۳۴۵۶۷۸۹';
-        return String(value || '')
+        const digits = String(value || '')
             .replace(/[٠-٩]/g, (digit) => arabicDigits.indexOf(digit))
             .replace(/[۰-۹]/g, (digit) => persianDigits.indexOf(digit))
-            .replace(/\D/g, '')
-            .slice(0, 8);
+            .replace(/\D/g, '');
+        const localDigits = digits.startsWith('968') ? digits.slice(3) : digits;
+        return localDigits.slice(0, 8);
     }
 
     function setAuthPhoneInvalid(isInvalid) {
@@ -306,6 +307,18 @@
         phoneInput.value = digits;
         const isValid = /^[97]\d{7}$/.test(digits);
         setAuthPhoneInvalid(!isValid);
+        return isValid ? `+968 ${digits}` : null;
+    }
+
+    function setProfilePhoneInvalid(isInvalid) {
+        profilePhoneInput.classList.toggle('invalid-input', isInvalid);
+    }
+
+    function getValidProfilePhone() {
+        const digits = normalizeAuthPhoneDigits(profilePhoneInput.value);
+        profilePhoneInput.value = digits;
+        const isValid = /^[97]\d{7}$/.test(digits);
+        setProfilePhoneInvalid(!isValid);
         return isValid ? `+968 ${digits}` : null;
     }
 
@@ -398,7 +411,8 @@
         profileDisplayName.textContent = currentUser.name || t('customerFallback');
         profileIdentifier.textContent = currentUser.identifier;
         profileNameInput.value = currentUser.name || '';
-        profilePhoneInput.value = currentUser.phone || '';
+        profilePhoneInput.value = normalizeAuthPhoneDigits(currentUser.phone || '');
+        setProfilePhoneInvalid(false);
         deleteEmailInput.value = '';
         deleteOtpCode.value = '';
     }
@@ -548,6 +562,12 @@
     profileEditForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         clearMessage(profileEditMessage);
+        const profilePhone = getValidProfilePhone();
+        if (!profilePhone) {
+            showMessage(profileEditMessage, t('phoneError'), true);
+            profilePhoneInput.focus();
+            return;
+        }
         const saveButton = $('profile-save-btn');
         const restoreButton = setBusy(saveButton, t('saving'));
         try {
@@ -555,7 +575,7 @@
                 method: 'POST',
                 body: JSON.stringify({
                     name: profileNameInput.value.trim(),
-                    phone: profilePhoneInput.value.trim()
+                    phone: profilePhone
                 })
             });
             currentUser = data.user;
@@ -648,6 +668,21 @@
             showMessage(message, t('phoneError'), true);
         } else if (message.textContent === t('phoneError')) {
             clearMessage(message);
+        }
+    });
+    profilePhoneInput.addEventListener('input', () => {
+        profilePhoneInput.value = normalizeAuthPhoneDigits(profilePhoneInput.value);
+        if (profilePhoneInput.value.length === 0) {
+            setProfilePhoneInvalid(false);
+            if (profileEditMessage.textContent === t('phoneError')) clearMessage(profileEditMessage);
+            return;
+        }
+        const hasInvalidStart = !/^[97]\d{0,7}$/.test(profilePhoneInput.value);
+        setProfilePhoneInvalid(hasInvalidStart);
+        if (hasInvalidStart) {
+            showMessage(profileEditMessage, t('phoneError'), true);
+        } else if (profileEditMessage.textContent === t('phoneError')) {
+            clearMessage(profileEditMessage);
         }
     });
     $('account-close').addEventListener('click', close);

@@ -523,7 +523,7 @@ app.get('/api/me', requireAuth, async (req, res) => {
 
 app.post('/api/me', requireAuth, async (req, res) => {
   const name = String(req.body.name || '').trim().slice(0, 150);
-  const phone = normalizePhone(req.body.phone);
+  const phone = normalizeOmanMobile(req.body.phone);
   if (!name || !phone) {
     return res.status(400).json({ message: 'يرجى إدخال الاسم ورقم هاتف صحيح.' });
   }

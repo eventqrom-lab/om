@@ -535,6 +535,52 @@ ul {
 }
 
 /* Hero Section */
+.intro-particles-section {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 18% 24%, rgba(212, 175, 55, 0.12), transparent 34%),
+        radial-gradient(circle at 78% 58%, rgba(212, 175, 55, 0.08), transparent 38%),
+        linear-gradient(180deg, #050505 0%, var(--deep-black) 52%, #050505 100%);
+}
+
+.intro-particles-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(180deg, rgba(8, 8, 8, 0.35), rgba(8, 8, 8, 0.08) 42%, rgba(8, 8, 8, 0.72)),
+        radial-gradient(circle at 50% 20%, rgba(255, 239, 188, 0.04), transparent 30%);
+}
+
+#particles-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    min-height: 100%;
+}
+
+#particles-bg canvas {
+    position: absolute !important;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.intro-particles-section .hero,
+.intro-particles-section .product-showcase {
+    position: relative;
+    z-index: 1;
+    background-color: transparent;
+}
+
+.intro-particles-section .hero {
+    background-image: none;
+}
+
 .hero {
     padding-top: 40px;
     min-height: 70vh;
