@@ -680,6 +680,19 @@ body.order-invoice-open {
     height: 100% !important;
 }
 
+#particles-bg.particles-static::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.62;
+    background:
+        radial-gradient(circle at 16% 24%, rgba(212, 175, 55, 0.5) 0 2px, transparent 3px),
+        radial-gradient(circle at 32% 66%, rgba(212, 175, 55, 0.32) 0 1.5px, transparent 3px),
+        radial-gradient(circle at 58% 38%, rgba(212, 175, 55, 0.42) 0 2px, transparent 3px),
+        radial-gradient(circle at 78% 70%, rgba(212, 175, 55, 0.3) 0 1.5px, transparent 3px),
+        radial-gradient(circle at 88% 28%, rgba(212, 175, 55, 0.38) 0 2px, transparent 3px);
+}
+
 .intro-particles-section .hero,
 .intro-particles-section .product-showcase {
     position: relative;

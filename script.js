@@ -9,9 +9,20 @@
 }
 
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations()
-        .then(registrations => registrations.forEach(registration => registration.unregister()))
-        .catch(() => {});
+    window.addEventListener('load', () => {
+        let shouldCleanup = true;
+        try {
+            const cleanupKey = 'eventQrSwCleanupDone';
+            shouldCleanup = sessionStorage.getItem(cleanupKey) !== '1';
+            if (shouldCleanup) sessionStorage.setItem(cleanupKey, '1');
+        } catch {}
+
+        if (!shouldCleanup) return;
+
+        navigator.serviceWorker.getRegistrations()
+            .then(registrations => registrations.forEach(registration => registration.unregister()))
+            .catch(() => {});
+    }, { once: true });
 }
 
 if ('scrollRestoration' in history) {
@@ -611,13 +622,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sticky Navbar Styling on Scroll
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
+    const updateNavbarState = () => {
+        if (!navbar) return;
         if (window.scrollY > 20) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
-    });
+    };
+    let navbarScrollTicking = false;
+    window.addEventListener('scroll', () => {
+        if (navbarScrollTicking) return;
+        navbarScrollTicking = true;
+        window.requestAnimationFrame(() => {
+            updateNavbarState();
+            navbarScrollTicking = false;
+        });
+    }, { passive: true });
+    updateNavbarState();
 
     // FAQ Accordion (if we want them expandable later, but for minimal let's keep them static or add simple toggle)
     const faqQuestions = document.querySelectorAll('.faq-question');

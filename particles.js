@@ -1,14 +1,42 @@
 (function () {
     const targetId = 'particles-bg';
     const gold = '#d4af37';
+    const staticClass = 'particles-static';
     let fallbackStarted = false;
+
+    function shouldUseStaticBackdrop() {
+        const nav = window.navigator || {};
+        const connection = nav.connection || nav.mozConnection || nav.webkitConnection;
+        const userAgent = nav.userAgent || '';
+        const prefersReducedMotion = window.matchMedia
+            ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            : false;
+        const isHuaweiFamily = /huawei|honor|harmonyos|hmscore/i.test(userAgent);
+
+        return Boolean(
+            prefersReducedMotion ||
+            (connection && connection.saveData) ||
+            isHuaweiFamily
+        );
+    }
+
+    function useStaticBackdrop(target) {
+        if (!target) return;
+        fallbackStarted = true;
+        target.classList.add(staticClass);
+    }
 
     function startFallbackNetwork(target) {
         if (!target || fallbackStarted) return;
+        if (shouldUseStaticBackdrop()) {
+            useStaticBackdrop(target);
+            return;
+        }
         fallbackStarted = true;
 
         const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
+        const context = canvas.getContext('2d', { alpha: true });
+        const enablePointerEffects = true;
         const pointer = {
             active: false,
             x: 0,
@@ -18,6 +46,9 @@
         let width = 0;
         let height = 0;
         let animationFrame = 0;
+        let resizeTimer = 0;
+        let lastFrameTime = 0;
+        let isVisible = true;
 
         canvas.className = 'particles-fallback-canvas';
         target.appendChild(canvas);
@@ -30,6 +61,10 @@
 
         function getBaseSpeed() {
             return width <= 768 ? 1.55 : 0.72;
+        }
+
+        function getFrameInterval() {
+            return 0;
         }
 
         function createParticle(isInitial) {
@@ -71,10 +106,10 @@
 
         function resize() {
             const bounds = target.getBoundingClientRect();
-            const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
 
             width = Math.max(bounds.width, 1);
             height = Math.max(bounds.height, 1);
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
             canvas.width = Math.floor(width * pixelRatio);
             canvas.height = Math.floor(height * pixelRatio);
             canvas.style.width = `${width}px`;
@@ -101,16 +136,36 @@
             pointer.active = false;
         }
 
-        function draw() {
+        function scheduleDraw() {
+            if (!animationFrame && isVisible && !document.hidden) {
+                animationFrame = window.requestAnimationFrame(draw);
+            }
+        }
+
+        function stopDraw() {
+            if (!animationFrame) return;
+            window.cancelAnimationFrame(animationFrame);
+            animationFrame = 0;
+        }
+
+        function draw(timestamp) {
+            animationFrame = 0;
+            if (!isVisible || document.hidden) return;
+            if (timestamp - lastFrameTime < getFrameInterval()) {
+                scheduleDraw();
+                return;
+            }
+            lastFrameTime = timestamp;
             context.clearRect(0, 0, width, height);
 
             for (const particle of particles) {
                 if (pointer.active) {
                     const dx = pointer.x - particle.x;
                     const dy = pointer.y - particle.y;
-                    const distance = Math.hypot(dx, dy);
+                    const distanceSq = (dx * dx) + (dy * dy);
 
-                    if (distance > 1 && distance < 150) {
+                    if (distanceSq > 1 && distanceSq < 22500) {
+                        const distance = Math.sqrt(distanceSq);
                         const force = (1 - distance / 150) * 0.006;
                         particle.vx -= dx * force / distance;
                         particle.vy -= dy * force / distance;
@@ -139,17 +194,22 @@
                 }
             }
 
+            const linkDistance = 170;
+            const linkDistanceSq = linkDistance * linkDistance;
             for (let i = 0; i < particles.length; i += 1) {
                 for (let j = i + 1; j < particles.length; j += 1) {
                     const first = particles[i];
                     const second = particles[j];
-                    const distance = Math.hypot(first.x - second.x, first.y - second.y);
+                    const dx = first.x - second.x;
+                    const dy = first.y - second.y;
+                    const distanceSq = (dx * dx) + (dy * dy);
 
-                    if (distance < 170) {
+                    if (distanceSq < linkDistanceSq) {
+                        const distance = Math.sqrt(distanceSq);
                         context.beginPath();
                         context.moveTo(first.x, first.y);
                         context.lineTo(second.x, second.y);
-                        context.strokeStyle = `rgba(212, 175, 55, ${0.32 * (1 - distance / 170)})`;
+                        context.strokeStyle = `rgba(212, 175, 55, ${0.32 * (1 - distance / linkDistance)})`;
                         context.lineWidth = 0.9;
                         context.stroke();
                     }
@@ -158,9 +218,12 @@
 
             if (pointer.active) {
                 for (const particle of particles) {
-                    const distance = Math.hypot(pointer.x - particle.x, pointer.y - particle.y);
+                    const dx = pointer.x - particle.x;
+                    const dy = pointer.y - particle.y;
+                    const distanceSq = (dx * dx) + (dy * dy);
 
-                    if (distance < 190) {
+                    if (distanceSq < 36100) {
+                        const distance = Math.sqrt(distanceSq);
                         context.beginPath();
                         context.moveTo(pointer.x, pointer.y);
                         context.lineTo(particle.x, particle.y);
@@ -178,44 +241,80 @@
                 context.fill();
             }
 
-            animationFrame = window.requestAnimationFrame(draw);
+            scheduleDraw();
         }
 
         resize();
-        draw();
+        scheduleDraw();
 
-        window.addEventListener('resize', resize);
-        window.addEventListener('pointerdown', updatePointer, { passive: true });
-        window.addEventListener('pointermove', updatePointer, { passive: true });
-        window.addEventListener('pointerup', clearPointer);
-        window.addEventListener('pointerleave', clearPointer);
-        window.addEventListener('touchstart', updatePointer, { passive: true });
-        window.addEventListener('touchmove', updatePointer, { passive: true });
-        window.addEventListener('touchend', clearPointer);
-        window.addEventListener('touchcancel', clearPointer);
+        window.addEventListener('resize', function () {
+            window.clearTimeout(resizeTimer);
+            resizeTimer = window.setTimeout(function () {
+                resize();
+                scheduleDraw();
+            }, 120);
+        }, { passive: true });
+        if (enablePointerEffects) {
+            window.addEventListener('pointerdown', updatePointer, { passive: true });
+            window.addEventListener('pointermove', updatePointer, { passive: true });
+            window.addEventListener('pointerup', clearPointer);
+            window.addEventListener('pointerleave', clearPointer);
+            window.addEventListener('touchstart', updatePointer, { passive: true });
+            window.addEventListener('touchmove', updatePointer, { passive: true });
+            window.addEventListener('touchend', clearPointer);
+            window.addEventListener('touchcancel', clearPointer);
+        }
+
+        const visibilityObserver = 'IntersectionObserver' in window
+            ? new IntersectionObserver(function (entries) {
+                isVisible = entries[0] ? entries[0].isIntersecting : true;
+                if (isVisible) {
+                    scheduleDraw();
+                } else {
+                    stopDraw();
+                }
+            }, { rootMargin: '120px' })
+            : null;
+        if (visibilityObserver) visibilityObserver.observe(target);
+
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                stopDraw();
+            } else {
+                scheduleDraw();
+            }
+        });
         window.addEventListener('pagehide', function () {
-            window.cancelAnimationFrame(animationFrame);
+            stopDraw();
+            if (visibilityObserver) visibilityObserver.disconnect();
         });
     }
 
     function initParticles() {
         const target = document.getElementById(targetId);
-        const engine = window.tsParticles;
 
         if (!target) return;
-
-        window.setTimeout(function () {
-            if (!target.querySelector('.particles-fallback-canvas')) {
-                startFallbackNetwork(target);
-            }
-        }, 650);
-
-        if (!engine || typeof engine.load !== 'function') {
-            startFallbackNetwork(target);
+        if (shouldUseStaticBackdrop()) {
+            useStaticBackdrop(target);
             return;
         }
 
-        engine.load({
+        function startAnimatedBackdrop() {
+            if (fallbackStarted || target.querySelector('canvas')) return;
+            const engine = window.tsParticles;
+
+            window.setTimeout(function () {
+                if (!target.querySelector('.particles-fallback-canvas') && !target.classList.contains(staticClass)) {
+                    startFallbackNetwork(target);
+                }
+            }, 650);
+
+            if (!engine || typeof engine.load !== 'function') {
+                startFallbackNetwork(target);
+                return;
+            }
+
+            engine.load({
             id: targetId,
             options: {
                 fullScreen: {
@@ -347,15 +446,18 @@
                     }
                 ]
             }
-        }).then(function () {
-            window.setTimeout(function () {
-                if (!target.querySelector('canvas')) {
-                    startFallbackNetwork(target);
-                }
-            }, 500);
-        }).catch(function () {
-            startFallbackNetwork(target);
-        });
+            }).then(function () {
+                window.setTimeout(function () {
+                    if (!target.querySelector('canvas')) {
+                        startFallbackNetwork(target);
+                    }
+                }, 500);
+            }).catch(function () {
+                startFallbackNetwork(target);
+            });
+        }
+
+        startAnimatedBackdrop();
     }
 
     if (document.readyState === 'loading') {

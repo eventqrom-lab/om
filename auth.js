@@ -189,10 +189,13 @@
 
     async function api(path, options = {}) {
         const headers = { ...(options.headers || {}) };
+        const authToken = token();
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 20000);
-        if (options.body) headers['Content-Type'] = 'application/json';
-        if (token()) headers.Authorization = `Bearer ${token()}`;
+        if (authToken) headers.Authorization = `Bearer ${authToken}`;
+        if (options.body && !headers['Content-Type']) {
+            headers['Content-Type'] = authToken ? 'application/json' : 'text/plain;charset=UTF-8';
+        }
         try {
             const response = await fetch(`${apiBase}${path}`, { ...options, headers, signal: controller.signal });
             const data = await response.json().catch(() => ({}));

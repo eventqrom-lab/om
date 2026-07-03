@@ -54,10 +54,37 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json({ limit: '250kb' }));
+app.use(express.text({ type: 'text/plain', limit: '250kb' }));
+app.use((req, res, next) => {
+  if (typeof req.body !== 'string') return next();
+  if (!req.body.trim()) {
+    req.body = {};
+    return next();
+  }
+  try {
+    req.body = JSON.parse(req.body);
+    next();
+  } catch {
+    res.status(400).json({ message: 'Invalid JSON body.' });
+  }
+});
 app.use('/images', express.static(path.join(__dirname, 'images'), {
-  maxAge: '30d'
+  maxAge: '30d',
+  immutable: true
 }));
-app.use(express.static(__dirname, { extensions: ['html'] }));
+app.use(express.static(__dirname, {
+  extensions: ['html'],
+  setHeaders(res, filePath) {
+    const ext = path.extname(filePath).toLowerCase();
+    if (ext === '.html') {
+      res.setHeader('Cache-Control', 'no-cache');
+      return;
+    }
+    if (ext === '.css' || ext === '.js') {
+      res.setHeader('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400');
+    }
+  }
+}));
 
 async function initializeDatabase() {
   await pool.query(`
