@@ -1647,7 +1647,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Valid quantity
         calcWarning.classList.add('hidden');
 
-        const discountTier = qty > 500 ? 500 : qty > 300 ? 300 : 0;
+        const discountTier = qty >= 500 ? 500 : qty >= 300 ? 300 : 0;
         const hasQuantityDiscount = discountTier > 0;
         const originalBasePrice = qty * BASE_CARD_PRICE;
         const baseDiscount = discountTier === 500 ? BASE_CARD_DISCOUNT_500 : discountTier === 300 ? BASE_CARD_DISCOUNT_300 : 0;
