@@ -113,9 +113,9 @@ const translations = {
         printedLargeSizeFee: "(+0.100 ر.ع للبطاقة)",
         labelDesignType: "نوع التصميم",
         optReadyTemplate: "نموذج جاهز",
-        optCustomDesign: `تصميم مخصص <span class="price-tag price-tag-stacked"><span>+0.040 ر.ع للبطاقة</span></span>`,
+        optCustomDesign: `تصميم مخصص <span class="price-tag price-tag-stacked"><span>بدون رسوم</span></span>`,
         optCustomDesignText: "تصميم مخصص",
-        customDesignPrice: "+0.040 ر.ع للبطاقة",
+        customDesignPrice: "بدون رسوم",
         templateGalleryTitle: "اختر نموذج",
         templateNumberLabel: "رقم:",
         templateInstagramNote: "يمكنكم الاطلاع على صور النماذج عبر حسابنا على إنستغرام.",
@@ -139,7 +139,7 @@ const translations = {
         faqQ1: "هل يمكن مشاركة بطاقة الـ QR مع أكثر من شخص؟",
         faqA1: "لا، كل رمز QR يتم إنشاؤه بشكل فريد ومخصص لدخول واحد فقط، لضمان تجربة دخول آمنة ومنظمة لجميع الضيوف.",
         faqQ2: "هل يمكن طلب تصميم مخصص؟",
-        faqA2: "نعم، يمكنك إضافة تصميم مخصص مقابل 0.040 ر.ع لكل بطاقة، لنقدّم لك بطاقة QR بتصميم أنيق يعكس هوية مناسبتك بأسلوب راقٍ واحترافي، مع لمسات مميزة تضيف تجربة دخول أكثر فخامة وتنظيماً لضيوفك.",
+        faqA2: "نعم، يمكنك إضافة تصميم مخصص بدون رسوم، لنقدّم لك بطاقة QR بتصميم أنيق يعكس هوية مناسبتك بأسلوب راقٍ واحترافي، مع لمسات مميزة تضيف تجربة دخول أكثر فخامة وتنظيماً لضيوفك.",
         faqQ3: "متى يجب تقديم طلب البطاقات المطبوعة؟",
         faqA3: "يجب أن يتم تقديم طلب البطاقات المطبوعة قبل 7 أيام على الأقل من تاريخ المناسبة أو الاستلام.",
         footerBrand: "Event QR Tech Tricks",
@@ -188,6 +188,7 @@ const translations = {
         discount50: "خصم 50%",
         discount25: "خصم 25%",
         discount15: "خصم 15%",
+        discount20: "خصم 20%",
         discount10: "خصم 10%",
         discount5: "خصم 5%",
         pdfTitle: "فاتورة طلب بطاقات",
@@ -286,9 +287,9 @@ const translations = {
         printedLargeSizeFee: "(+0.100 OMR per card)",
         labelDesignType: "Design Type",
         optReadyTemplate: "Ready Template",
-        optCustomDesign: `Custom Design <span class="price-tag price-tag-stacked"><span>+0.040 OMR</span><span>per card</span></span>`,
+        optCustomDesign: `Custom Design <span class="price-tag price-tag-stacked"><span>No fee</span></span>`,
         optCustomDesignText: "Custom Design",
-        customDesignPrice: "+0.040 OMR per card",
+        customDesignPrice: "No fee",
         templateGalleryTitle: "Choose a template",
         templateNumberLabel: "Number:",
         templateInstagramNote: "You can view template images on our Instagram account.",
@@ -312,7 +313,7 @@ const translations = {
         faqQ1: "Can the QR card be shared with more than one person?",
         faqA1: "No, each QR code is generated uniquely and assigned for one entry only, ensuring a secure and organized entry experience for all guests.",
         faqQ2: "Can the design be customized?",
-        faqA2: "Yes, you can add a custom design for 0.040 OMR per card. We will create an elegant QR card that reflects your event identity in a refined and professional style, with distinctive touches that make the entry experience more luxurious and organized for your guests.",
+        faqA2: "Yes, you can add a custom design with no fee. We will create an elegant QR card that reflects your event identity in a refined and professional style, with distinctive touches that make the entry experience more luxurious and organized for your guests.",
         faqQ3: "When should printed card orders be placed?",
         faqA3: "Printed card orders must be placed at least 7 days before the event or pickup date.",
         footerBrand: "Event QR Tech Tricks",
@@ -361,6 +362,7 @@ const translations = {
         discount50: "50% Discount",
         discount25: "25% Discount",
         discount15: "15% Discount",
+        discount20: "20% Discount",
         discount10: "10% Discount",
         discount5: "5% Discount",
         pdfTitle: "Order Invoice",
@@ -1590,21 +1592,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const securityNote = document.getElementById('security-note');
     const calcSecurityRow = document.getElementById('calc-security-row');
     const calcSecurityPriceSpan = document.getElementById('calc-security-price');
-    const BASE_CARD_PRICE = 0.213;
-    const BASE_CARD_DISCOUNT_200 = 0.05;
+    const BASE_CARD_PRICE = 0.115;
+    const BASE_CARD_DISCOUNT_300 = 0.05;
     const BASE_CARD_DISCOUNT_500 = 0.10;
-    const BASE_CARD_DISCOUNT_1000 = 0.15;
     const PRINTING_SMALL_PRICE = 0.050;
     const PRINTING_LARGE_PRICE = 0.100;
-    const PRINTING_SMALL_PRICE_200 = 0.045;
-    const PRINTING_LARGE_PRICE_200 = 0.095;
-    const PRINTING_SMALL_PRICE_500 = 0.035;
-    const PRINTING_LARGE_PRICE_500 = 0.075;
-    const PRINTING_SMALL_PRICE_1000 = 0.030;
-    const PRINTING_LARGE_PRICE_1000 = 0.065;
-    const CUSTOM_DESIGN_PRICE = 0.040;
-    const CUSTOM_DESIGN_DISCOUNT_200 = 0.30;
-    const CUSTOM_DESIGN_DISCOUNT_500 = 0.50;
+    const PRINTING_SMALL_PRICE_500 = 0.040;
+    const PRINTING_LARGE_PRICE_500 = 0.080;
+    const CUSTOM_DESIGN_PRICE = 0;
     const SECURITY_PRICE = 20;
     const DELIVERY_PRICE = 2;
 
@@ -1622,14 +1617,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const isPrinted = selectedInvitationType && selectedInvitationType.value === 'دعوة مطبوعة';
 
         if (!isPrinted || !selectedSize) return 0;
-        if (discountTier === 1000) {
-            return selectedSize.value === '9.5x14cm' ? PRINTING_LARGE_PRICE_1000 : PRINTING_SMALL_PRICE_1000;
-        }
         if (discountTier === 500) {
             return selectedSize.value === '9.5x14cm' ? PRINTING_LARGE_PRICE_500 : PRINTING_SMALL_PRICE_500;
-        }
-        if (discountTier === 200) {
-            return selectedSize.value === '9.5x14cm' ? PRINTING_LARGE_PRICE_200 : PRINTING_SMALL_PRICE_200;
         }
         return selectedSize.value === '9.5x14cm' ? PRINTING_LARGE_PRICE : PRINTING_SMALL_PRICE;
     }
@@ -1655,10 +1644,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Valid quantity
         calcWarning.classList.add('hidden');
 
-        const discountTier = qty >= 1000 ? 1000 : qty >= 500 ? 500 : qty >= 200 ? 200 : 0;
-        const hasQuantityDiscount = qty >= 200;
+        const discountTier = qty > 500 ? 500 : qty > 300 ? 300 : 0;
+        const hasQuantityDiscount = discountTier > 0;
         const originalBasePrice = qty * BASE_CARD_PRICE;
-        const baseDiscount = discountTier === 1000 ? BASE_CARD_DISCOUNT_1000 : discountTier === 500 ? BASE_CARD_DISCOUNT_500 : discountTier === 200 ? BASE_CARD_DISCOUNT_200 : 0;
+        const baseDiscount = discountTier === 500 ? BASE_CARD_DISCOUNT_500 : discountTier === 300 ? BASE_CARD_DISCOUNT_300 : 0;
         const basePrice = originalBasePrice * (1 - baseDiscount);
         const originalPrintingUnitPrice = getPrintingUnitPrice();
         const printingUnitPrice = getPrintingUnitPrice(discountTier);
@@ -1667,62 +1656,49 @@ document.addEventListener('DOMContentLoaded', () => {
         const hasCustomDesign = calcDesignToggle.checked;
 
         const originalDesignPrice = hasCustomDesign ? qty * CUSTOM_DESIGN_PRICE : 0;
-        const designDiscount = discountTier >= 500 ? CUSTOM_DESIGN_DISCOUNT_500 : discountTier === 200 ? CUSTOM_DESIGN_DISCOUNT_200 : 0;
-        const designPrice = originalDesignPrice * (1 - designDiscount);
+        const designPrice = originalDesignPrice;
 
         const hasSecurity = securityToggle && securityToggle.checked;
         const securityPrice = hasSecurity ? SECURITY_PRICE : 0;
         const totalPrice = basePrice + printingPrice + designPrice + securityPrice;
         const originalTotalPrice = originalBasePrice + originalPrintingPrice + originalDesignPrice + securityPrice + DELIVERY_PRICE;
 
-        if (calcBasePriceSpan) calcBasePriceSpan.textContent = basePrice.toFixed(2);
+        if (calcBasePriceSpan) calcBasePriceSpan.textContent = basePrice.toFixed(3);
         if (calcBaseOldPriceSpan) {
-            calcBaseOldPriceSpan.textContent = originalBasePrice.toFixed(2);
+            calcBaseOldPriceSpan.textContent = originalBasePrice.toFixed(3);
             calcBaseOldPriceSpan.classList.toggle('hidden', !hasQuantityDiscount);
         }
         if (baseDiscountBadge) {
-            const baseDiscountKey = discountTier === 1000 ? 'discount15' : discountTier === 500 ? 'discount10' : 'discount5';
+            const baseDiscountKey = discountTier === 500 ? 'discount10' : 'discount5';
             baseDiscountBadge.setAttribute('data-i18n', baseDiscountKey);
             baseDiscountBadge.textContent = translations[currentLang][baseDiscountKey];
             baseDiscountBadge.classList.toggle('hidden', !hasQuantityDiscount);
         }
         if (calcPrintingRow) calcPrintingRow.classList.toggle('hidden', printingPrice <= 0);
-        if (calcPrintingPriceSpan) calcPrintingPriceSpan.textContent = printingPrice.toFixed(2);
+        if (calcPrintingPriceSpan) calcPrintingPriceSpan.textContent = printingPrice.toFixed(3);
         if (calcPrintingOldPriceSpan) {
-            calcPrintingOldPriceSpan.textContent = originalPrintingPrice.toFixed(2);
-            calcPrintingOldPriceSpan.classList.toggle('hidden', !hasQuantityDiscount || printingPrice <= 0);
+            calcPrintingOldPriceSpan.textContent = originalPrintingPrice.toFixed(3);
+            calcPrintingOldPriceSpan.classList.toggle('hidden', discountTier !== 500 || printingPrice <= 0);
         }
         if (printingDiscountBadge) {
-            const selectedSize = getSelectedInvitationSize();
-            const isLargePrinting = selectedSize && selectedSize.value === '9.5x14cm';
-            const printingDiscountKey = discountTier === 1000
-                ? (isLargePrinting ? 'discount35' : 'discount40')
-                : discountTier === 500
-                    ? (isLargePrinting ? 'discount25' : 'discount30')
-                    : (isLargePrinting ? 'discount5' : 'discount10');
-            printingDiscountBadge.setAttribute('data-i18n', printingDiscountKey);
-            printingDiscountBadge.textContent = translations[currentLang][printingDiscountKey];
-            printingDiscountBadge.classList.toggle('hidden', !hasQuantityDiscount || printingPrice <= 0);
+            printingDiscountBadge.setAttribute('data-i18n', 'discount20');
+            printingDiscountBadge.textContent = translations[currentLang].discount20;
+            printingDiscountBadge.classList.toggle('hidden', discountTier !== 500 || printingPrice <= 0);
         }
 
         if (hasCustomDesign) {
             if (calcDesignRow) calcDesignRow.classList.remove('hidden');
-            if (calcDesignPriceSpan) calcDesignPriceSpan.textContent = designPrice.toFixed(2);
+            if (calcDesignPriceSpan) calcDesignPriceSpan.textContent = designPrice.toFixed(3);
             if (calcDesignOldPriceSpan) {
-                calcDesignOldPriceSpan.textContent = originalDesignPrice.toFixed(2);
-                calcDesignOldPriceSpan.classList.toggle('hidden', !hasQuantityDiscount);
+                calcDesignOldPriceSpan.textContent = originalDesignPrice.toFixed(3);
+                calcDesignOldPriceSpan.classList.add('hidden');
             }
-            if (designDiscountBadge) {
-                const designDiscountKey = discountTier >= 500 ? 'discount50' : 'discount30';
-                designDiscountBadge.setAttribute('data-i18n', designDiscountKey);
-                designDiscountBadge.textContent = translations[currentLang][designDiscountKey];
-                designDiscountBadge.classList.toggle('hidden', !hasQuantityDiscount);
-            }
+            if (designDiscountBadge) designDiscountBadge.classList.add('hidden');
         } else {
             if (calcDesignRow) calcDesignRow.classList.add('hidden');
-            if (calcDesignPriceSpan) calcDesignPriceSpan.textContent = '0.00';
+            if (calcDesignPriceSpan) calcDesignPriceSpan.textContent = '0.000';
             if (calcDesignOldPriceSpan) {
-                calcDesignOldPriceSpan.textContent = '0.00';
+                calcDesignOldPriceSpan.textContent = '0.000';
                 calcDesignOldPriceSpan.classList.add('hidden');
             }
             if (designDiscountBadge) designDiscountBadge.classList.add('hidden');
@@ -1732,12 +1708,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (calcSecurityPriceSpan) calcSecurityPriceSpan.textContent = securityPrice.toFixed(3);
         if (securityNote) securityNote.classList.toggle('hidden', !hasSecurity);
 
-        calcTotalPriceSpan.textContent = totalPrice.toFixed(2);
-        if (calcTotalOldPriceSpan) calcTotalOldPriceSpan.textContent = originalTotalPrice.toFixed(2);
+        calcTotalPriceSpan.textContent = totalPrice.toFixed(3);
+        if (calcTotalOldPriceSpan) calcTotalOldPriceSpan.textContent = originalTotalPrice.toFixed(3);
         
         // Sync with hidden input for form submission
         const hiddenPrice = document.getElementById('hidden-total-price');
-        if (hiddenPrice) hiddenPrice.value = totalPrice.toFixed(2);
+        if (hiddenPrice) hiddenPrice.value = totalPrice.toFixed(3);
 
         calcResults.classList.remove('hidden');
     }

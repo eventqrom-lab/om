@@ -119,7 +119,7 @@ async function initializeDatabase() {
     CREATE TABLE IF NOT EXISTS orders (
       id BIGSERIAL PRIMARY KEY,
       order_number VARCHAR(24) NOT NULL UNIQUE,
-      user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+      user_id BIGINT REFERENCES users(id) ON DELETE SET NULL,
       customer_name VARCHAR(150) NOT NULL,
       customer_phone VARCHAR(30),
       total_price NUMERIC(12,3) NOT NULL CHECK (total_price >= 0),
@@ -136,6 +136,57 @@ async function initializeDatabase() {
     ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS signup_name VARCHAR(150);
     ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS signup_phone VARCHAR(30);
     ALTER TABLE orders ALTER COLUMN user_id DROP NOT NULL;
+
+    UPDATE orders o
+    SET user_id = NULL
+    WHERE user_id IS NOT NULL
+      AND NOT EXISTS (SELECT 1 FROM users u WHERE u.id = o.user_id);
+
+    DO $$
+    DECLARE
+      fk RECORD;
+      has_set_null_fk BOOLEAN;
+      orders_user_id_attnum SMALLINT;
+      users_id_attnum SMALLINT;
+    BEGIN
+      SELECT attnum INTO orders_user_id_attnum
+      FROM pg_attribute
+      WHERE attrelid = 'orders'::regclass AND attname = 'user_id' AND NOT attisdropped;
+
+      SELECT attnum INTO users_id_attnum
+      FROM pg_attribute
+      WHERE attrelid = 'users'::regclass AND attname = 'id' AND NOT attisdropped;
+
+      SELECT EXISTS (
+        SELECT 1
+        FROM pg_constraint c
+        WHERE c.contype = 'f'
+          AND c.conrelid = 'orders'::regclass
+          AND c.confrelid = 'users'::regclass
+          AND c.conkey = ARRAY[orders_user_id_attnum]::SMALLINT[]
+          AND c.confkey = ARRAY[users_id_attnum]::SMALLINT[]
+          AND c.confdeltype = 'n'
+      ) INTO has_set_null_fk;
+
+      FOR fk IN
+        SELECT c.conname
+        FROM pg_constraint c
+        WHERE c.contype = 'f'
+          AND c.conrelid = 'orders'::regclass
+          AND c.confrelid = 'users'::regclass
+          AND c.conkey = ARRAY[orders_user_id_attnum]::SMALLINT[]
+          AND c.confkey = ARRAY[users_id_attnum]::SMALLINT[]
+          AND c.confdeltype <> 'n'
+      LOOP
+        EXECUTE format('ALTER TABLE orders DROP CONSTRAINT %I', fk.conname);
+      END LOOP;
+
+      IF NOT has_set_null_fk THEN
+        ALTER TABLE orders
+          ADD CONSTRAINT orders_user_id_fkey
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL;
+      END IF;
+    END $$;
   `);
 }
 
@@ -662,6 +713,8 @@ app.delete('/api/me', requireAuth, async (req, res) => {
       await client.query('ROLLBACK');
       return res.status(400).json({ message: 'تم استخدام رمز التحقق مسبقا.' });
     }
+
+    await client.query('UPDATE orders SET user_id = NULL WHERE user_id = $1', [req.user.id]);
 
     const deleted = await client.query(
       'DELETE FROM users WHERE id = $1 AND identifier = $2 RETURNING id',
