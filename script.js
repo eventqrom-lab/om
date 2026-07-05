@@ -113,9 +113,9 @@ const translations = {
         printedLargeSizeFee: "(+0.100 ر.ع للبطاقة)",
         labelDesignType: "نوع التصميم",
         optReadyTemplate: "نموذج جاهز",
-        optCustomDesign: `تصميم مخصص <span class="price-tag price-tag-stacked"><span>بدون رسوم</span></span>`,
+        optCustomDesign: "تصميم مخصص",
         optCustomDesignText: "تصميم مخصص",
-        customDesignPrice: "بدون رسوم",
+        customDesignPrice: "",
         templateGalleryTitle: "اختر نموذج",
         templateNumberLabel: "رقم:",
         templateInstagramNote: "يمكنكم الاطلاع على صور النماذج عبر حسابنا على إنستغرام.",
@@ -139,7 +139,7 @@ const translations = {
         faqQ1: "هل يمكن مشاركة بطاقة الـ QR مع أكثر من شخص؟",
         faqA1: "لا، كل رمز QR يتم إنشاؤه بشكل فريد ومخصص لدخول واحد فقط، لضمان تجربة دخول آمنة ومنظمة لجميع الضيوف.",
         faqQ2: "هل يمكن طلب تصميم مخصص؟",
-        faqA2: "نعم، يمكنك إضافة تصميم مخصص بدون رسوم، لنقدّم لك بطاقة QR بتصميم أنيق يعكس هوية مناسبتك بأسلوب راقٍ واحترافي، مع لمسات مميزة تضيف تجربة دخول أكثر فخامة وتنظيماً لضيوفك.",
+        faqA2: "نعم، يمكنك إضافة تصميم مخصص لنقدّم لك بطاقة QR بتصميم أنيق يعكس هوية مناسبتك بأسلوب راقٍ واحترافي، مع لمسات مميزة تضيف تجربة دخول أكثر فخامة وتنظيماً لضيوفك.",
         faqQ3: "متى يجب تقديم طلب البطاقات المطبوعة؟",
         faqA3: "يجب أن يتم تقديم طلب البطاقات المطبوعة قبل 7 أيام على الأقل من تاريخ المناسبة أو الاستلام.",
         footerBrand: "Event QR Tech Tricks",
@@ -287,9 +287,9 @@ const translations = {
         printedLargeSizeFee: "(+0.100 OMR per card)",
         labelDesignType: "Design Type",
         optReadyTemplate: "Ready Template",
-        optCustomDesign: `Custom Design <span class="price-tag price-tag-stacked"><span>No fee</span></span>`,
+        optCustomDesign: "Custom Design",
         optCustomDesignText: "Custom Design",
-        customDesignPrice: "No fee",
+        customDesignPrice: "",
         templateGalleryTitle: "Choose a template",
         templateNumberLabel: "Number:",
         templateInstagramNote: "You can view template images on our Instagram account.",
@@ -313,7 +313,7 @@ const translations = {
         faqQ1: "Can the QR card be shared with more than one person?",
         faqA1: "No, each QR code is generated uniquely and assigned for one entry only, ensuring a secure and organized entry experience for all guests.",
         faqQ2: "Can the design be customized?",
-        faqA2: "Yes, you can add a custom design with no fee. We will create an elegant QR card that reflects your event identity in a refined and professional style, with distinctive touches that make the entry experience more luxurious and organized for your guests.",
+        faqA2: "Yes, you can add a custom design. We will create an elegant QR card that reflects your event identity in a refined and professional style, with distinctive touches that make the entry experience more luxurious and organized for your guests.",
         faqQ3: "When should printed card orders be placed?",
         faqA3: "Printed card orders must be placed at least 7 days before the event or pickup date.",
         footerBrand: "Event QR Tech Tricks",
@@ -1686,7 +1686,7 @@ document.addEventListener('DOMContentLoaded', () => {
             printingDiscountBadge.classList.toggle('hidden', discountTier !== 500 || printingPrice <= 0);
         }
 
-        if (hasCustomDesign) {
+        if (hasCustomDesign && designPrice > 0) {
             if (calcDesignRow) calcDesignRow.classList.remove('hidden');
             if (calcDesignPriceSpan) calcDesignPriceSpan.textContent = designPrice.toFixed(3);
             if (calcDesignOldPriceSpan) {
