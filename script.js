@@ -181,6 +181,12 @@ const translations = {
         calcDesignPriceLabel: "رسوم التصميم:",
         calcDeliveryLabel: "رسوم التوصيل:",
         calcFree: "0.000",
+        couponLabel: "كود الخصم",
+        couponPlaceholder: "أدخل كود الخصم",
+        couponApply: "تطبيق",
+        couponApplied: "تم تفعيل خصم 20%",
+        couponInvalid: "لا يوجد هذا الكود أو انتهت صلاحيته",
+        couponEmpty: "أدخل كود الخصم أولاً",
         freeBadge: "مجاناً",
         discount30: "خصم 30%",
         discount40: "خصم 40%",
@@ -355,6 +361,12 @@ const translations = {
         calcDesignPriceLabel: "Design Fee:",
         calcDeliveryLabel: "Delivery Fee:",
         calcFree: "0.000",
+        couponLabel: "Discount Code",
+        couponPlaceholder: "Enter discount code",
+        couponApply: "Apply",
+        couponApplied: "20% discount applied",
+        couponInvalid: "This code does not exist or has expired",
+        couponEmpty: "Enter a discount code first",
         freeBadge: "Free",
         discount30: "30% Discount",
         discount40: "40% Discount",
@@ -1172,6 +1184,123 @@ document.addEventListener('DOMContentLoaded', () => {
     const formMessage = document.getElementById('form-message');
     const calcQtyInput = document.getElementById('calc-qty');
     const calcDesignToggle = document.getElementById('calc-design');
+    const couponCodeInput = document.getElementById('coupon-code');
+    const couponApplyBtn = document.getElementById('coupon-apply-btn');
+    const couponMessage = document.getElementById('coupon-message');
+    const ACTIVE_COUPON_CODE = 'lilaty';
+    const ACTIVE_COUPON_DISCOUNT = 0.20;
+    let activeCoupon = null;
+    let activeCouponSummary = null;
+
+    function normalizeCouponCode(value) {
+        return String(value || '').trim().toLowerCase();
+    }
+
+    function getCouponConfig(value) {
+        return normalizeCouponCode(value) === ACTIVE_COUPON_CODE
+            ? { code: ACTIVE_COUPON_CODE, discount: ACTIVE_COUPON_DISCOUNT }
+            : null;
+    }
+
+    function setCouponMessage(type, key = '') {
+        if (!couponMessage) return;
+
+        couponMessage.classList.remove('success', 'error');
+        couponMessage.dataset.messageKey = key;
+
+        if (!key) {
+            couponMessage.textContent = '';
+            couponMessage.classList.add('hidden');
+            return;
+        }
+
+        couponMessage.textContent = translations[currentLang][key] || '';
+        couponMessage.classList.remove('hidden');
+        couponMessage.classList.add(type);
+    }
+
+    function refreshCouponMessage() {
+        if (!couponMessage || couponMessage.classList.contains('hidden')) return;
+
+        const key = couponMessage.dataset.messageKey;
+        if (key && translations[currentLang][key]) {
+            couponMessage.textContent = translations[currentLang][key];
+        }
+    }
+
+    function applyCouponFromInput({ requireValue = false } = {}) {
+        if (!couponCodeInput) return true;
+
+        const normalizedCode = normalizeCouponCode(couponCodeInput.value);
+        if (!normalizedCode) {
+            activeCoupon = null;
+            couponCodeInput.classList.toggle('invalid-input', requireValue);
+            setCouponMessage(requireValue ? 'error' : '', requireValue ? 'couponEmpty' : '');
+            updateCalculator();
+            return !requireValue;
+        }
+
+        const coupon = getCouponConfig(normalizedCode);
+        if (!coupon) {
+            activeCoupon = null;
+            couponCodeInput.classList.add('invalid-input');
+            setCouponMessage('error', 'couponInvalid');
+            updateCalculator();
+            return false;
+        }
+
+        activeCoupon = coupon;
+        couponCodeInput.value = coupon.code;
+        couponCodeInput.classList.remove('invalid-input');
+        setCouponMessage('success', 'couponApplied');
+        updateCalculator();
+        return true;
+    }
+
+    function ensureCouponIsValidForSubmit() {
+        if (!couponCodeInput) return true;
+
+        const normalizedCode = normalizeCouponCode(couponCodeInput.value);
+        if (!normalizedCode) return true;
+        if (activeCoupon && normalizedCode === activeCoupon.code) return true;
+
+        const isValid = applyCouponFromInput({ requireValue: true });
+        if (!isValid) {
+            couponCodeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            couponCodeInput.focus({ preventScroll: true });
+        }
+        return isValid;
+    }
+
+    function getActiveCouponSummary() {
+        return activeCouponSummary;
+    }
+
+    if (couponApplyBtn) {
+        couponApplyBtn.addEventListener('click', () => applyCouponFromInput({ requireValue: true }));
+    }
+
+    if (couponCodeInput) {
+        couponCodeInput.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            applyCouponFromInput({ requireValue: true });
+        });
+
+        couponCodeInput.addEventListener('input', () => {
+            const normalizedCode = normalizeCouponCode(couponCodeInput.value);
+            couponCodeInput.classList.remove('invalid-input');
+
+            if (activeCoupon && normalizedCode !== activeCoupon.code) {
+                activeCoupon = null;
+                updateCalculator();
+            }
+
+            if (!normalizedCode || !activeCoupon) {
+                setCouponMessage();
+            }
+        });
+    }
 
     if (inquiryForm) {
         const requiredOptionGroups = [
@@ -1394,6 +1523,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            if (!ensureCouponIsValidForSubmit()) {
+                return;
+            }
+
             submitBtn.textContent = translations[currentLang]['btnSending'];
             submitBtn.disabled = true;
 
@@ -1449,6 +1582,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const finalPriceValue = parseFloat(document.getElementById('calc-total-price').textContent) || 0;
             const formatAmount = (value) => `${value.toFixed(3)} OMR`;
             const formatAmountHtml = (value) => `${omrSymbol}<span>${value.toFixed(3)}</span>`;
+            const couponSummary = getActiveCouponSummary();
             // Create organized order details for the database and admin notification.
             const organizedObject = {
                 "رقم_الطلب": orderId,
@@ -1482,6 +1616,12 @@ document.addEventListener('DOMContentLoaded', () => {
             organizedObject["حارس_الأمن"] = document.getElementById('security-toggle').checked
                 ? (currentLang === 'ar' ? "نعم" : "Yes")
                 : (currentLang === 'ar' ? "لا" : "No");
+
+            if (couponSummary) {
+                organizedObject["كود_الخصم"] = couponSummary.code;
+                organizedObject["نسبة_خصم_الكود"] = `${Math.round(couponSummary.discount * 100)}%`;
+                organizedObject["قيمة_خصم_الكود"] = formatAmount(couponSummary.discountAmount);
+            }
 
             if (rawObject["ملاحظات_إضافية"] && rawObject["ملاحظات_إضافية"].trim()) {
                 organizedObject["ملاحظات_إضافية"] = rawObject["ملاحظات_إضافية"].trim();
@@ -1647,10 +1787,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Valid quantity
         calcWarning.classList.add('hidden');
 
-        const discountTier = qty >= 500 ? 500 : qty >= 300 ? 300 : 0;
+        const hasCouponDiscount = Boolean(activeCoupon);
+        const discountTier = hasCouponDiscount ? 0 : qty >= 500 ? 500 : qty >= 300 ? 300 : 0;
         const hasQuantityDiscount = discountTier > 0;
         const originalBasePrice = qty * BASE_CARD_PRICE;
-        const baseDiscount = discountTier === 500 ? BASE_CARD_DISCOUNT_500 : discountTier === 300 ? BASE_CARD_DISCOUNT_300 : 0;
+        const quantityBaseDiscount = discountTier === 500 ? BASE_CARD_DISCOUNT_500 : discountTier === 300 ? BASE_CARD_DISCOUNT_300 : 0;
+        const baseDiscount = hasCouponDiscount ? activeCoupon.discount : quantityBaseDiscount;
         const basePrice = originalBasePrice * (1 - baseDiscount);
         const originalPrintingUnitPrice = getPrintingUnitPrice();
         const printingUnitPrice = getPrintingUnitPrice(discountTier);
@@ -1663,19 +1805,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const hasSecurity = securityToggle && securityToggle.checked;
         const securityPrice = hasSecurity ? SECURITY_PRICE : 0;
-        const totalPrice = basePrice + printingPrice + designPrice + securityPrice;
-        const originalTotalPrice = originalBasePrice + originalPrintingPrice + originalDesignPrice + securityPrice + DELIVERY_PRICE;
+        const subtotalBeforeCoupon = basePrice + printingPrice + designPrice + securityPrice;
+        const couponDiscountAmount = hasCouponDiscount ? originalBasePrice * activeCoupon.discount : 0;
+        const totalPrice = subtotalBeforeCoupon;
+        const originalTotalPrice = hasCouponDiscount
+            ? originalBasePrice + originalPrintingPrice + originalDesignPrice + securityPrice + DELIVERY_PRICE
+            : originalBasePrice + originalPrintingPrice + originalDesignPrice + securityPrice + DELIVERY_PRICE;
+        activeCouponSummary = hasCouponDiscount
+            ? {
+                code: activeCoupon.code,
+                discount: activeCoupon.discount,
+                discountAmount: couponDiscountAmount,
+                beforeDiscount: subtotalBeforeCoupon,
+                afterDiscount: totalPrice
+            }
+            : null;
 
         if (calcBasePriceSpan) calcBasePriceSpan.textContent = basePrice.toFixed(3);
         if (calcBaseOldPriceSpan) {
             calcBaseOldPriceSpan.textContent = originalBasePrice.toFixed(3);
-            calcBaseOldPriceSpan.classList.toggle('hidden', !hasQuantityDiscount);
+            calcBaseOldPriceSpan.classList.toggle('hidden', !hasQuantityDiscount && !hasCouponDiscount);
         }
         if (baseDiscountBadge) {
-            const baseDiscountKey = discountTier === 500 ? 'discount10' : 'discount5';
+            const baseDiscountKey = hasCouponDiscount ? 'discount20' : discountTier === 500 ? 'discount10' : 'discount5';
             baseDiscountBadge.setAttribute('data-i18n', baseDiscountKey);
             baseDiscountBadge.textContent = translations[currentLang][baseDiscountKey];
-            baseDiscountBadge.classList.toggle('hidden', !hasQuantityDiscount);
+            baseDiscountBadge.classList.toggle('hidden', !hasQuantityDiscount && !hasCouponDiscount);
         }
         if (calcPrintingRow) calcPrintingRow.classList.toggle('hidden', printingPrice <= 0);
         if (calcPrintingPriceSpan) calcPrintingPriceSpan.textContent = printingPrice.toFixed(3);
@@ -1727,5 +1882,9 @@ document.addEventListener('DOMContentLoaded', () => {
         invitationTypeInputs.forEach((input) => input.addEventListener('change', updateCalculator));
         invitationSizeInputs.forEach((input) => input.addEventListener('change', updateCalculator));
         if (securityToggle) securityToggle.addEventListener('change', updateCalculator);
+        window.addEventListener('eventQrLanguageChange', () => {
+            refreshCouponMessage();
+            updateCalculator();
+        });
     }
 });

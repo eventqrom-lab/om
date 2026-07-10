@@ -17,7 +17,7 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=20260703-performance-1">
+    <link rel="stylesheet" href="style.css?v=20260711-coupon-1">
     <noscript><link rel="stylesheet" href="style.css"></noscript>
 </head>
 
@@ -407,6 +407,18 @@
                         </div>
                         <p class="security-note hidden" id="security-note" data-i18n="securityDurationNote">لراحة ضيوفكم وتنظيم دخولهم بكل سلاسة، تشمل خدمة حارس الأمن 4 ساعات، ويمكنكم تمديد الخدمة بكل مرونة مقابل 5.000 ر.ع لكل ساعة إضافية.</p>
 
+                        <div class="form-group coupon-group" id="coupon-group">
+                            <label for="coupon-code" data-i18n="couponLabel">كود الخصم</label>
+                            <div class="coupon-control">
+                                <input type="text" id="coupon-code" name="كود_الخصم" class="coupon-input"
+                                    autocomplete="off" data-lpignore="true" data-form-type="other"
+                                    placeholder="أدخل كود الخصم" data-i18n="couponPlaceholder">
+                                <button type="button" class="btn btn-secondary coupon-apply-btn"
+                                    id="coupon-apply-btn" data-i18n="couponApply">تطبيق</button>
+                            </div>
+                            <p id="coupon-message" class="coupon-message hidden" aria-live="polite"></p>
+                        </div>
+
                         <div id="calc-results" class="calc-results hidden">
                             <div class="result-row">
                                 <span class="result-label">
@@ -754,7 +766,7 @@
 
     <!-- JavaScript -->
     <script defer src="auth.js?v=20260703-performance-1"></script>
-    <script defer src="script.js?v=20260703-performance-1"></script>
+    <script defer src="script.js?v=20260711-coupon-1"></script>
     <script defer src="particles.js?v=20260703-performance-1"></script>
 </body>
 

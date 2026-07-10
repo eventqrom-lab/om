@@ -1017,6 +1017,47 @@ html[lang="ar"] .hero-title {
     box-shadow: 0 0 0 4px var(--luxury-gold-glow);
 }
 
+.coupon-group {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.coupon-control {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.coupon-input {
+    min-width: 0;
+    text-transform: none;
+}
+
+.coupon-apply-btn {
+    min-width: 108px;
+    height: 54px;
+    padding: 0 18px;
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: none;
+}
+
+.coupon-message {
+    margin: 8px 0 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.coupon-message.success {
+    color: #34D399;
+}
+
+.coupon-message.error {
+    color: #F87171;
+}
+
 .toggle-label-container {
     display: flex;
     flex-direction: column;
@@ -3011,6 +3052,14 @@ html[lang="en"] .contact-info h2 {
 
     .calculator-card {
         padding: 24px 20px;
+    }
+
+    .coupon-control {
+        grid-template-columns: 1fr;
+    }
+
+    .coupon-apply-btn {
+        width: 100%;
     }
     
     .total-row .result-value {
