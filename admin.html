@@ -1827,10 +1827,11 @@
             const isSelected = value => hasValue(value) && !['لا', 'no', 'false'].includes(String(value).trim().toLowerCase());
             const row = (label, value, options = {}) => {
                 if (!hasValue(value)) return '';
-                const direction = options.ltr ? ' dir="ltr" style="text-align:right;"' : '';
+                const direction = options.ltr ? ' dir="ltr" style="direction:ltr; unicode-bidi:isolate; text-align:right;"' : '';
                 const className = options.customer ? ' customer-value' : '';
                 return `<tr><td class="field-label">${escapeHTML(label)}</td><td class="field-value${className}"${direction}>${options.html ? value : escapeHTML(value)}</td></tr>`;
             };
+            const extraFieldRow = field => row(field.label, field.value, { ltr: isCouponValueLabel(field.label) });
             const couponPercentField = data.extraFields.find(field => isCouponPercentLabel(field.label));
             const invoiceExtraFields = data.extraFields
                 .filter(field => {
@@ -1866,7 +1867,7 @@
                 hasValue(data.themeColor) ? row('لون الثيم', `<div class="color-preview"><span class="color-dot" style="background:${escapeHTML(data.themeColor)};"></span><span dir="ltr">${escapeHTML(data.themeColor)}</span></div>`, { html: true }) : '',
                 hasValue(data.customDesign) ? row('تصميم مخصص', `<span class="status-badge ${isYes ? 'status-paid' : 'status-pending'}">${escapeHTML(data.customDesign)}</span>`, { html: true }) : '',
                 row('ملاحظات إضافية', data.notes),
-                ...invoiceExtraFields.map(field => row(field.label, field.value))
+                ...invoiceExtraFields.map(extraFieldRow)
             ].join('');
 
             const html = `
