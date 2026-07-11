@@ -1413,12 +1413,48 @@
             showAdminEmailForm();
         }
 
+        function normalizeInvoiceLabel(label) {
+            return String(label || '').replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function normalizeCouponPercent(value) {
+            const clean = String(value || '').trim();
+            if (!clean) return '';
+            const numberMatch = clean.match(/-?\d+(?:\.\d+)?/);
+            if (!numberMatch) return clean.startsWith('-') ? clean : `-${clean}`;
+            const number = Math.abs(Number(numberMatch[0]));
+            return Number.isFinite(number) ? `-${number}%` : '';
+        }
+
+        function isCouponPercentLabel(label) {
+            return normalizeInvoiceLabel(label) === 'نسبة خصم الكود';
+        }
+
+        function isCouponValueLabel(label) {
+            return normalizeInvoiceLabel(label) === 'قيمة خصم الكود';
+        }
+
+        function formatCouponDiscountValue(value, percent) {
+            const discountValue = String(value ?? '').trim();
+            const percentText = normalizeCouponPercent(percent);
+            if (!percentText || discountValue.includes(percentText)) return discountValue;
+            return `${discountValue} (${percentText})`;
+        }
+
         function orderToInvoice(order) {
             const details = order.details && typeof order.details === 'object' ? order.details : {};
-            const visibleDetails = Object.entries(details).filter(([key]) => {
-                const normalizedKey = String(key).replace(/_/g, ' ').trim();
-                return normalizedKey !== 'نوع العميل';
-            });
+            const couponPercent = Object.entries(details).find(([key]) => isCouponPercentLabel(key))?.[1] || '';
+            const visibleDetails = Object.entries(details)
+                .filter(([key]) => {
+                    const normalizedKey = normalizeInvoiceLabel(key);
+                    return normalizedKey !== 'نوع العميل' && !isCouponPercentLabel(normalizedKey);
+                })
+                .map(([key, value]) => {
+                    if (isCouponValueLabel(key)) {
+                        return [key, formatCouponDiscountValue(value, couponPercent)];
+                    }
+                    return [key, value];
+                });
             const rawData = [
                 `رقم الطلب: ${order.order_number}`,
                 `اسم العميل: ${order.customer_name}`,
@@ -1668,6 +1704,11 @@
             let normalized = convertToEnglish(text);
             normalized = normalized.replace(/\t/g, ' ');
             const lines = normalized.split(/\n|\r/).map(l => l.trim()).filter(Boolean);
+            let hasExplicitFinalPrice = false;
+            const setParsedField = (fieldKey, value) => {
+                data[fieldKey] = value;
+                if (fieldKey === 'finalPrice') hasExplicitFinalPrice = true;
+            };
             
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
@@ -1680,7 +1721,7 @@
                     let value = separatorMatch[2].trim();
                     const fieldKey = findFieldKey(rawKey);
                     if (fieldKey && value) {
-                        data[fieldKey] = value;
+                        setParsedField(fieldKey, value);
                         matched = true;
                     } else if (/^(subject|from_name|access_key|botcheck|---|رابط_الفاتورة)$/i.test(rawKey)) {
                         matched = true;
@@ -1698,7 +1739,7 @@
                     if (exactFieldKey) {
                         const value = lines[i + 1] && !findFieldKey(lines[i + 1]) ? lines[i + 1].trim() : '';
                         if (value) {
-                            data[exactFieldKey] = value;
+                            setParsedField(exactFieldKey, value);
                             i++;
                             matched = true;
                         }
@@ -1716,7 +1757,7 @@
                                 value = lines[i + 1].trim();
                                 i++;
                             }
-                            if (value) data[fieldKey] = value;
+                            if (value) setParsedField(fieldKey, value);
                             break;
                         }
                     }
@@ -1735,7 +1776,7 @@
 
             const priceRegex = /(\d+\.?\d*)\s*(OMR|ر\.ع|ريال|OMR)/i;
             const priceMatch = text.match(priceRegex);
-            if (priceMatch) {
+            if (!hasExplicitFinalPrice && priceMatch) {
                 data.finalPrice = priceMatch[1] + ' ' + (priceMatch[2] || 'OMR');
             }
 
@@ -1790,6 +1831,21 @@
                 const className = options.customer ? ' customer-value' : '';
                 return `<tr><td class="field-label">${escapeHTML(label)}</td><td class="field-value${className}"${direction}>${options.html ? value : escapeHTML(value)}</td></tr>`;
             };
+            const couponPercentField = data.extraFields.find(field => isCouponPercentLabel(field.label));
+            const invoiceExtraFields = data.extraFields
+                .filter(field => {
+                    const normalizedLabel = normalizeInvoiceLabel(field.label);
+                    return normalizedLabel !== 'نوع العميل' && !isCouponPercentLabel(normalizedLabel);
+                })
+                .map(field => {
+                    if (isCouponValueLabel(field.label)) {
+                        return {
+                            ...field,
+                            value: formatCouponDiscountValue(field.value, couponPercentField?.value)
+                        };
+                    }
+                    return field;
+                });
             const detailRows = [
                 row('رقم الطلب', data.orderId, { ltr: true }),
                 row('اسم العميل', data.customerName, { customer: true }),
@@ -1810,9 +1866,7 @@
                 hasValue(data.themeColor) ? row('لون الثيم', `<div class="color-preview"><span class="color-dot" style="background:${escapeHTML(data.themeColor)};"></span><span dir="ltr">${escapeHTML(data.themeColor)}</span></div>`, { html: true }) : '',
                 hasValue(data.customDesign) ? row('تصميم مخصص', `<span class="status-badge ${isYes ? 'status-paid' : 'status-pending'}">${escapeHTML(data.customDesign)}</span>`, { html: true }) : '',
                 row('ملاحظات إضافية', data.notes),
-                ...data.extraFields
-                    .filter(field => String(field.label).replace(/_/g, ' ').trim() !== 'نوع العميل')
-                    .map(field => row(field.label, field.value))
+                ...invoiceExtraFields.map(field => row(field.label, field.value))
             ].join('');
 
             const html = `

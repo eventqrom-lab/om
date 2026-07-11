@@ -1619,8 +1619,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (couponSummary) {
                 organizedObject["كود_الخصم"] = couponSummary.code;
-                organizedObject["نسبة_خصم_الكود"] = `${Math.round(couponSummary.discount * 100)}%`;
-                organizedObject["قيمة_خصم_الكود"] = formatAmount(couponSummary.discountAmount);
+                organizedObject["قيمة_خصم_الكود"] = `${formatAmount(couponSummary.discountAmount)} (-${Math.round(couponSummary.discount * 100)}%)`;
             }
 
             if (rawObject["ملاحظات_إضافية"] && rawObject["ملاحظات_إضافية"].trim()) {
