@@ -539,35 +539,6 @@
             font-size: 1.7rem;
             font-weight: 800;
         }
-        .archive-header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .commitment-open-btn {
-            width: auto;
-            min-height: 42px;
-            padding: 9px 16px;
-            border: 1.5px solid var(--luxury-gold);
-            background: rgba(198, 167, 105, 0.1);
-            color: var(--luxury-gold);
-            white-space: nowrap;
-        }
-        .commitment-open-btn:hover {
-            background: var(--luxury-gold);
-            color: #000;
-        }
-        .commitment-plus {
-            display: grid;
-            place-items: center;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: rgba(198, 167, 105, 0.16);
-            font-size: 1.25rem;
-            font-weight: 800;
-            line-height: 1;
-        }
         .archive-close-btn {
             width: 42px;
             height: 42px;
@@ -714,180 +685,6 @@
             border: 1.5px solid var(--border-color);
             border-radius: var(--border-radius);
             background: rgba(198, 167, 105, 0.03);
-        }
-        .commitment-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 6800;
-            display: none;
-            place-items: center;
-            padding: 22px;
-            background: rgba(8, 8, 8, 0.78);
-            backdrop-filter: blur(10px);
-        }
-        .commitment-modal.open {
-            display: grid;
-        }
-        .commitment-card {
-            position: relative;
-            width: min(520px, 100%);
-            padding: 28px;
-            border: 1.5px solid rgba(198, 167, 105, 0.42);
-            border-radius: var(--border-radius);
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01) 42%),
-                var(--charcoal-card);
-            box-shadow: var(--shadow-lg);
-        }
-        .commitment-close {
-            position: absolute;
-            top: 14px;
-            inset-inline-start: 14px;
-            display: grid;
-            place-items: center;
-            width: 36px;
-            height: 36px;
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.18);
-            color: var(--text-ivory);
-            font-size: 1.35rem;
-            line-height: 1;
-            cursor: pointer;
-        }
-        .commitment-close:hover,
-        .commitment-close:focus-visible {
-            border-color: var(--luxury-gold);
-            color: var(--luxury-gold);
-            outline: none;
-        }
-        .commitment-header {
-            display: grid;
-            grid-template-columns: 46px minmax(0, 1fr);
-            gap: 14px;
-            align-items: center;
-            margin-bottom: 22px;
-            padding-inline-start: 44px;
-        }
-        .commitment-header-icon {
-            display: grid;
-            place-items: center;
-            width: 46px;
-            height: 46px;
-            border: 1.5px solid rgba(198, 167, 105, 0.5);
-            border-radius: 50%;
-            color: var(--luxury-gold);
-            background: rgba(198, 167, 105, 0.1);
-            font-size: 1.6rem;
-            font-weight: 800;
-            line-height: 1;
-        }
-        .commitment-title {
-            margin: 0 0 3px;
-            color: var(--luxury-gold);
-            font-size: 1.45rem;
-            font-weight: 800;
-        }
-        .commitment-subtitle {
-            margin: 0;
-            color: var(--text-muted-beige);
-            font-size: 0.9rem;
-        }
-        .commitment-form {
-            display: grid;
-            gap: 16px;
-        }
-        .commitment-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-        .commitment-field {
-            display: grid;
-            gap: 8px;
-        }
-        .commitment-field-wide {
-            grid-column: 1 / -1;
-        }
-        .commitment-field label {
-            color: var(--text-muted-beige);
-            font-size: 0.88rem;
-            font-weight: 700;
-        }
-        .commitment-field input,
-        .commitment-field select {
-            width: 100%;
-            height: 52px;
-            padding: 0 15px;
-            border: 1.5px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.05)), var(--soft-black-field);
-            color: var(--text-ivory);
-            font: inherit;
-            outline: none;
-            transition: var(--transition);
-        }
-        .commitment-field input:focus,
-        .commitment-field select:focus {
-            border-color: var(--luxury-gold);
-            box-shadow: 0 0 0 4px var(--luxury-gold-glow);
-        }
-        .commitment-field input::placeholder {
-            color: var(--text-muted-beige);
-            opacity: 0.68;
-        }
-        .commitment-amount-wrap {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            align-items: center;
-            border: 1.5px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background: var(--soft-black-field);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-        .commitment-amount-wrap:focus-within {
-            border-color: var(--luxury-gold);
-            box-shadow: 0 0 0 4px var(--luxury-gold-glow);
-        }
-        .commitment-amount-wrap input {
-            border: 0;
-            border-radius: 0;
-            background: transparent;
-            direction: ltr;
-            text-align: right;
-            box-shadow: none;
-        }
-        .commitment-amount-wrap input:focus {
-            box-shadow: none;
-        }
-        .commitment-currency {
-            display: grid;
-            place-items: center;
-            align-self: stretch;
-            min-width: 58px;
-            padding: 0 14px;
-            border-inline-start: 1px solid var(--border-color);
-            color: var(--luxury-gold);
-            font-weight: 800;
-        }
-        .commitment-message {
-            padding: 10px 12px;
-            border: 1px solid rgba(158, 61, 61, 0.45);
-            border-radius: var(--border-radius);
-            background: rgba(158, 61, 61, 0.13);
-            color: #f2b2b2;
-            font-size: 0.88rem;
-        }
-        .commitment-save-btn {
-            min-height: 52px;
-            border-radius: var(--border-radius);
-        }
-        .commitment-save-icon {
-            display: inline-grid;
-            place-items: center;
-            width: 19px;
-            height: 19px;
         }
         .delete-confirm-modal {
             position: fixed;
@@ -1215,19 +1012,9 @@
                 font-size: 1.35rem;
             }
             .archive-modal-header {
-                align-items: stretch;
-                flex-direction: column;
                 gap: 12px;
                 margin-bottom: 16px;
                 padding-bottom: 14px;
-            }
-            .archive-header-actions {
-                width: 100%;
-            }
-            .commitment-open-btn {
-                width: 100%;
-                justify-content: center;
-                min-height: 46px;
             }
             .archive-close-btn {
                 width: 38px;
@@ -1320,41 +1107,6 @@
                 width: 36px;
                 height: 36px;
                 min-height: 36px;
-            }
-            .commitment-modal {
-                align-items: end;
-                padding: 12px;
-            }
-            .commitment-card {
-                padding: 24px 16px 18px;
-            }
-            .commitment-header {
-                grid-template-columns: 40px minmax(0, 1fr);
-                gap: 10px;
-                padding-inline-start: 42px;
-                margin-bottom: 18px;
-            }
-            .commitment-header-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1.35rem;
-            }
-            .commitment-title {
-                font-size: 1.24rem;
-            }
-            .commitment-subtitle {
-                font-size: 0.82rem;
-            }
-            .commitment-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            .commitment-field input,
-            .commitment-field select,
-            .commitment-save-btn {
-                height: 50px;
-                min-height: 50px;
-                font-size: 16px;
             }
             .delete-confirm-modal {
                 padding: 14px;
@@ -1557,12 +1309,6 @@
             <div class="archive-modal-content">
                 <div class="archive-modal-header">
                     <h2 class="archive-modal-title">الفواتير</h2>
-                    <div class="archive-header-actions">
-                        <button type="button" class="btn commitment-open-btn" onclick="openCommitmentModal()" aria-haspopup="dialog">
-                            <span class="commitment-plus" aria-hidden="true">+</span>
-                            <span>دفع التزام</span>
-                        </button>
-                    </div>
                 </div>
                 <div class="archive-search">
                     <input type="text" id="archive-search-input" placeholder="ابحث برقم الطلب أو رقم هاتف العميل" oninput="renderArchiveTable()" autocomplete="off">
@@ -1613,55 +1359,6 @@
         </div>
     </div>
 
-    <div class="commitment-modal" id="commitment-modal" dir="rtl" aria-hidden="true">
-        <div class="commitment-card" role="dialog" aria-modal="true" aria-labelledby="commitment-title">
-            <button type="button" class="commitment-close" onclick="closeCommitmentModal()" aria-label="إغلاق">×</button>
-            <div class="commitment-header">
-                <span class="commitment-header-icon" aria-hidden="true">+</span>
-                <div>
-                    <h2 class="commitment-title" id="commitment-title">دفع التزام</h2>
-                    <p class="commitment-subtitle">أدخل مبلغ الالتزام ونوعه ثم احفظ العملية.</p>
-                </div>
-            </div>
-            <form class="commitment-form" id="commitment-form" autocomplete="off" novalidate>
-                <div class="commitment-grid">
-                    <div class="commitment-field">
-                        <label for="commitment-amount">المبلغ</label>
-                        <div class="commitment-amount-wrap">
-                            <input type="text" id="commitment-amount" inputmode="decimal" placeholder="مثال: 5" aria-describedby="commitment-form-message">
-                            <span class="commitment-currency">ر.ع</span>
-                        </div>
-                    </div>
-                    <div class="commitment-field">
-                        <label for="commitment-type">الالتزام</label>
-                        <select id="commitment-type" aria-describedby="commitment-form-message">
-                            <option value="" disabled selected>اختر الالتزام</option>
-                            <option value="الإيجار">الإيجار</option>
-                            <option value="الموردين">الموردين</option>
-                            <option value="الخدمات">الخدمات</option>
-                            <option value="أخرى">أخرى</option>
-                        </select>
-                    </div>
-                    <div class="commitment-field commitment-field-wide">
-                        <label for="commitment-note">الملاحظة</label>
-                        <input type="text" id="commitment-note" placeholder="مثال: قهوة" maxlength="120">
-                    </div>
-                </div>
-                <div class="commitment-message hidden" id="commitment-form-message" role="alert"></div>
-                <button type="submit" class="btn btn-primary commitment-save-btn">
-                    <span>حفظ</span>
-                    <span class="commitment-save-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path>
-                            <path d="M17 21v-8H7v8"></path>
-                            <path d="M7 3v5h8"></path>
-                        </svg>
-                    </span>
-                </button>
-            </form>
-        </div>
-    </div>
-
     <div class="delete-confirm-modal" id="delete-confirm-modal" dir="rtl" aria-hidden="true">
         <div class="delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="delete-confirm-title">
             <h3 id="delete-confirm-title">حذف الفاتورة؟</h3>
@@ -1679,7 +1376,6 @@
     <script>
         const { jsPDF } = window.jspdf;
         const adminTokenKey = 'eventQrAdminToken';
-        const commitmentStorageKey = 'eventQrCommitmentPayments';
         const adminApiBase = window.location.hostname.endsWith('github.io')
             ? 'https://om-production-7de0.up.railway.app'
             : '';
@@ -1712,7 +1408,6 @@
         function adminLogout() {
             localStorage.removeItem(adminTokenKey);
             adminOrders = [];
-            closeCommitmentModal();
             closeInvoiceModal();
             document.getElementById('admin-login').classList.remove('hidden');
             showAdminEmailForm();
@@ -1835,89 +1530,6 @@
             toast.textContent = msg;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        function getCommitmentPayments() {
-            try {
-                const stored = JSON.parse(localStorage.getItem(commitmentStorageKey) || '[]');
-                return Array.isArray(stored) ? stored.filter(item => item && typeof item === 'object') : [];
-            } catch {
-                return [];
-            }
-        }
-
-        function saveCommitmentPayment(payment) {
-            const payments = getCommitmentPayments();
-            payments.unshift(payment);
-            localStorage.setItem(commitmentStorageKey, JSON.stringify(payments.slice(0, 200)));
-        }
-
-        function setCommitmentMessage(text) {
-            const message = document.getElementById('commitment-form-message');
-            if (!message) return;
-            message.textContent = text || '';
-            message.classList.toggle('hidden', !text);
-        }
-
-        function openCommitmentModal() {
-            const modal = document.getElementById('commitment-modal');
-            if (!modal) return;
-            setCommitmentMessage('');
-            modal.classList.add('open');
-            modal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => document.getElementById('commitment-amount')?.focus(), 80);
-        }
-
-        function closeCommitmentModal() {
-            const modal = document.getElementById('commitment-modal');
-            if (!modal) return;
-            modal.classList.remove('open');
-            modal.setAttribute('aria-hidden', 'true');
-            setCommitmentMessage('');
-            document.body.style.overflow = '';
-        }
-
-        function normalizeCommitmentAmount(value) {
-            return convertToEnglish(String(value || ''))
-                .replace(/[^\d.]/g, '')
-                .replace(/(\..*)\./g, '$1');
-        }
-
-        function handleCommitmentSubmit(event) {
-            event.preventDefault();
-            const form = event.currentTarget;
-            const amountInput = document.getElementById('commitment-amount');
-            const typeInput = document.getElementById('commitment-type');
-            const noteInput = document.getElementById('commitment-note');
-            const amountText = normalizeCommitmentAmount(amountInput.value);
-            const amountNumber = Number(amountText);
-            const type = typeInput.value;
-            const note = noteInput.value.trim();
-
-            if (!amountText || !Number.isFinite(amountNumber) || amountNumber <= 0) {
-                setCommitmentMessage('يرجى إدخال مبلغ صحيح أكبر من صفر.');
-                amountInput.focus();
-                return;
-            }
-
-            if (!type) {
-                setCommitmentMessage('يرجى اختيار نوع الالتزام.');
-                typeInput.focus();
-                return;
-            }
-
-            saveCommitmentPayment({
-                id: `COM-${Date.now()}`,
-                amount: amountNumber.toFixed(3),
-                type,
-                note,
-                createdAt: new Date().toISOString()
-            });
-
-            form.reset();
-            closeCommitmentModal();
-            showToast(`تم حفظ دفع الالتزام: ${amountNumber.toFixed(3)} ر.ع`);
         }
 
         function getSavedInvoices() {
@@ -2517,10 +2129,6 @@
 
         document.addEventListener('keydown', function(event) {
             if (event.key !== 'Escape') return;
-            if (document.getElementById('commitment-modal').classList.contains('open')) {
-                closeCommitmentModal();
-                return;
-            }
             if (document.getElementById('delete-confirm-modal').classList.contains('open')) {
                 closeDeleteConfirm();
                 return;
@@ -2541,12 +2149,6 @@
         document.getElementById('delete-confirm-modal').addEventListener('click', function(event) {
             if (event.target === this) closeDeleteConfirm();
         });
-
-        document.getElementById('commitment-modal').addEventListener('click', function(event) {
-            if (event.target === this) closeCommitmentModal();
-        });
-
-        document.getElementById('commitment-form').addEventListener('submit', handleCommitmentSubmit);
 
         function printInvoice() {
             const element = document.getElementById('invoice-to-print');

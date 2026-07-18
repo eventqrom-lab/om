@@ -1802,14 +1802,15 @@ document.addEventListener('DOMContentLoaded', () => {
         calcWarning.classList.add('hidden');
 
         const hasCouponDiscount = Boolean(activeCoupon);
-        const discountTier = hasCouponDiscount ? 0 : qty >= 500 ? 500 : qty >= 300 ? 300 : 0;
-        const hasQuantityDiscount = discountTier > 0;
+        const baseDiscountTier = hasCouponDiscount ? 0 : qty >= 500 ? 500 : qty >= 300 ? 300 : 0;
+        const printingDiscountTier = qty >= 500 ? 500 : 0;
+        const hasQuantityDiscount = baseDiscountTier > 0;
         const originalBasePrice = qty * BASE_CARD_PRICE;
-        const quantityBaseDiscount = discountTier === 500 ? BASE_CARD_DISCOUNT_500 : discountTier === 300 ? BASE_CARD_DISCOUNT_300 : 0;
+        const quantityBaseDiscount = baseDiscountTier === 500 ? BASE_CARD_DISCOUNT_500 : baseDiscountTier === 300 ? BASE_CARD_DISCOUNT_300 : 0;
         const baseDiscount = hasCouponDiscount ? activeCoupon.discount : quantityBaseDiscount;
         const basePrice = originalBasePrice * (1 - baseDiscount);
         const originalPrintingUnitPrice = getPrintingUnitPrice();
-        const printingUnitPrice = getPrintingUnitPrice(discountTier);
+        const printingUnitPrice = getPrintingUnitPrice(printingDiscountTier);
         const originalPrintingPrice = qty * originalPrintingUnitPrice;
         const printingPrice = qty * printingUnitPrice;
         const hasCustomDesign = calcDesignToggle.checked;
@@ -1841,7 +1842,7 @@ document.addEventListener('DOMContentLoaded', () => {
             calcBaseOldPriceSpan.classList.toggle('hidden', !hasQuantityDiscount && !hasCouponDiscount);
         }
         if (baseDiscountBadge) {
-            const baseDiscountKey = hasCouponDiscount ? 'discount20' : discountTier === 500 ? 'discount10' : 'discount5';
+            const baseDiscountKey = hasCouponDiscount ? 'discount20' : baseDiscountTier === 500 ? 'discount10' : 'discount5';
             baseDiscountBadge.setAttribute('data-i18n', baseDiscountKey);
             baseDiscountBadge.textContent = translations[currentLang][baseDiscountKey];
             baseDiscountBadge.classList.toggle('hidden', !hasQuantityDiscount && !hasCouponDiscount);
@@ -1850,12 +1851,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (calcPrintingPriceSpan) calcPrintingPriceSpan.textContent = printingPrice.toFixed(3);
         if (calcPrintingOldPriceSpan) {
             calcPrintingOldPriceSpan.textContent = originalPrintingPrice.toFixed(3);
-            calcPrintingOldPriceSpan.classList.toggle('hidden', discountTier !== 500 || printingPrice <= 0);
+            calcPrintingOldPriceSpan.classList.toggle('hidden', printingDiscountTier !== 500 || printingPrice <= 0);
         }
         if (printingDiscountBadge) {
             printingDiscountBadge.setAttribute('data-i18n', 'discount20');
             printingDiscountBadge.textContent = translations[currentLang].discount20;
-            printingDiscountBadge.classList.toggle('hidden', discountTier !== 500 || printingPrice <= 0);
+            printingDiscountBadge.classList.toggle('hidden', printingDiscountTier !== 500 || printingPrice <= 0);
         }
 
         if (hasCustomDesign && designPrice > 0) {
